@@ -1,5 +1,5 @@
-Various scripts to make my work easier
-======================================
+Various scripts to make work easier
+===================================
 
 Feel free to use or contribute if you come across this repo by accident
 Currently this repo contains the following scripts:
