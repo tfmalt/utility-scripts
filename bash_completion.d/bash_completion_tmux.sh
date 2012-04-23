@@ -1,1 +1,1 @@
-../../../../svn/tmux/trunk/examples/bash_completion_tmux.sh
+../../../tmux/trunk/examples/bash_completion_tmux.sh
