@@ -3,10 +3,12 @@
 #
 # @author Thomas Malt
 # 
+echo "profile_mac"
 
 # Source in bashrc if it is not loaded
 if [[ ! $BASHRC_LOADED ]]; then
-    source .bashrc
+    echo "loading bashrc"
+    source $HOME/.bashrc
 fi
 
 # Load bash completion
@@ -18,7 +20,3 @@ if [ -d $HOME/.bash_completion.d ]; then
 else
     unset BASH_COMPLETION_LOADED
 fi
-
-
-
-

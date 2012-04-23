@@ -6,7 +6,7 @@
 
 
 PATH="/usr/local/bin:$PATH:$HOME/bin:/usr/local/mysql/bin:/usr/local/sbin"
-PATH=$PATH:$HOME/git/startsiden/startsiden-build-tools/bin
+PATH=$PATH:$HOME/src/startsiden/startsiden-build-tools/bin
 
 # Locale settings
 EDITOR="emacs"
@@ -19,7 +19,7 @@ LC_TIME=nb_NO.UTF-8
 LESS="-M-Q-r"          				# Less stuff 
 LESSCHARDEF="8bcccbcc13b.4b95.33b."		#
 LESSEDIT="%E ?lt+%lt. %f" 			# 
-PERL5LIB="$PERL5LIB:$HOME/git/startsiden/startsiden-build-tools/lib"
+PERL5LIB="$PERL5LIB:$HOME/src/startsiden/startsiden-build-tools/lib"
 RSYNC_RSH="ssh"					# We use ssh for rsync 
 TERM="xterm-256color"
 VISUAL=$EDITOR	       				# Same for Visual
