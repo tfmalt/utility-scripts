@@ -1,19 +1,29 @@
 " Vim configuration file
 "
 
+syntax on
+set modelines=5
 set nocompatible
 set background=dark
 set columns=80
 set ruler
-set incsearch
 set mouse=a
+
+" statusline
+set laststatus=2
+
+" searching
+set incsearch
+set ignorecase
 
 " set smartindent
 " set tabstop=4
+" Tabbing
 set smarttab
 set softtabstop=4
 set shiftwidth=4
 set expandtab
 
-syntax on
+colors tm
+
 

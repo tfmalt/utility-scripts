@@ -3,11 +3,9 @@
 #
 # @author Thomas Malt
 # 
-echo "profile_mac"
 
 # Source in bashrc if it is not loaded
 if [[ ! $BASHRC_LOADED ]]; then
-    echo "loading bashrc"
     source $HOME/.bashrc
 fi
 
