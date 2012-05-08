@@ -3,18 +3,20 @@
 # helper completion script
 #
 
-CORE="git/startsiden/abcnyheter-core"
+SRC="src/startsiden"
+CORE="$SRC/abcnyheter-core"
 MODULES=$CORE/"sites/all/modules/"
-UTILS="git/startsiden/abcnyheter-utils"
-VAGRANT="git/startsiden/abcnyheter-vagrant-setup/abcnyheter-dev/"
+UTILS="$SRC/abcnyheter-utils"
+VAGRANT="$SRC/abcnyheter-vagrant-setup"
 THEME=$CORE/"sites/all/themes"
-LIB="git/startsiden/abcnyheter-lib"
-FIRES="git/startsiden/abcnyheter-fires"
-TESTS="git/startsiden/abcnyheter-selenium-testsuite"
+LIB="$SRC/abcnyheter-lib"
+FIRES="$SRC/abcnyheter-fires"
+TESTS="$SRC/abcnyheter-selenium-testsuite"
+NOVUS="$SRC/novus"
 
 function to {
     case "$1" in
-	core)
+        core)
 	    cd $HOME/$CORE/
 	    pwd
 	    git branch
@@ -25,16 +27,10 @@ function to {
 	    git branch
 	    ;;
 	vagrant)
-	    cd $HOME/$VAGRANT
-	    case "$2" in 
-		ssh) 
-		    vagrant ssh
-		    ;;
-		up)
-		    vagrant up
-		    ;;
-		destroy)
-		    vagrant destroy
+	    cd $HOME/$VAGRANT/$2
+	    case "$3" in 
+		ssh|up|destroy) 
+		    vagrant $3
 		    ;;
 	    esac 
 	    ;;
@@ -64,7 +60,12 @@ function to {
             git branch
             ;;
         api)
-            cd $HOME/git/startsiden/abcnyheter-api-$2
+            cd $HOME/$SRC/abcnyheter-api-$2
+            pwd
+            git branch
+            ;;
+        novus)
+            cd $HOME/${NOVUS}-${2}
             pwd
             git branch
             ;;
@@ -77,9 +78,9 @@ function to {
 _gotocomp() {
     local cur prev opts
     COMPREPLY=()
-    cur="${COMP_WORDS[COMP_CWORD]}"
-    prev="${COMP_WORDS[COMP_CWORD-1]}"
-    opts="core modules vagrant utils theme lib fires api testsuite"
+    _get_comp_words_by_ref -n : cur prev;
+
+    opts="novus core modules vagrant utils theme lib fires api testsuite"
 
     case "${prev}" in
 	modules)
@@ -91,23 +92,38 @@ _gotocomp() {
 	    return 0
 	    ;;
 	vagrant)
-	    COMPREPLY=( $(compgen -W "ssh up destroy reload" -- ${cur}) )
+	    COMPREPLY=( $(compgen -W "$(__vagrant_dirs)" -- ${cur}) )
 	    return 0
             ;;
         api)
-            COMPREPLY=( $(compgen -W "$(ls -d1 $HOME/git/startsiden/abcnyheter-api-* | cut -f3- -d'-')" -- ${cur}) )
+            COMPREPLY=( $(compgen -W "$(ls -d1 $HOME/src/startsiden/abcnyheter-api-* | cut -f3- -d'-')" -- ${cur}) )
             return 0
 	    ;;
+        novus)
+            COMPREPLY=( $(compgen -W "$(ls -d1 ${HOME}/${NOVUS}-* | cut -f2- -d'-')" -- ${cur}))
+            return 0
+            ;;
 	core|utils|lib|fires|testsuite)
 	    # COMPREPLY=""
 	    return 0
 	    ;;
     esac
 
+    for dir in $(__vagrant_dirs); do
+        if [[ $prev == $dir ]]; then
+            COMPREPLY=( $(compgen -W "ssh status suspend up halt destroy" -- ${cur}))
+            return 0
+        fi 
+    done
+
     if [[ ${cur} == * ]]; then
-	COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-	return 0
+	    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+	    return 0
     fi
+}
+
+__vagrant_dirs() {
+    find $HOME/$VAGRANT -name Vagrantfile -exec dirname {} \; | cut -d'/' -f7 
 }
 
 complete -F _gotocomp to

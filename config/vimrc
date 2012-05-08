@@ -1,0 +1,19 @@
+" Vim configuration file
+"
+
+set nocompatible
+set background=dark
+set columns=80
+set ruler
+set incsearch
+set mouse=a
+
+" set smartindent
+" set tabstop=4
+set smarttab
+set softtabstop=4
+set shiftwidth=4
+set expandtab
+
+syntax on
+
