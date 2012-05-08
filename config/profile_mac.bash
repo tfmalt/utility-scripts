@@ -1,11 +1,10 @@
 # -*- sh -*-
+# vim: set ft=sh :
+
 # bash profile for my macs
 #
 # @author Thomas Malt
 # 
-
-echo "bash_profile"
-uptime
 
 # Setting the path
 PATH="/usr/local/bin:$PATH"

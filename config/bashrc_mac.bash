@@ -9,7 +9,7 @@ PATH="/usr/local/bin:$PATH:$HOME/bin:/usr/local/mysql/bin:/usr/local/sbin"
 PATH=$PATH:$HOME/src/startsiden/startsiden-build-tools/bin
 
 # Locale settings
-EDITOR="emacs"
+EDITOR="vim"
 HISTIGNORE='&:d:ls:lm:lm *'			# Ignore stuff
 LANG=en_US.UTF-8
 LANGUAGE=en_US.UTF-8
@@ -34,16 +34,13 @@ unset MAILCHECK
 
 case $(setuptype) in
     root)
-        echo "root"
         PS1="[\[\e[38;05;9m\]\u\[\e[0m\]@\[\e[38;05;9m\]\h:\w\[\e[1;0m\]] "
         ;;
     laptop)
-        echo "laptop"
         PS1="\[\e[38;5;11m\][\[\e[0m\]\u\[\e[38;5;45m\]@\[\e[0m\]\h"
         PS1="${PS1}\[\e[38;5;11m\]:\[\e[0m\]\w\[\e[38;5;11m\]]\[\e[0m\] "
         ;;
     *)
-        echo "default"
         PS1="\[\033[1;32m\][\[\033[0m\]\u\[\033[0;36m\]@\[\033[0m\]\h"
         PS1="${PS1}\[\033[0;36m\]:\[\033[0m\]\w\[\033[1;32m\]]\[\033[0m\] "
         ;;
@@ -55,7 +52,7 @@ case `uname` in
 	LSCOLORS=exGxcxdxbxefedabafacad
 	DIRCOLOR=1
 	MANPATH=$MANPATH:/opt/local/man
-	EDITOR="emacs"
+	EDITOR="vim"
 	export LSCOLORS MANPATH
 	;;
 esac
