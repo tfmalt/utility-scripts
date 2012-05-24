@@ -6,6 +6,9 @@
 # @author Thomas Malt
 # 
 
+# Setting editing mode to vi:
+set -o vi
+
 # Setting the path
 PATH="/usr/local/bin:$PATH"
 PATH="$PATH:$HOME/bin:"
@@ -19,7 +22,7 @@ PERL5LIB="$PERL5LIB:$HOME/git/startsiden/startsiden-build-tools/lib"
 export PERL5LIB
 
 # Locale settings
-EDITOR="emacs"
+EDITOR="vim"
 RSYNC_RSH="ssh"					# We use ssh for rsync 
 TERM="xterm-256color"
 VISUAL=$EDITOR	       				# Same for Visual
