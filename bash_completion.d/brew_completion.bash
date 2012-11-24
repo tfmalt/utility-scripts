@@ -4,10 +4,11 @@
 #
 # @author Thomas Malt <thomas@malt.no>
 #
-
-if [ -f $(brew --prefix)/etc/bash_completion ]; then
-    source $(brew --prefix)/etc/bash_completion
-    export BREW_COMPLETION_LOADED="yes"
-else
-    unset BREW_COMPLETION_LOADED
+if [[ $(uname) == "Darwin" ]]; then
+    if [ -f $(brew --prefix)/etc/bash_completion ]; then
+        source $(brew --prefix)/etc/bash_completion
+        export BREW_COMPLETION_LOADED="yes"
+    else
+        unset BREW_COMPLETION_LOADED
+    fi
 fi

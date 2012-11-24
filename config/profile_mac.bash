@@ -9,8 +9,8 @@ if [[ $BASH_PROFILE_LOADED ]]; then
     exit
 fi
 
-uptime
-echo "RUNNING BASH_PROFILE"
+echo "uptime: " $(uptime)
+echo ""
 
 # Setting the path
 PATH="/usr/local/bin:$PATH"
@@ -32,16 +32,18 @@ TERM="xterm-256color"
 VISUAL=$EDITOR	       				# Same for Visual
 LSCOLORS=exGxcxdxbxefedabafacad
 DIRCOLOR=1
-export EDITOR RSYNC_RSH TERM VISUAL LSCOLORS DIRCOLOR
+LANGUAGE="en_US.UTF-8"
+LC_CTYPE="en_US.UTF-8"
+LC_ALL="en_US.UTF-8"
+
+export LANGUAGE EDITOR RSYNC_RSH TERM VISUAL LSCOLORS DIRCOLOR
 
 # aliases
 case $(uname) in
     Linux)
-	echo "RUNNING ON LINUX"
         alias ls="ls --color=auto"
         ;;
     Darwin)
-	echo "RUNNING ON DARWIN"
         alias ls="ls -G"                                                              
         ;;
 esac
@@ -75,16 +77,21 @@ fi
 # Setting the different command prompts.
 case $(setuptype) in
     root)
-        echo "root"
         PS1="[\[\e[38;05;9m\]\u\[\e[0m\]@\[\e[38;05;9m\]\h:\w\[\e[1;0m\]] "
         ;;
     laptop)
-        echo "laptop"
         PS1="\[\e[38;5;11m\][\[\e[0m\]\u\[\e[38;5;45m\]@\[\e[0m\]\h"
         PS1="${PS1}\[\e[38;5;11m\]:\[\e[0m\]\w\[\e[38;5;11m\]]\[\e[0m\] "
         ;;
+    linux-server)
+        PS1="\[\033[1;32m\][\[\033[0m\]\u\[\033[0;36m\]@\[\033[0m\]\h"
+        PS1="${PS1}\[\033[0;36m\]:\[\033[0m\]\w\[\033[1;32m\]]\[\033[0m\] "
+	;;
+    linux)
+        PS1="\[\033[1;32m\][\[\033[0m\]\u\[\033[0;36m\]@\[\033[0m\]\h"
+        PS1="${PS1}\[\033[0;36m\]:\[\033[0m\]\w\[\033[1;32m\]]\[\033[0m\] "
+	;;
     *)
-        echo "default"
         PS1="\[\033[1;32m\][\[\033[0m\]\u\[\033[0;36m\]@\[\033[0m\]\h"
         PS1="${PS1}\[\033[0;36m\]:\[\033[0m\]\w\[\033[1;32m\]]\[\033[0m\] "
         ;;

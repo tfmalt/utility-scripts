@@ -7,6 +7,17 @@ setuptype() {
         echo "root"
         return
     fi
+    if [[ $(uname) == "Linux" ]]; then
+	case $(hostname) in
+	    duro*)
+		echo "linux-server"
+		;;
+	    *)
+		echo "linux"
+		;;
+	esac
+        return
+     fi
 
-    echo "laptop"
+     echo "laptop"
 }
