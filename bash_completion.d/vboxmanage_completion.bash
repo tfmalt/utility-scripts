@@ -1,1 +1,0 @@
-../../bash-completion-virtualbox/vboxmanage_completion.bash

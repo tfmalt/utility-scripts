@@ -4,20 +4,26 @@
 # @author Thomas Malt
 # 
 
-echo "bash_profile"
+# Exit if we have already loaded this file.
+if [[ $BASH_PROFILE_LOADED ]]; then
+    exit
+fi
+
 uptime
+echo "RUNNING BASH_PROFILE"
 
 # Setting the path
 PATH="/usr/local/bin:$PATH"
 PATH="$PATH:$HOME/bin:"
-PATH="$PATH:/usr/local/mysql/bin"
 PATH="$PATH:/usr/local/sbin"
-PATH="$PATH:$HOME/git/startsiden/startsiden-build-tools/bin"
-export PATH
-
-# Setting PERL5LIB
-PERL5LIB="$PERL5LIB:$HOME/git/startsiden/startsiden-build-tools/lib"
-export PERL5LIB
+if [ -d /usr/local/mysql/bin ]; then
+    PATH="$PATH:/usr/local/mysql/bin"
+fi
+if [ -d $HOME/src/startsiden/startsiden-build-tools ]; then 
+    PATH="$PATH:$HOME/src/startsiden/startsiden-build-tools/bin"
+    PERL5LIB="$PERL5LIB:$HOME/git/startsiden/startsiden-build-tools/lib"
+fi
+export PATH PERL5LIB
 
 # Locale settings
 EDITOR="vim"
@@ -29,7 +35,17 @@ DIRCOLOR=1
 export EDITOR RSYNC_RSH TERM VISUAL LSCOLORS DIRCOLOR
 
 # aliases
-alias ls="ls -G"                                                              
+case $(uname) in
+    Linux)
+	echo "RUNNING ON LINUX"
+        alias ls="ls --color=auto"
+        ;;
+    Darwin)
+	echo "RUNNING ON DARWIN"
+        alias ls="ls -G"                                                              
+        ;;
+esac
+
 alias vboxheadless="VBoxHeadless"
 alias week="date +'%A %d %B %k:%M:%S Week %W'"
 alias rm="rm -v"                                  #we like to be verbose
