@@ -8,6 +8,10 @@ setuptype() {
         return
     fi
     if [[ $(uname) == "Linux" ]]; then
+	if [[ $(dmesg | grep "Booting paravirtualized kernel on KVM") ]]; then
+		echo "linux-virtual"
+		return
+	fi
 	case $(hostname) in
 	    duro*)
 		echo "linux-server"
