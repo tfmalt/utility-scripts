@@ -6,11 +6,22 @@
 
 # Exit if we have already loaded this file.
 if [[ $BASH_PROFILE_LOADED ]]; then
-    exit
+    return    
 fi
 
-echo "uptime: " $(uptime)
-echo ""
+if [ -n "$PS1" ]; then
+    echo "uptime: " $(uptime)
+    echo ""
+fi
+
+if (( $EUID == 0 )); then
+    echo "Logged in as root: loading bash-completion"
+    if [ -f /usr/share/bash-completion/bash_completion ]; then
+        source /usr/share/bash-completion/bash_completion
+    elif [ -f /etc/bash_completion ]; then
+        source /etc/bash_completion
+    fi
+fi
 
 # Setting the path
 PATH="/usr/local/bin:$PATH"
