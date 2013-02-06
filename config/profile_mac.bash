@@ -23,6 +23,9 @@ if (( $EUID == 0 )); then
     fi
 fi
 
+# setting vi mode
+set -o vi
+
 # Setting the path
 PATH="/usr/local/bin:$PATH"
 PATH="$PATH:$HOME/bin:"
@@ -30,6 +33,10 @@ PATH="$PATH:/usr/local/sbin"
 if [ -d /usr/local/mysql/bin ]; then
     PATH="$PATH:/usr/local/mysql/bin"
 fi
+if [ -d /usr/local/share/npm/bin ]; then
+    PATH="$PATH:/usr/local/share/npm/bin"
+fi
+
 if [ -d $HOME/src/startsiden/startsiden-build-tools ]; then 
     PATH="$PATH:$HOME/src/startsiden/startsiden-build-tools/bin"
     PERL5LIB="$PERL5LIB:$HOME/git/startsiden/startsiden-build-tools/lib"
