@@ -1,11 +1,16 @@
 " Vim configuration file
 "
 
+" adding pathogen support per instructions on
+"  https://github.com/tpope/vim-pathogen
+execute pathogen#infect()
 syntax on
+filetype plugin indent on
+
 set modelines=5
 set nocompatible
 set background=dark
-set columns=80
+" set columns=80
 set ruler
 set mouse=a
 set number
