@@ -27,6 +27,7 @@ fi
 PATH="/usr/local/bin:$PATH"
 PATH="$PATH:$HOME/bin:"
 PATH="$PATH:/usr/local/sbin"
+PATH="$PATH:/usr/local/share/npm/bin"
 if [ -d /usr/local/mysql/bin ]; then
     PATH="$PATH:/usr/local/mysql/bin"
 fi
