@@ -5,9 +5,9 @@
 # 
 
 # Exit if we have already loaded this file.
-if [[ $BASH_PROFILE_LOADED ]]; then
-    return    
-fi
+# if [[ $BASH_PROFILE_LOADED ]]; then
+#    return    
+# fi
 
 if [ -n "$PS1" ]; then
     echo "uptime: " $(uptime)
