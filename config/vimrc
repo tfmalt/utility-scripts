@@ -1,6 +1,5 @@
 " Vim configuration file
 "
-
 " adding pathogen support per instructions on
 "  https://github.com/tpope/vim-pathogen
 execute pathogen#infect()
@@ -31,6 +30,9 @@ set softtabstop=4
 set shiftwidth=4
 set expandtab
 
-colors tm
+let g:solarized_termcolors=256
+let g:solarized_termtrans=1
+
+colorscheme solarized
 
 
