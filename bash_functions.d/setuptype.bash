@@ -8,7 +8,7 @@ setuptype() {
         return
     fi
     if [[ $(uname) == "Linux" ]]; then
-	if [[ $(dmesg | grep "Booting paravirtualized kernel on KVM") ]]; then
+	if [[ $(dmesg | grep "Booting paravirtualized kernel") ]]; then
 		echo "linux-virtual"
 		return
 	fi

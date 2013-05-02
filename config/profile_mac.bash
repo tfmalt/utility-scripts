@@ -37,11 +37,15 @@ fi
 if [ -d /usr/local/share/npm/bin ]; then
     PATH="$PATH:/usr/local/share/npm/bin"
 fi
-
-if [ -d $HOME/src/startsiden/startsiden-build-tools ]; then 
-    PATH="$PATH:$HOME/src/startsiden/startsiden-build-tools/bin"
-    PERL5LIB="$PERL5LIB:$HOME/git/startsiden/startsiden-build-tools/lib"
+if [ -d /Users/tm/pear/bin ]; then
+    PATH="$PATH:/Users/tm/pear/bin"
 fi
+
+# if [ -d $HOME/src/startsiden/startsiden-build-tools ]; then 
+#     PATH="$PATH:$HOME/src/startsiden/startsiden-build-tools/bin"
+#     PERL5LIB="$PERL5LIB:$HOME/git/startsiden/startsiden-build-tools/lib"
+# fi
+
 export PATH PERL5LIB
 
 # Locale settings
@@ -108,8 +112,8 @@ case $(setuptype) in
         PS1="${PS1}\[\033[0;36m\]:\[\033[0m\]\w$GITBRANCH\[\033[1;32m\]]\[\033[0m\] "
 	;;
     linux-virtual)
-        PS1="\[\e[38;5;162m\][\[\033[0m\]\u\[\033[0;36m\]@\[\033[0m\]\h"
-        PS1="${PS1}\[\033[0;36m\]:\[\033[0m\]\w$GITBRANCH\[\e[38;5;162m\]]\[\033[0m\] "
+        PS1="\[\e[38;5;14m\][\[\033[0m\]\u\[\033[0;36m\]@\[\033[0m\]\h"
+        PS1="${PS1}\[\033[0;36m\]:\[\033[0m\]\w$GITBRANCH\[\e[38;5;14m\]]\[\033[0m\] "
         ;;
     linux)
         PS1="\[\033[1;32m\][\[\033[0m\]\u\[\033[0;36m\]@\[\033[0m\]\h"
