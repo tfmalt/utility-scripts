@@ -97,6 +97,14 @@ else
     unset BASH_COMPLETION_LOADED
 fi
 
+# load additional config if exists
+if [ -d $HOME/.bash_config.d ]; then
+    for FILE in $HOME/.bash_config.d/*sh; do
+        echo $FILE
+        source $FILE
+    done
+fi
+
 # Setting the different command prompts.
 GITBRANCH="\[\e[38;5;9m\]\$(__git_ps1 ' %s')\[\e[0m\]"
 case $(setuptype) in
