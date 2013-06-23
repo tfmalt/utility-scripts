@@ -1,6 +1,11 @@
 
 # Adding extlibs
-if [[ $(hostname -a | grep fronter.dev) ]]; then
+UNAME=$(uname)
+if [[ $(hostname | grep fronter) ]]; then
     EXTLIBS_ROOT="$HOME/fronterworld/source2/extlibs"
-    export EXTLIBS_ROOT
+else 
+    EXTLIBS_ROOT="$HOME/src/fronter/fronterworld/source2/extlibs"
 fi
+
+export EXTLIBS_ROOT
+
