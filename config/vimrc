@@ -6,6 +6,9 @@ execute pathogen#infect()
 syntax on
 filetype plugin indent on
 
+autocmd! BufNewFile,BufRead *.pde setlocal ft=arduino
+autocmd! BufNewFile,BufRead *.ino setlocal ft=arduino
+
 set modelines=5
 set nocompatible
 set background=dark
