@@ -28,7 +28,7 @@ set -o vi
 
 # Setting the path
 PATH="/usr/local/bin:$PATH"
-PATH="$PATH:$HOME/bin:"
+PATH="$PATH:$HOME/bin"
 PATH="$PATH:/usr/local/sbin"
 PATH="$PATH:/usr/local/share/npm/bin"
 if [ -d /usr/local/mysql/bin ]; then
@@ -61,22 +61,6 @@ LC_ALL="en_US.UTF-8"
 
 export LANGUAGE EDITOR RSYNC_RSH TERM VISUAL LSCOLORS DIRCOLOR
 
-# aliases
-case $(uname) in
-    Linux)
-        alias ls="ls --color=auto"
-        ;;
-    Darwin)
-        alias ls="ls -G"                                                              
-        ;;
-esac
-
-alias vboxheadless="VBoxHeadless"
-alias week="date +'%A %d %B %k:%M:%S Week %W'"
-alias rm="rm -v"                                  #we like to be verbose
-alias mv="mv -v"
-alias cp="cp -v"
-
 # Load bash functions
 if [ -d $HOME/.bash_functions.d ]; then
     for FILE in $HOME/.bash_functions.d/*sh; do
@@ -104,6 +88,24 @@ if [ -d $HOME/.bash_config.d ]; then
         source $FILE
     done
 fi
+
+case $(uname) in
+    Linux)
+        alias ls="ls --color=auto"
+        ;;
+    Darwin)
+        alias ls="ls -G"
+        export JAVA_HOME=$(/usr/libexec/java_home)
+        export EC2_HOME="${HOME}/src/ec2-api-tools-1.6.13.0"
+        export PATH=$PATH:$EC2_HOME/bin
+        ;;
+esac
+
+alias vboxheadless="VBoxHeadless"
+alias week="date +'%A %d %B %k:%M:%S Week %W'"
+alias rm="rm -v"                                  #we like to be verbose
+alias mv="mv -v"
+alias cp="cp -v"
 
 # Setting the different command prompts.
 GITBRANCH="\[\e[38;5;9m\]\$(__git_ps1 ' %s')\[\e[0m\]"
