@@ -15,7 +15,7 @@ if [ -n "$PS1" ]; then
 fi
 
 if (( $EUID == 0 )); then
-    echo "Logged in as root: loading bash-completion"
+    # echo "Logged in as root: loading bash-completion"
     if [ -f /usr/share/bash-completion/bash_completion ]; then
         source /usr/share/bash-completion/bash_completion
     elif [ -f /etc/bash_completion ]; then
@@ -84,7 +84,6 @@ fi
 # load additional config if exists
 if [ -d $HOME/.bash_config.d ]; then
     for FILE in $HOME/.bash_config.d/*sh; do
-        echo $FILE
         source $FILE
     done
 fi
