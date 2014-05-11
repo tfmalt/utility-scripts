@@ -4,11 +4,6 @@
 # @author Thomas Malt
 # 
 
-# Exit if we have already loaded this file.
-# if [[ $BASH_PROFILE_LOADED ]]; then
-#    return    
-# fi
-
 if [ -n "$PS1" ]; then
     echo "uptime: " $(uptime)
     echo ""
@@ -27,24 +22,13 @@ fi
 set -o vi
 
 # Setting the path
-PATH="/usr/local/bin:$PATH"
-PATH="$PATH:$HOME/bin"
-PATH="$PATH:/usr/local/sbin"
-PATH="$PATH:/usr/local/share/npm/bin"
-if [ -d /usr/local/mysql/bin ]; then
-    PATH="$PATH:/usr/local/mysql/bin"
-fi
-if [ -d /usr/local/share/npm/bin ]; then
-    PATH="$PATH:/usr/local/share/npm/bin"
-fi
-if [ -d /Users/tm/pear/bin ]; then
-    PATH="$PATH:/Users/tm/pear/bin"
-fi
+PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 
-# if [ -d $HOME/src/startsiden/startsiden-build-tools ]; then 
-#     PATH="$PATH:$HOME/src/startsiden/startsiden-build-tools/bin"
-#     PERL5LIB="$PERL5LIB:$HOME/git/startsiden/startsiden-build-tools/lib"
-# fi
+[ -d $HOME/bin ]            && PATH=$PATH:$HOME/bin
+[ -d /usr/local/mysql/bin ] && PATH=$PATH:/usr/local/mysql/bin
+[ -d $HOME/pear/bin ]       && PATH=$PATH:$HOME/pear/bin
+[ -d /opt/packer ]          && PATH=$PATH:/opt/packer
+[ -d $HOME/lib/packer ]     && PATH=$PATH:$HOME/lib/packer
 
 export PATH PERL5LIB
 
@@ -88,6 +72,7 @@ if [ -d $HOME/.bash_config.d ]; then
     done
 fi
 
+# Linux and MacOS specific setup
 case $(uname) in
     Linux)
         alias ls="ls --color=auto"
