@@ -13,7 +13,7 @@ esac
 
 echo $DOMAIN: $CREDS
 
-if [ $CREDS != "" ]; then
+if [[ $CREDS != "" ]]; then
     AWS_ACCESS_KEY=$(cat $CREDS | sed -n -e 's/^.*AWS_ACCESS_KEY.*: *"\(.*\)".*$/\1/p')
     AWS_SECRET_KEY=$(cat $CREDS | sed -n -e 's/^.*AWS_SECRET_KEY.*: *"\(.*\)".*$/\1/p')
     AWS_USER_NAME=$(cat $CREDS | sed -n -e 's/^.*AWS_USER_NAME.*: *"\(.*\)".*$/\1/p')
