@@ -9,9 +9,13 @@ setuptype() {
     fi
     if [[ $(uname) == "Linux" ]]; then
 	if [[ $(dmesg | grep "Booting paravirtualized kernel") ]]; then
-		echo "linux-virtual"
-		return
-	fi
+	    echo "linux-virtual"
+	    return
+        elif [[ $(dmesg | grep "Raspberry Pi") ]]; then
+            echo "rpi"
+            return
+        fi
+
 	case $(hostname) in
 	    duro*)
 		echo "linux-server"

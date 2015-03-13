@@ -92,7 +92,7 @@ alias mv="mv -v"
 alias cp="cp -v"
 
 # Setting the different command prompts.
-GITBRANCH="\[\e[38;5;9m\]\$(__git_ps1 ' %s')\[\e[0m\]"
+GITBRANCH="\[\e[38;5;196m\]\$(__git_ps1 ' %s')\[\e[0m\]"
 case $(setuptype) in
     root)
         PS1="[\[\e[38;05;9m\]\u\[\e[0m\]@\[\e[38;05;9m\]\h:\w\[\e[1;0m\]] "
@@ -112,6 +112,10 @@ case $(setuptype) in
     linux)
         PS1="\[\033[1;32m\][\[\033[0m\]\u\[\033[0;36m\]@\[\033[0m\]\h"
         PS1="${PS1}\[\033[0;36m\]:\[\033[0m\]\w$GITBRANCH\[\033[1;32m\]]\[\033[0m\] "
+	;;
+    rpi)
+        PS1="\[\033[38;5;162m\][\[\033[38;5;174m\]\u@\h"
+        PS1="${PS1}\[\033[38;5;162m\]:\[\033[0m\]\w$GITBRANCH\[\033[38;5;162m\]]\[\033[0m\] "
 	;;
     *)
         PS1="\[\033[1;32m\][\[\033[0m\]\u\[\033[0;36m\]@\[\033[0m\]\h"
