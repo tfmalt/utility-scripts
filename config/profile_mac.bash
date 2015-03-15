@@ -37,13 +37,12 @@ EDITOR="vim"
 RSYNC_RSH="ssh"					# We use ssh for rsync 
 TERM="xterm-256color"
 VISUAL=$EDITOR	       				# Same for Visual
-LSCOLORS=exGxcxdxbxefedabafacad
 DIRCOLOR=1
 LANGUAGE="en_US.UTF-8"
 LC_CTYPE="en_US.UTF-8"
 LC_ALL="en_US.UTF-8"
 
-export LANGUAGE EDITOR RSYNC_RSH TERM VISUAL LSCOLORS DIRCOLOR
+export LANGUAGE EDITOR RSYNC_RSH TERM VISUAL DIRCOLOR
 
 # Load bash functions
 if [ -d $HOME/.bash_functions.d ]; then
@@ -76,9 +75,11 @@ fi
 case $(uname) in
     Linux)
         alias ls="ls --color=auto"
+        eval $(dircolors .dircolors/dircolors.256dark)
         ;;
     Darwin)
         alias ls="ls -G"
+        export LSCOLORS=exGxcxdxbxefedabafacad
         export JAVA_HOME=$(/usr/libexec/java_home)
         export EC2_HOME="${HOME}/src/ec2-api-tools-1.6.13.0"
         export PATH=$PATH:$EC2_HOME/bin
@@ -92,7 +93,7 @@ alias mv="mv -v"
 alias cp="cp -v"
 
 # Setting the different command prompts.
-GITBRANCH="\[\e[38;5;9m\]\$(__git_ps1 ' %s')\[\e[0m\]"
+GITBRANCH="\[\e[38;5;196m\]\$(__git_ps1 ' %s')\[\e[0m\]"
 case $(setuptype) in
     root)
         PS1="[\[\e[38;05;9m\]\u\[\e[0m\]@\[\e[38;05;9m\]\h:\w\[\e[1;0m\]] "
@@ -102,8 +103,9 @@ case $(setuptype) in
         PS1="${PS1}\[\e[38;5;214m\]:\[\e[0m\]\w$GITBRANCH\[\e[38;5;214m\]]\[\e[0m\] "
         ;;
     linux-server)
-        PS1="\[\033[1;32m\][\[\033[0m\]\u\[\033[0;36m\]@\[\033[0m\]\h"
-        PS1="${PS1}\[\033[0;36m\]:\[\033[0m\]\w$GITBRANCH\[\033[1;32m\]]\[\033[0m\] "
+        PS1="\[\033[38;5;27m\][\[\033[38;5;39m\]\u\[\033[38;5;27m\]"
+        PS1="${PS1}@\[\033[38;5;39m\]\h"
+        PS1="${PS1}\[\033[38;5;27m\]:\[\033[38;5;39m\]\w$GITBRANCH\[\033[38;5;27m\]]\[\033[0m\] "
 	;;
     linux-virtual)
         PS1="\[\e[38;5;14m\][\[\033[0m\]\u\[\033[0;36m\]@\[\033[0m\]\h"
@@ -112,6 +114,11 @@ case $(setuptype) in
     linux)
         PS1="\[\033[1;32m\][\[\033[0m\]\u\[\033[0;36m\]@\[\033[0m\]\h"
         PS1="${PS1}\[\033[0;36m\]:\[\033[0m\]\w$GITBRANCH\[\033[1;32m\]]\[\033[0m\] "
+	;;
+    linux-rpi)
+        PI=$'\u03C0'
+        PS1="\[\033[38;5;162m\][\[\033[38;5;174m\]\u@${PI}"
+        PS1="${PS1}\[\033[38;5;162m\]:\[\033[0m\]\w$GITBRANCH\[\033[38;5;162m\]]\[\033[0m\] "
 	;;
     *)
         PS1="\[\033[1;32m\][\[\033[0m\]\u\[\033[0;36m\]@\[\033[0m\]\h"
