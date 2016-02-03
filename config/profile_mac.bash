@@ -80,9 +80,9 @@ case $(uname) in
     Darwin)
         alias ls="ls -G"
         export LSCOLORS=exGxcxdxbxefedabafacad
-        export JAVA_HOME=$(/usr/libexec/java_home)
-        export EC2_HOME="${HOME}/src/ec2-api-tools-1.6.13.0"
-        export PATH=$PATH:$EC2_HOME/bin
+        # export JAVA_HOME=$(/usr/libexec/java_home)
+        # export EC2_HOME="${HOME}/src/ec2-api-tools-1.6.13.0"
+        # export PATH=$PATH:$EC2_HOME/bin
         ;;
 esac
 
@@ -100,6 +100,10 @@ case $(setuptype) in
         ;;
     laptop)
         PS1="\[\e[38;5;214m\][\[\e[38;5;228m\]\u\[\e[38;5;214m\]@\[\e[38;5;228m\]\h"
+        PS1="${PS1}\[\e[38;5;214m\]:\[\e[0m\]\w$GITBRANCH\[\e[38;5;214m\]]\[\e[0m\] "
+        ;;
+    nrk-laptop)
+        PS1="\[\e[38;5;214m\][\[\e[38;5;228m\]tm\[\e[38;5;214m\]@\[\e[38;5;228m\]nrk"
         PS1="${PS1}\[\e[38;5;214m\]:\[\e[0m\]\w$GITBRANCH\[\e[38;5;214m\]]\[\e[0m\] "
         ;;
     linux-server)
