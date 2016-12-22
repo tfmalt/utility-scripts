@@ -117,7 +117,16 @@ case $(setuptype) in
 	;;
     linux-rpi)
         PI=$'\u03C0'
-        PS1="\[\033[38;5;162m\][\[\033[38;5;174m\]\u@${PI}"
+        SIGMA=$'\u03A3'
+
+        PS1="\[\033[38;5;162m\][\[\033[38;5;174m\]\u@"
+        
+        if [ $(hostname) == "pi" ]; then
+            PS1="${PS1}${PI}"
+        elif [ $(hostname) == "sigma" ]; then
+            PS1="${PS1}${SIGMA}" 
+        fi
+
         PS1="${PS1}\[\033[38;5;162m\]:\[\033[0m\]\w$GITBRANCH\[\033[38;5;162m\]]\[\033[0m\] "
 	;;
     *)
