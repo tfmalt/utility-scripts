@@ -75,7 +75,7 @@ fi
 case $(uname) in
     Linux)
         alias ls="ls --color=auto"
-        eval $(dircolors .dircolors/dircolors.256dark)
+        eval $(dircolors $HOME/.dircolors/dircolors.256dark)
         ;;
     Darwin)
         alias ls="ls -G"
@@ -102,10 +102,14 @@ case $(setuptype) in
         PS1="\[\e[38;5;214m\][\[\e[38;5;228m\]\u\[\e[38;5;214m\]@\[\e[38;5;228m\]\h"
         PS1="${PS1}\[\e[38;5;214m\]:\[\e[0m\]\w$GITBRANCH\[\e[38;5;214m\]]\[\e[0m\] "
         ;;
+    nrk-laptop)
+        PS1="\[\e[38;5;214m\][\[\e[38;5;228m\]tm\[\e[38;5;214m\]@\[\e[38;5;228m\]nrk"
+        PS1="${PS1}\[\e[38;5;214m\]:\[\e[0m\]\w$GITBRANCH\[\e[38;5;214m\]]\[\e[0m\] "
+        ;;
     linux-server)
-        PS1="\[\033[38;5;33m\][\[\033[38;5;51m\]\u\[\033[38;5;33m\]"
-        PS1="${PS1}@\[\033[38;5;51m\]\h"
-        PS1="${PS1}\[\033[38;5;33m\]:\[\033[38;5;51m\]\w$GITBRANCH\[\033[38;5;33m\]]\[\033[0m\] "
+        PS1="\[\033[38;5;45m\][\[\033[38;5;87m\]\u\[\033[38;5;45m\]"
+        PS1="${PS1}@\[\033[38;5;87m\]\h"
+        PS1="${PS1}\[\033[38;5;45m\]:\[\033[38;5;87m\]\w$GITBRANCH\[\033[38;5;45m\]]\[\033[0m\] "
 	;;
     linux-virtual)
         PS1="\[\e[38;5;14m\][\[\033[0m\]\u\[\033[0;36m\]@\[\033[0m\]\h"
