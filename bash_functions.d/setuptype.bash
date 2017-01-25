@@ -38,6 +38,9 @@ setuptype() {
             *nrk.no)
                 echo "nrk-laptop"
                 ;;
+            wootz.malt.no)
+              echo "laptop"
+              ;;
         esac
         return
      fi
