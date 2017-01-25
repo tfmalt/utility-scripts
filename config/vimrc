@@ -29,13 +29,13 @@ set hlsearch
 " set tabstop=4
 " Tabbing
 set smarttab
-set softtabstop=4
-set shiftwidth=4
+set softtabstop=2
+set shiftwidth=2
 set expandtab
 
 let g:solarized_termcolors=256
 let g:solarized_termtrans=1
 
-colorscheme solarized
+colorscheme mojave
 
 
