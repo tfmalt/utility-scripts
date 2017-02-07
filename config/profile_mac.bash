@@ -2,7 +2,7 @@
 # bash profile for my macs
 #
 # @author Thomas Malt
-# 
+#
 
 if [ -n "$PS1" ]; then
     echo "uptime: " $(uptime)
@@ -34,7 +34,7 @@ export PATH PERL5LIB
 
 # Locale settings
 EDITOR="vim"
-RSYNC_RSH="ssh"					# We use ssh for rsync 
+RSYNC_RSH="ssh"					# We use ssh for rsync
 TERM="xterm-256color"
 VISUAL=$EDITOR	       				# Same for Visual
 DIRCOLOR=1
@@ -103,8 +103,8 @@ case $(setuptype) in
         PS1="${PS1}\[\e[38;5;214m\]:\[\e[0m\]\w$GITBRANCH\[\e[38;5;214m\]]\[\e[0m\] "
         ;;
     lxc)
-        PS1="\[\e[38;5;214m\][\[\e[38;5;228m\]\u\[\e[38;5;214m\]@\[\e[38;5;228m\]\h"
-        PS1="${PS1}\[\e[38;5;214m\]:\[\e[0m\]\w$GITBRANCH\[\e[38;5;214m\]]\[\e[0m\] "
+        PS1="\[\e[38;5;53m\][\[\e[38;5;77m\]\u\[\e[38;5;53m\]@\[\e[38;5;77m\]\h"
+        PS1="${PS1}\[\e[38;5;53m\]:\[\e[0m\]\w$GITBRANCH\[\e[38;5;53m\]]\[\e[0m\] "
         ;;
     nrk-laptop)
         PS1="\[\e[38;5;214m\][\[\e[38;5;228m\]tm\[\e[38;5;214m\]@\[\e[38;5;228m\]nrk"
@@ -128,11 +128,11 @@ case $(setuptype) in
         SIGMA=$'\u03A3'
 
         PS1="\[\033[38;5;162m\][\[\033[38;5;174m\]\u@"
-        
+
         if [ $(hostname) == "pi" ]; then
             PS1="${PS1}${PI}"
         elif [ $(hostname) == "sigma" ]; then
-            PS1="${PS1}${SIGMA}" 
+            PS1="${PS1}${SIGMA}"
         fi
 
         PS1="${PS1}\[\033[38;5;162m\]:\[\033[0m\]\w$GITBRANCH\[\033[38;5;162m\]]\[\033[0m\] "
@@ -145,4 +145,3 @@ esac
 export PS1
 
 export BASH_PROFILE_LOADED="yes"
-
