@@ -75,7 +75,7 @@ fi
 case $(uname) in
     Linux)
         alias ls="ls --color=auto"
-        eval $(dircolors $HOME/.dircolors/dircolors.256dark)
+        eval $(dircolors -b $HOME/.dircolors/dircolors.256dark)
         ;;
     Darwin)
         alias ls="ls -G"
@@ -99,6 +99,10 @@ case $(setuptype) in
         PS1="[\[\e[38;05;9m\]\u\[\e[0m\]@\[\e[38;05;9m\]\h:\w\[\e[1;0m\]] "
         ;;
     laptop)
+        PS1="\[\e[38;5;214m\][\[\e[38;5;228m\]\u\[\e[38;5;214m\]@\[\e[38;5;228m\]\h"
+        PS1="${PS1}\[\e[38;5;214m\]:\[\e[0m\]\w$GITBRANCH\[\e[38;5;214m\]]\[\e[0m\] "
+        ;;
+    lxc)
         PS1="\[\e[38;5;214m\][\[\e[38;5;228m\]\u\[\e[38;5;214m\]@\[\e[38;5;228m\]\h"
         PS1="${PS1}\[\e[38;5;214m\]:\[\e[0m\]\w$GITBRANCH\[\e[38;5;214m\]]\[\e[0m\] "
         ;;
