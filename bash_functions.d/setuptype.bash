@@ -7,6 +7,11 @@
 #
 setuptype() {
     if (( $EUID == 0 )); then
+        if [[ $container == "lxc" ]]; then
+          echo "lxc"
+          return 
+        fi
+
         echo "root"
         return
     fi
