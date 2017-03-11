@@ -1,0 +1,1 @@
+/usr/local/Cellar/nvm/0.33.1/nvm.sh
