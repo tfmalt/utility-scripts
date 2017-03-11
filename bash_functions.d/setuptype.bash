@@ -22,8 +22,9 @@ setuptype() {
         elif [[ $(dmesg | grep "Booting paravirtualized kernel") ]]; then
 	    echo "linux-virtual"
 	    return
-        elif [[ $(dmesg | grep "Raspberry Pi") ]]; then
+        elif [[ $(uname -n) == "pi" ]]; then
             echo "linux-rpi"
+            export MALT_SETUPTYPE="Raspberry Pi"
             return
         fi
 
