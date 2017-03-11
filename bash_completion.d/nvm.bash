@@ -1,0 +1,1 @@
+/usr/local/Cellar/nvm/0.33.1/etc/bash_completion.d/nvm

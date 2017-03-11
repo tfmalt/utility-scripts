@@ -1,9 +1,17 @@
 #
 # A function for defining setuptypes according to criteria
 #
-
+# Copyright (c) 2012-2016 Thomas Malt <thomas@malt.no>
+#
+# License: MIT
+#
 setuptype() {
     if (( $EUID == 0 )); then
+        if [[ $container == "lxc" ]]; then
+          echo "lxc"
+          return 
+        fi
+
         echo "root"
         return
     fi
@@ -28,6 +36,18 @@ setuptype() {
 		echo "linux"
 		;;
 	esac
+        return
+     fi
+
+     if [[ $(uname | grep "Darwin") ]]; then
+        case $(hostname) in
+            *nrk.no)
+                echo "nrk-laptop"
+                ;;
+            wootz.malt.no)
+              echo "laptop"
+              ;;
+        esac
         return
      fi
 
