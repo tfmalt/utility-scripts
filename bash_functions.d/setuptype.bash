@@ -40,11 +40,11 @@ setuptype() {
      fi
 
      if [[ $(uname | grep "Darwin") ]]; then
-        case $(hostname) in
+        case $(hostname -s) in
             *nrk.no)
                 echo "nrk-laptop"
                 ;;
-            wootz.malt.no)
+            wootz|damaskus)
               echo "laptop"
               ;;
         esac
@@ -53,3 +53,5 @@ setuptype() {
 
      echo "laptop"
 }
+
+echo " - Setuptype: $(setuptype)"
