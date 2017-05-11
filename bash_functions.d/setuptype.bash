@@ -16,7 +16,11 @@ setuptype() {
         return
     fi
     if [[ $(uname) == "Linux" ]]; then
-        if [[ $(dmesg | grep "Booting paravirtualized kernel on bare hardware") ]]; then
+        if [[ $(uname -a | grep Microsoft) ]]; then
+          # I know I'm on windows
+          echo "windows"
+          return
+        elif [[ $(dmesg | grep "Booting paravirtualized kernel on bare hardware") ]]; then
             echo "linux-server"
             return
         elif [[ $(dmesg | grep "Booting paravirtualized kernel") ]]; then

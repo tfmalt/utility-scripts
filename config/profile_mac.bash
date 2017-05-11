@@ -9,15 +9,6 @@ if [ -n "$PS1" ]; then
     echo ""
 fi
 
-if (( $EUID == 0 )); then
-    # echo "Logged in as root: loading bash-completion"
-    if [ -f /usr/share/bash-completion/bash_completion ]; then
-        source /usr/share/bash-completion/bash_completion
-    elif [ -f /etc/bash_completion ]; then
-        source /etc/bash_completion
-    fi
-fi
-
 # setting vi mode
 set -o vi
 
@@ -55,11 +46,25 @@ else
 fi
 
 # Load bash completion
+if (( $EUID == 0 )); then
+    # echo "Logged in as root: loading bash-completion"
+    if [ -f /usr/share/bash-completion/bash_completion ]; then
+        source /usr/share/bash-completion/bash_completion
+    elif [ -f /etc/bash_completion ]; then
+        source /etc/bash_completion
+    fi
+fi
+
 if [ -d $HOME/.bash_completion.d ]; then
-    for FILE in $HOME/.bash_completion.d/*sh; do
-        source $FILE
-    done
-    export BASH_COMPLETION_LOADED="yes"
+  if [[ $(setuptype) == "windows" ]]; then
+    echo " - loading bash completions for windows"
+    source /etc/bash_completion
+  fi
+
+  for FILE in $HOME/.bash_completion.d/*sh; do
+    source $FILE
+  done
+  export BASH_COMPLETION_LOADED="yes"
 else
     unset BASH_COMPLETION_LOADED
 fi

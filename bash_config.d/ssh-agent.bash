@@ -11,25 +11,31 @@ function start_agent {
   echo succeeded
   chmod 600 "${SSH_ENV}"
   source "${SSH_ENV}" > /dev/null
+
+  case $(setuptype) in
+    laptop)
+      ssh-add -A 2>/dev/null
+      echo " - Adding ssh identities found in keychain to ssh-agent."
+      ;;
+    windows)
+      echo " - Adding ssh identities to ssh-agent: "
+      ssh-add
+      ;;
+    linux-rpi|root)
+      ;;
+  esac
 }
 
 # Source SSH settings, if applicable
 
 if [ -f "${SSH_ENV}" ]; then
   source "${SSH_ENV}" > /dev/null
-  ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
+  if [[ $(ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$) ]]; then
+    echo " - ssh-agent aleady running ($SSH_AGENT_PID)"
+  else
     start_agent;
-  }
+  fi
 else
   start_agent;
 fi
-
-case $(setuptype) in
-  laptop)
-    ssh-add -A 2>/dev/null
-    echo " - Adding ssh identities found in keychain to ssh-agent."
-    ;;
-  linux-rpi|root)
-    ;;
-esac
 
