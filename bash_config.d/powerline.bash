@@ -10,5 +10,5 @@ if [ -x /usr/bin/powerline ]; then
   export BASH_POWERLINE_LOADED="yes"
   echo " - powerline loaded for bash"
 else
-  unset BASH_POWERLINE_LOADED
+  export BASH_POWERLINE_LOADED="no"
 fi
