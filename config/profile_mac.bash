@@ -70,15 +70,12 @@ fi
 # Linux and MacOS specific setup
 case $(uname) in
     Linux)
+        eval $(dircolors -b $HOME/.dircolors/dircolors.256dark)
         alias ls="ls --color=auto"
         # eval $(dircolors -b $HOME/.dircolors/dircolors.256dark)
         ;;
     Darwin)
-        alias ls="ls -G"
         export LSCOLORS=exGxcxdxbxefedabafacad
-        # export JAVA_HOME=$(/usr/libexec/java_home)
-        # export EC2_HOME="${HOME}/src/ec2-api-tools-1.6.13.0"
-        # export PATH=$PATH:$EC2_HOME/bin
         ;;
 esac
 

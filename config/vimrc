@@ -38,7 +38,10 @@ let g:solarized_termtrans=1
 
 colorscheme molokai
 
+let s:uname = system("uname -s")
+if s:uname == "Linux\n"
+  python3 from powerline.vim import setup as powerline_setup
+  python3 powerline_setup()
+  python3 del powerline_setup
+endif
 
-python3 from powerline.vim import setup as powerline_setup
-python3 powerline_setup()
-python3 del powerline_setup

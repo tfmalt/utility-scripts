@@ -48,8 +48,8 @@ setuptype() {
             *nrk.no)
                 echo "nrk-laptop"
                 ;;
-            wootz|damaskus)
-              echo "laptop"
+              wootz|damaskus|alloy)
+                echo "laptop"
               ;;
         esac
         return
@@ -58,4 +58,6 @@ setuptype() {
      echo "laptop"
 }
 
-echo " - Setuptype: $(setuptype)"
+if [ -t 0 ]; then 
+  echo " - Setuptype: $(setuptype)"
+fi
