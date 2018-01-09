@@ -88,7 +88,7 @@ alias rm="rm -v"                                  #we like to be verbose
 alias mv="mv -v"
 alias cp="cp -v"
 
-if [ $BASH_POWERLINE_LOADED != "yes" ]; then
+if [ "x$BASH_POWERLINE_LOADED" != "xyes" ]; then
   # Setting the different command prompts.
   GITBRANCH="\[\e[38;5;196m\]\$(__git_ps1 ' %s')\[\e[0m\]"
   case $(setuptype) in
