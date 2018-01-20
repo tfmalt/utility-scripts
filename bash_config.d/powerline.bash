@@ -12,4 +12,6 @@ else
   export BASH_POWERLINE_LOADED="no"
 fi
 
-echo " - powerline loaded for bash: $BASH_POWERLINE_LOADED"
+if [ -t 0 ]; then
+  echo " - powerline loaded for bash: $BASH_POWERLINE_LOADED"
+fi
