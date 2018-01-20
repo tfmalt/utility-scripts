@@ -5,8 +5,8 @@
 #
 
 if [ -n "$PS1" ]; then
-    echo "uptime: " $(uptime)
-    echo ""
+    [ -t 0 ] && echo "uptime: " $(uptime)
+    [ -t 0 ] && echo ""
 fi
 
 # setting vi mode
@@ -140,4 +140,5 @@ if [ "x$BASH_POWERLINE_LOADED" != "xyes" ]; then
 fi
 
 export BASH_PROFILE_LOADED="yes"
-echo ""
+[ -t 0 ] && echo ""
+
