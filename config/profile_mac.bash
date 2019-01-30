@@ -4,6 +4,10 @@
 # @author Thomas Malt
 #
 
+# execute tmux if all constellations line up
+if command -v tmux &> /dev/null && [[ $- == *i* ]] && [ -z $TMUX ] && [[ $TERM != screen* ]]; then 
+    exec tmux
+fi
 # setting vi mode
 set -o vi
 
@@ -21,7 +25,7 @@ export PATH PERL5LIB
 # Locale settings
 EDITOR="vim"
 RSYNC_RSH="ssh"					# We use ssh for rsync
-TERM="xterm-256color"
+# TERM="xterm-256color"
 VISUAL=$EDITOR	       				# Same for Visual
 DIRCOLOR=1
 LANGUAGE="en_US.UTF-8"
@@ -64,4 +68,3 @@ fi
 
 export BASH_PROFILE_LOADED="yes"
 [ -t 0 ] && echo ""
-
