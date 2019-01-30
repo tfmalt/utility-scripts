@@ -57,7 +57,3 @@ setuptype() {
 
      echo "laptop"
 }
-
-if [ -t 0 ]; then 
-  echo " - Setuptype: $(setuptype)"
-fi
