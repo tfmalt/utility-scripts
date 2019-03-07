@@ -6,7 +6,7 @@ case $(uname) in
             eval $(dircolors -b $HOME/.dircolors/dircolors.256dark)
         fi
         alias ls="ls --color=auto"
-        # eval $(dircolors -b $HOME/.dircolors/dircolors.256dark)
+        eval $(dircolors -b $HOME/.dircolors/dircolors.256dark)
         ;;
     Darwin)
         export LSCOLORS=exGxcxdxbxefedabafacad
