@@ -1,0 +1,7 @@
+# Enables visible vi mode in bash
+set show-mode-in-prompt on
+
+# Updates the cursor to match the mode
+set vi-cmd-mode-string "\1\e[2 q\2"
+set vi-ins-mode-string "\1\e[6 q\2"
+
