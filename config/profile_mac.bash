@@ -8,6 +8,7 @@
 if command -v tmux &> /dev/null && [[ $- == *i* ]] && [ -z $TMUX ] && [[ $TERM != screen* ]]; then 
     exec tmux
 fi
+
 # setting vi mode
 set -o vi
 
@@ -68,3 +69,4 @@ fi
 
 export BASH_PROFILE_LOADED="yes"
 [ -t 0 ] && echo ""
+
