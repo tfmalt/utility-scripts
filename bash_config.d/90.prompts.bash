@@ -1,5 +1,5 @@
 
-if [ "x$BASH_POWERLINE_LOADED" != "xyes" ]; then
+if [ "x$BASH_POWERLINE_LOADED" != "xyes" ] && [[ $0 == "bash" ]]; then
   # Setting the different command prompts.
   GITBRANCH="\[\e[38;5;196m\]\$(__git_ps1 ' %s')\[\e[0m\]"
   case $(setuptype) in
