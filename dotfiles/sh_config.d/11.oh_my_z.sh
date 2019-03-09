@@ -56,13 +56,30 @@ if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
   # see 'man strftime' for details.
 
   HIST_STAMP="yyyy-mm-dd"
-  ZSH_DISABLE_COMPFIX=TRUE
+  ZSH_DISABLE_COMPFIX=true
 
   plugins=(
     git
     osx
     vi-mode
     cargo
+  )
+
+  POWERLEVEL9K_MODE='nerdfont-complete'
+  POWERLEVEL9K_SHORTEN_STRATEGY="truncate_to_last"
+  POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
+      os_icon
+      host
+      root_indicator 
+      dir 
+      vcs
+  )
+
+  POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
+      status 
+      vi_mode
+      background_jobs 
+      time
   )
 
   source $ZSH/oh-my-zsh.sh
