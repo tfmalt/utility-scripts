@@ -4,6 +4,25 @@
 
 #only run if shell is zsh
 
+rustc_version() {
+  [[ -z $(command -v rustc) ]] && return 127
+
+  rustc --version | awk '{print $2}'
+  return 0
+}
+
+custom_rust() {
+  if [[ -e Cargo.toml ]] || [[ $(find . -maxdepth 1 -name '*.rs' -print -quit) ]]; then
+    echo -e "\ue7a8 $(rustc_version)"
+  fi
+}
+
+custom_js() {
+  if [[ -e package.json ]] || [[ $(find . -maxdepth 1 -name '*.js' -print -quit) ]]; then
+    echo -e "\ue74e"
+  fi
+}
+
 if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
 
   [ -t 0 ] && echo "$ICON_OK Shell is zsh and found oh-my-zsh. Doing configuration."
@@ -72,6 +91,8 @@ if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
     dir 
     dir_writable
     nvm
+    custom_rust
+    custom_js
     vcs
   )
 
@@ -83,7 +104,11 @@ if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
       time
   )
 
+  POWERLEVEL9K_CUSTOM_RUST="custom_rust"
+  POWERLEVEL9K_CUSTOM_JS="custom_js"
+  POWERLEVEL9K_CUSTOM_JS_BACKGROUND='226'
   POWERLEVEL9K_TIME_FORMAT="%D{%H:%M}"
+  POWERLEVEL9K_CUSTOM_RUST_BACKGROUND='166'
   POWERLEVEL9K_ROOT_INDICATOR_BACKGROUND='160'
   POWERLEVEL9K_ROOT_INDICATOR_FOREGROUND='white'
   POWERLEVEL9K_CONTEXT_ROOT_BACKGROUND='160'
