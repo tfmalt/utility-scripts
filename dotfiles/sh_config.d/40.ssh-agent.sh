@@ -6,19 +6,19 @@
 SSH_ENV="$HOME/.ssh/environment"
 
 function start_agent {
-  [ -t 0 ] && echo -n " - Initialising new SSH agent... "
+  [ -t 0 ] && echo -ne "$ICON_INFO Initialising new SSH agent... "
   /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
-  [ -t 0 ] && echo succeeded
+  [ -t 0 ] && echo -e "$ICON_OK succeeded"
   chmod 600 "${SSH_ENV}"
   source "${SSH_ENV}" > /dev/null
 
   case $(setuptype) in
-    laptop)
+    macbook)
       ssh-add -A 2>/dev/null
-      [ -t 0 ] && echo " - Adding ssh identities found in keychain to ssh-agent."
+      [ -t 0 ] && echo -e "$ICON_INFO Adding ssh identities found in keychain to ssh-agent."
       ;;
     windows)
-      [ -t 0 ] && echo " - Adding ssh identities to ssh-agent: "
+      [ -t 0 ] && echo -e "$ICON_INFO Adding ssh identities to ssh-agent: "
       ssh-add
       ;;
     linux-rpi|root)
@@ -31,7 +31,7 @@ function start_agent {
 if [ -f "${SSH_ENV}" ]; then
   source "${SSH_ENV}" > /dev/null
   if [[ $(ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$) ]]; then
-    [ -t 0 ] && echo " - ssh-agent aleady running ($SSH_AGENT_PID)"
+    [ -t 0 ] && echo -e "$ICON_INFO ssh-agent aleady running ($SSH_AGENT_PID)"
   else
     start_agent;
   fi

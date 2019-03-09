@@ -5,13 +5,17 @@
 #
 
 case $(setuptype) in
-  laptop)
+  macbook)
     export NVM_DIR="$HOME/.nvm"
-    [ -t 0 ] && echo " - Running nvm setup: $NVM_DIR"
     ;;
   linux-rpi|root)
     export NVM_DIR="/usr/local/nvm"
-    [ -t 0 ] && echo " - Running nvm setup: $NVM_DIR"
     ;;
 esac
 
+if [ -e $NVM_DIR/nvm.sh ]; then
+  [ -t 0 ] && echo -e "$ICON_OK Found $NVM_DIR. Running nvm setup."
+  source $NVM_DIR/nvm.sh
+else
+  [ -t 0 ] && echo -e "$ICON_ERR nvm Not Found. Skipping."
+fi

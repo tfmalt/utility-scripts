@@ -49,7 +49,7 @@ setuptype() {
                 echo "nrk-laptop"
                 ;;
               wootz|damaskus|alloy)
-                echo "laptop"
+                echo "macbook"
               ;;
         esac
         return
