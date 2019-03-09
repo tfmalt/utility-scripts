@@ -1,12 +1,12 @@
 
-if [ "x$BASH_POWERLINE_LOADED" != "xyes" ] && [[ $0 == "bash" ]]; then
+if [[ $SHELL == *bash ]]; then
   # Setting the different command prompts.
   GITBRANCH="\[\e[38;5;196m\]\$(__git_ps1 ' %s')\[\e[0m\]"
   case $(setuptype) in
       root)
           PS1="[\[\e[38;05;9m\]\u\[\e[0m\]@\[\e[38;05;9m\]\h:\w\[\e[1;0m\]] "
           ;;
-      laptop)
+      macbook)
           PS1="\[\e[38;5;214m\][\[\e[38;5;228m\]\u\[\e[38;5;214m\]@\[\e[38;5;228m\]\h"
           PS1="${PS1}\[\e[38;5;214m\]:\[\e[0m\]\w$GITBRANCH\[\e[38;5;214m\]]\[\e[0m\] "
           ;;
@@ -51,4 +51,5 @@ if [ "x$BASH_POWERLINE_LOADED" != "xyes" ] && [[ $0 == "bash" ]]; then
           ;;
   esac
   export PS1
+  [ -t 0 ] && echo -e "$ICON_OK Shell is bash. Setting prompt for $(setuptype)"
 fi

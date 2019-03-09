@@ -4,26 +4,21 @@
 #
 
 case $(setuptype) in
-    laptop)
+    macbook)
         PIOPATH=$HOME/.platformio/penv/bin
-        if [ -d $PIOPATH ]; then
-            if [ -t 0 ]; then
-                echo " - platformio found. Adding to path."
-            fi
-            PATH="$PATH:$PIOPATH"
-        fi
     ;;
     windows)
         PIOPATH=/mnt/c/Users/thoma/.platformio/penv/Scripts
-        if [ -d $PIOPATH ]; then
-            if [ -t 0 ]; then
-                echo " - platformio found. adding to path."
-            fi
-            PATH="$PATH:$PIOPATH"
-        fi
         alias pio='pio.exe'
         alias platformio='platformio.exe'
     ;;
 esac
-export PATH
+
+if [ -d $PIOPATH ]; then
+    [ -t 0 ] &&  echo -e "$ICON_OK Found platformio. Adding to path."
+    PATH="$PATH:$PIOPATH"
+    export PATH
+else 
+    [ -t 0 ] && echo -e "$ICON_ERR Platformio Not Found. Skipping."
+fi
 
