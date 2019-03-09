@@ -70,6 +70,7 @@ if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
   POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
     context
     dir 
+    dir_writable
     nvm
     vcs
   )
@@ -81,6 +82,7 @@ if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
       command_execution_time
       time
   )
+
   POWERLEVEL9K_TIME_FORMAT="%D{%H:%M}"
   POWERLEVEL9K_ROOT_INDICATOR_BACKGROUND='160'
   POWERLEVEL9K_ROOT_INDICATOR_FOREGROUND='white'
