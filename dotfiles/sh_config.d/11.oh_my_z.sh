@@ -57,7 +57,7 @@ if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
 
   HIST_STAMP="yyyy-mm-dd"
   ZSH_DISABLE_COMPFIX=true
-
+  DEFAULT_USER="tm"
   plugins=(
     git
     osx
@@ -68,19 +68,32 @@ if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
   POWERLEVEL9K_MODE='nerdfont-complete'
   POWERLEVEL9K_SHORTEN_STRATEGY="truncate_to_last"
   POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
-      os_icon
-      host
-      root_indicator 
-      dir 
-      vcs
+    context
+    dir 
+    nvm
+    vcs
   )
 
   POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
       status 
       vi_mode
       background_jobs 
+      command_execution_time
       time
   )
+  POWERLEVEL9K_TIME_FORMAT="%D{%H:%M}"
+  POWERLEVEL9K_ROOT_INDICATOR_BACKGROUND='160'
+  POWERLEVEL9K_ROOT_INDICATOR_FOREGROUND='white'
+  POWERLEVEL9K_CONTEXT_ROOT_BACKGROUND='160'
+  POWERLEVEL9K_CONTEXT_ROOT_FOREGROUND='white'
+  POWERLEVEL9K_VI_INSERT_MODE_STRING="INSERT"
+  POWERLEVEL9K_VI_COMMAND_MODE_STRING="NORMAL"
+  POWERLEVEL9K_VI_MODE_INSERT_BACKGROUND='45'
+  POWERLEVEL9K_VI_MODE_INSERT_FOREGROUND='black'
+  POWERLEVEL9K_VI_MODE_NORMAL_BACKGROUND='245'
+  POWERLEVEL9K_VI_MODE_NORMAL_FOREGROUND='black'
+  POWERLEVEL9K_STATUS_OK_BACKGROUND='238'
+  POWERLEVEL9K_HOME_FOLDER_ABBREVIATION=""
 
   source $ZSH/oh-my-zsh.sh
 else
