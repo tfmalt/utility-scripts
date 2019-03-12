@@ -26,7 +26,7 @@ custom_js() {
 if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
 
   [ -t 0 ] && echo "$ICON_OK Shell is zsh and found oh-my-zsh. Doing configuration."
-  export ZSH="/Users/tm/.oh-my-zsh"
+  export ZSH="$HOME/.oh-my-zsh"
 
   # Set name of the theme to load --- if set to "random", it will
   # load a random theme each time oh-my-zsh is loaded, in which case,
