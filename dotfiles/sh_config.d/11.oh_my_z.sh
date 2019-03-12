@@ -34,10 +34,12 @@ if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
   # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 
   ZSH_THEME="powerlevel9k/powerlevel9k"
+  # ZSH_THEME="agnoster"
+
   # ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
 
   # Uncomment the following line to use case-sensitive completion.
-  # CASE_SENSITIVE="true"
+  CASE_SENSITIVE="true"
 
   # Uncomment the following line to use hyphen-insensitive completion.
   # Case-sensitive completion must be off. _ and - will be interchangeable.
@@ -79,13 +81,22 @@ if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
   DEFAULT_USER="tm"
   plugins=(
     git
+    brew
+    docker
     osx
+    npm
     vi-mode
     cargo
   )
 
   POWERLEVEL9K_MODE='nerdfont-complete'
-  POWERLEVEL9K_SHORTEN_STRATEGY="truncate_to_last"
+
+  # p9k directory truncation
+  POWERLEVEL9K_SHORTEN_STRATEGY="Default"
+  POWERLEVEL9K_SHORTEN_DIR_LENGTH=1
+  POWERLEVEL9K_SHORTEN_DELIMITER=".."
+
+  # Left prompt elements
   POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
     context
     dir 
@@ -101,7 +112,6 @@ if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
       vi_mode
       background_jobs 
       command_execution_time
-      time
   )
 
   POWERLEVEL9K_CUSTOM_RUST="custom_rust"
@@ -115,7 +125,7 @@ if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
   POWERLEVEL9K_CONTEXT_ROOT_FOREGROUND='white'
   POWERLEVEL9K_VI_INSERT_MODE_STRING="INSERT"
   POWERLEVEL9K_VI_COMMAND_MODE_STRING="NORMAL"
-  POWERLEVEL9K_VI_MODE_INSERT_BACKGROUND='240'
+  POWERLEVEL9K_VI_MODE_INSERT_BACKGROUND='243'
   POWERLEVEL9K_VI_MODE_INSERT_FOREGROUND='white'
   POWERLEVEL9K_VI_MODE_NORMAL_BACKGROUND='240'
   POWERLEVEL9K_VI_MODE_NORMAL_FOREGROUND='black'
