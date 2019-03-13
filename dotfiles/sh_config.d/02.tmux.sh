@@ -6,7 +6,7 @@
 #
 
 # execute tmux if all constellations line up
-if [[ $(command -v tmux) ]] && [[ $- == *i* ]] && [[ -z $TMUX ]] && [[ $TERM != screen* ]]; then 
+if [[ -z $SSH_CONNECTION ]] && [[ $(command -v tmux) ]] && [[ $- == *i* ]] && [[ -z $TMUX ]] && [[ $TERM != screen* ]]; then 
     exec tmux
 fi
 
