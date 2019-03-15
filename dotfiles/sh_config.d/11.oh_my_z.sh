@@ -133,6 +133,7 @@ if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
   POWERLEVEL9K_HOME_FOLDER_ABBREVIATION=""
 
   source $ZSH/oh-my-zsh.sh
+
 else
   [ -t 0 ] && echo -e "$ICON_ERR zsh not running ($0). Skipping zsh setup."
 fi
