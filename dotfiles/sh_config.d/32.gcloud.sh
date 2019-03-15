@@ -9,6 +9,7 @@ if [[ -e $(command -v gcloud) ]]; then
   [ -t 0 ] && echo -e "$ICON_OK Found gcloud. Setting up completion."
   case $(setuptype) in
     macbook)
+      export CLOUDSDK_PYTHON=/usr/local/bin/python
       CASKPATH='/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk'
       if [[ $SHELL == *zsh ]]; then
         source $CASKPATH/path.zsh.inc
