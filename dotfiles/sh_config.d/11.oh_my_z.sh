@@ -108,13 +108,17 @@ if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
   )
 
   POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
+      command_execution_time
+      background_jobs 
       status 
       vi_mode
-      background_jobs 
-      command_execution_time
   )
 
-  POWERLEVEL9K_CUSTOM_RUST="custom_rust"
+  # Context colors - linux-server
+  POWERLEVEL9K_CONTEXT_BACKGROUND='33' 
+  POWERLEVEL9K_CONTEXT_FOREGROUND='15'
+
+  POWERLEVEL9K_CUSTOM_RUST="custom_rust" 
   POWERLEVEL9K_CUSTOM_JS="custom_js"
   POWERLEVEL9K_CUSTOM_JS_BACKGROUND='226'
   POWERLEVEL9K_TIME_FORMAT="%D{%H:%M}"
