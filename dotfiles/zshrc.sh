@@ -3,6 +3,8 @@
 # @author Thomas Malt
 #
 
+zmodload zsh/zprof
+
 
 # First include all functions
 if [ -d $DOTFILES/sh_functions.d ]; then
