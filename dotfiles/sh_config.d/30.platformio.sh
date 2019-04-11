@@ -14,7 +14,7 @@ case $(setuptype) in
     ;;
 esac
 
-if [ -d $PIOPATH ]; then
+if [[ $PIOPATH ]] && [ -d $PIOPATH ]; then
     [ -t 0 ] &&  echo -e "$ICON_OK Found platformio. Adding to path."
     PATH="$PATH:$PIOPATH"
     export PATH
