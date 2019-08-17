@@ -28,15 +28,8 @@ if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
   [ -t 0 ] && echo "$ICON_OK Shell is zsh and found oh-my-zsh. Doing configuration."
   export ZSH="$HOME/.oh-my-zsh"
 
-  # Set name of the theme to load --- if set to "random", it will
-  # load a random theme each time oh-my-zsh is loaded, in which case,
-  # to know which specific one was loaded, run: echo $RANDOM_THEME
   # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-
   ZSH_THEME="powerlevel9k/powerlevel9k"
-  # ZSH_THEME="agnoster"
-
-  # ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
 
   # Uncomment the following line to use case-sensitive completion.
   CASE_SENSITIVE="true"
@@ -62,12 +55,12 @@ if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
 
   # Uncomment the following line to display red dots whilst waiting for 
   # completion.
-  # COMPLETION_WAITING_DOTS="true"
+  COMPLETION_WAITING_DOTS="true"
 
   # Uncomment the following line if you want to disable marking untracked files
   # under VCS as dirty. This makes repository status check for large repositories
   # much, much faster.
-  # DISABLE_UNTRACKED_FILES_DIRTY="true"
+  DISABLE_UNTRACKED_FILES_DIRTY="true"
 
   # Uncomment the following line if you want to change the command execution time
   # stamp shown in the history command output.
@@ -129,7 +122,7 @@ if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
   POWERLEVEL9K_CONTEXT_ROOT_FOREGROUND='white'
   POWERLEVEL9K_VI_INSERT_MODE_STRING="INSERT"
   POWERLEVEL9K_VI_COMMAND_MODE_STRING="NORMAL"
-  POWERLEVEL9K_VI_MODE_INSERT_BACKGROUND='243'
+  POWERLEVEL9K_VI_MODE_INSERT_BACKGROUND='2'
   POWERLEVEL9K_VI_MODE_INSERT_FOREGROUND='white'
   POWERLEVEL9K_VI_MODE_NORMAL_BACKGROUND='240'
   POWERLEVEL9K_VI_MODE_NORMAL_FOREGROUND='black'
