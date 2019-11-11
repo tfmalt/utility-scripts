@@ -45,10 +45,7 @@ setuptype() {
 
      if [[ $(uname | grep "Darwin") ]]; then
         case $(hostname -s) in
-            *nrk.no)
-                echo "nrk-laptop"
-                ;;
-              wootz|damaskus|alloy)
+              *)
                 echo "macbook"
               ;;
         esac
