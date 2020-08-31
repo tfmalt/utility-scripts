@@ -5,7 +5,7 @@
 # @author Thomas Malt
 #
 
-export SHELL="/usr/local/bin/bash"
+export SHELL=$(which bash)
 
 # setting vi mode
 set -o vi
