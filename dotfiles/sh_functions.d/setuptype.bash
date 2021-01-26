@@ -16,7 +16,7 @@ setuptype() {
         return
     fi
     if [[ $(uname) == "Linux" ]]; then
-        if [[ $(uname -a | grep Microsoft) ]]; then
+        if [[ $(uname -a | grep -i Microsoft) ]]; then
           # I know I'm on windows
           echo "windows"
           return

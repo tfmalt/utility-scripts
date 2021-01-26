@@ -5,7 +5,7 @@
 # @author Thomas Malt
 #
 
-export SHELL="/usr/local/bin/bash"
+export SHELL=$(which bash)
 
 # setting vi mode
 set -o vi
@@ -59,3 +59,7 @@ else
 fi
 
 export BASH_PROFILE_LOADED="yes"
+
+export NVM_DIR="/usr/local/nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
