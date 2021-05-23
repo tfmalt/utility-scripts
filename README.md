@@ -1,14 +1,20 @@
-Various scripts to make work easier
-===================================
+# Various scripts to make work easier
 
-Feel free to use or contribute if you come across this repo by accident
+This repository contains my personal dotfiles and configuration for unix/posix
+shells and coomand line tools in general. Feel free to use them if you find
+anything useful.
+
+A couple of years ago I migrated from bash to zsh. All scripts and snippets should
+be compatible with both shells, but some bugs might appear as I don't
+actively verify outside my own environment on a day to day basis.
+
+Feel free to use or contribute if you come across this repo by accident.
 Currently this repo contains the following scripts:
 
- - __lspd.bash__: 
-   A script for grepping a folder and listing all dependencies found
-   in Module::Install Makefile.PL syntax
- - __tap-functions.bash__: 
-   bash implementation of tap test library. Nice to have. Downloaded 
-   from http://svn.solucorp.qc.ca/repos/solucorp/JTap/trunk/
-   Licenced as GPL
+## Install
 
+1. Run the install.sh script
+
+```
+$ ./install.sh
+```
