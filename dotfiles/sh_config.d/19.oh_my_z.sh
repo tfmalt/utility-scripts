@@ -29,7 +29,7 @@ if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
   export ZSH="$HOME/.oh-my-zsh"
 
   # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-  ZSH_THEME="powerlevel9k/powerlevel9k"
+  ZSH_THEME="powerlevel10k/powerlevel10k"
 
   # Uncomment the following line to use case-sensitive completion.
   CASE_SENSITIVE="true"
