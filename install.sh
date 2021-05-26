@@ -46,7 +46,7 @@ if [ ! -d "$ZSH" ]; then
         -c fsck.zeroPaddedFilemode=ignore \
         -c fetch.fsck.zeroPaddedFilemode=ignore \
         -c receive.fsck.zeroPaddedFilemode=ignore \
-        --depth=1 https://github.com/ohmyzsh/ohmyzsh.git "$ZSH" 2&>1 > /dev/null
+        --depth=1 https://github.com/ohmyzsh/ohmyzsh.git "$ZSH" 2>&1 > /dev/null
 
     if [ $? -eq 0 ]; then
         echo " Done"
@@ -63,7 +63,7 @@ echo -n ${(l:$PAD:)OUTPUT}:
 
 if [ ! -d "$ZSH_CUSTOM/themes/powerlevel10k" ]; then
     # Add powerlevel10k to the list of Oh My Zsh themes.
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/themes/powerlevel10k 2&>1 > /dev/null 
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/themes/powerlevel10k 2>&1 > /dev/null 
 
     if [ $? -eq 0 ]; then
         echo " Done"
@@ -80,7 +80,7 @@ echo -n ${(l:$PAD:)OUTPUT}:
 if [ -e "$HOME/.volta" ]; then
     echo " exists"
 else 
-    curl https://get.volta.sh | bash -s -- --skip-setup
+    curl -s https://get.volta.sh | bash -s -- --skip-setup
 fi
 
 OUTPUT="writing"
