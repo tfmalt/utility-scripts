@@ -73,13 +73,12 @@ if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
   ZSH_DISABLE_COMPFIX=true
   DEFAULT_USER="tm"
   plugins=(
-    git
-    brew
     docker
     osx
     npm
     vi-mode
     cargo
+    wakeonlan
   )
 
   POWERLEVEL9K_MODE='nerdfont-complete'
@@ -94,7 +93,6 @@ if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
     context
     dir 
     dir_writable
-    nvm
     custom_rust
     custom_js
     vcs
