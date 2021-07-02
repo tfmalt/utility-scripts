@@ -13,7 +13,7 @@ COL_STOP="\e[0m"
 # Icons
 ICON_OK="$COL_GREEN2  ✔$COL_STOP"
 ICON_ERR="$COL_RED  ✘$COL_STOP"
-ICON_INFO="  ⭐"
+ICON_INFO="$COL_GREEN2  ✔$COL_STOP"
 
 # delay to set vim mode
 KEYTIMEOUT=1
