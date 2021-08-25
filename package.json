@@ -1,0 +1,9 @@
+{
+  "name": "utility-scripts",
+  "version": "1.0.1",
+  "description": "Various shell scripts to make work easier",
+  "main": "index.js",
+  "repository": "git@github.com:tfmalt/utility-scripts.git",
+  "author": "Thomas Malt <thomas@malt.no>",
+  "license": "MIT"
+}
