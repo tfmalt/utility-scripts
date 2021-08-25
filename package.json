@@ -1,6 +1,6 @@
 {
   "name": "utility-scripts",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Various shell scripts to make work easier",
   "main": "",
   "repository": "git@github.com:tfmalt/utility-scripts.git",
