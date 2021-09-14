@@ -4,6 +4,8 @@
 #
 
 zmodload zsh/zprof
+# autoload -U compinit
+# compinit -i
 
 
 # First include all functions
