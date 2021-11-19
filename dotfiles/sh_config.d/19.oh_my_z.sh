@@ -53,7 +53,7 @@ if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
   # Uncomment the following line to enable command auto-correction.
   # ENABLE_CORRECTION="true"
 
-  # Uncomment the following line to display red dots whilst waiting for 
+  # Uncomment the following line to display red dots whilst waiting for
   # completion.
   COMPLETION_WAITING_DOTS="true"
 
@@ -74,7 +74,7 @@ if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
   DEFAULT_USER="tm"
   plugins=(
     docker
-    osx
+    macos
     npm
     vi-mode
     cargo
@@ -91,7 +91,7 @@ if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
   # Left prompt elements
   POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
     context
-    dir 
+    dir
     dir_writable
     custom_rust
     custom_js
@@ -99,17 +99,17 @@ if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
   )
 
   POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
-      command_execution_time
-      background_jobs 
-      status 
-      vi_mode
+    command_execution_time
+    background_jobs
+    status
+    vi_mode
   )
 
   # Context colors - linux-server
-  POWERLEVEL9K_CONTEXT_BACKGROUND='33' 
+  POWERLEVEL9K_CONTEXT_BACKGROUND='33'
   POWERLEVEL9K_CONTEXT_FOREGROUND='15'
 
-  POWERLEVEL9K_CUSTOM_RUST="custom_rust" 
+  POWERLEVEL9K_CUSTOM_RUST="custom_rust"
   POWERLEVEL9K_CUSTOM_JS="custom_js"
   POWERLEVEL9K_CUSTOM_JS_BACKGROUND='226'
   POWERLEVEL9K_TIME_FORMAT="%D{%H:%M}"
@@ -132,4 +132,3 @@ if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
 else
   [ -t 0 ] && echo -e "$ICON_ERR zsh not running ($0). Skipping zsh setup."
 fi
-
