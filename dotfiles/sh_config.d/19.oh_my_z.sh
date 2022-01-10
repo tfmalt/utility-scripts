@@ -74,10 +74,11 @@ if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
   DEFAULT_USER="tm"
   plugins=(
     docker
+    history
     macos
     npm
     vi-mode
-    cargo
+    rust
     wakeonlan
   )
 
