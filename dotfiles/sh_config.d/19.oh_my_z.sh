@@ -84,6 +84,7 @@ if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
     gatsby
     gh
     volta
+    pip
   )
 
   POWERLEVEL9K_MODE='nerdfont-complete'
