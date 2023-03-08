@@ -1,7 +1,7 @@
 # Various scripts to make work easier
 
 This repository contains my personal dotfiles and configuration for unix/posix
-shells and coomand line tools in general. Feel free to use them if you find
+shells and command line tools in general. Feel free to use them if you find
 anything useful.
 
 A couple of years ago I migrated from bash to zsh. All scripts and snippets should
