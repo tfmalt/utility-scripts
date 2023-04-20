@@ -5,6 +5,8 @@
 
 # Locale settings
 LC_ALL=en_US.UTF-8
+LANGUAGE=en_US.UTF-8
+LANG=en_US.UTF-8
 
-export LC_ALL
+export LC_ALL LANGUAGE LANG
 
