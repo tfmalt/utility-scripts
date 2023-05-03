@@ -19,6 +19,7 @@ linux-server) ;;
 
 windows)
   alias dotnet="dotnet.exe"
+  alias code="code-insiders"
   ;;
 esac
 
@@ -27,3 +28,4 @@ alias week="date +'%A %d %B %k:%M:%S Week %W'"
 alias rm="rm -v" #we like to be verbose
 alias mv="mv -v"
 alias cp="cp -v"
+alias cal="ncal -M"

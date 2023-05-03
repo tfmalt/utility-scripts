@@ -80,8 +80,11 @@ if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
     vi-mode
     rust
     wakeonlan
-    yarn-completion
-    zsh-completions
+    yarn
+    gatsby
+    gh
+    volta
+    pip
   )
 
   POWERLEVEL9K_MODE='nerdfont-complete'
