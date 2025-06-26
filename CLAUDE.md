@@ -9,6 +9,7 @@ This is a comprehensive dotfiles management system that provides a complete Unix
 ## Essential Commands
 
 ### Installation and Management
+
 ```bash
 ./install.sh                    # Interactive installation with prompts
 ./install.sh -v                 # Verbose mode with detailed logging
@@ -19,6 +20,7 @@ This is a comprehensive dotfiles management system that provides a complete Unix
 ```
 
 ### Dependencies
+
 ```bash
 npm install  # Install git utilities (git-open, git-recent, git-extras, etc.)
 git submodule update --init --recursive  # Initialize vim colorscheme submodule
@@ -27,6 +29,7 @@ git submodule update --init --recursive  # Initialize vim colorscheme submodule
 ## Architecture Overview
 
 ### Modular Configuration System
+
 The shell configuration uses a numbered loading system in `dotfiles/sh_config.d/`:
 
 - `01-09`: Helper functions and core utilities
@@ -60,6 +63,7 @@ The shell configuration uses a numbered loading system in `dotfiles/sh_config.d/
 - Provides fallback for missing components
 
 ### Configuration Flow
+
 1. `~/.zshrc` → `$DOTFILES/zshrc.sh` (entry point)
 2. Load `sh_functions.d/*.bash` (system utilities)
 3. Source `sh_config.d/*.sh` in numerical order (modular config)
@@ -68,17 +72,20 @@ The shell configuration uses a numbered loading system in `dotfiles/sh_config.d/
 ## Development Patterns
 
 ### Adding New Configurations
+
 - Place shell configs in `dotfiles/sh_config.d/` with appropriate number prefix
 - Use `setuptype()` function for platform-specific logic
 - Add functions to `dotfiles/sh_functions.d/` for reusable utilities
 
 ### Modifying install.sh
+
 - Maintain existing pattern of padded output and confirmation prompts
 - Use `log_verbose()` for debug information
 - Follow backup/restore pattern for any new file operations
 - Test both verbose and quiet modes
 
 ### Working with Submodules
+
 - Vim colorschemes are managed as git submodule in `dotfiles/vim/awesome-vim-colorschemes`
 - Use `git config submodule.dotfiles/vim/awesome-vim-colorschemes.ignore all` to ignore changes
 - Install script automatically initializes submodules during setup
