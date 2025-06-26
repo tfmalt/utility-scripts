@@ -162,6 +162,25 @@ command_exists() {
     command -v "$1" >/dev/null 2>&1
 }
 
+# Function to initialize git submodules
+init_submodules() {
+    local submodule_path="$1"
+    local submodule_name="$2"
+    
+    if [ ! -d "$submodule_path" ] || [ -z "$(ls -A "$submodule_path" 2>/dev/null)" ]; then
+        log_verbose "Initializing submodule: $submodule_name"
+        if [ "$VERBOSE" = true ]; then
+            git submodule update --init --recursive "$submodule_path"
+        else
+            git submodule update --init --recursive "$submodule_path" 2>&1 > /dev/null
+        fi
+        return 0
+    else
+        log_verbose "Submodule already initialized: $submodule_name"
+        return 1
+    fi
+}
+
 # Function to check dependencies
 check_dependencies() {
     local missing_deps=()
@@ -304,6 +323,15 @@ backup_file "$INSTALL_PREFIX/.vim"
 create_symlink "$DOTFILES/vimrc" "$INSTALL_PREFIX/.vimrc" ".vimrc"
 create_symlink "$DOTFILES/vim" "$INSTALL_PREFIX/.vim" ".vim"
 echo ""
+
+# ---------------------------------------------------------------------------
+OUTPUT="initializing vim themes"
+echo -n "$(pad_output "$OUTPUT"):"
+if init_submodules "$DOTFILES/vim/awesome-vim-colorschemes" "awesome-vim-colorschemes"; then
+    echo " Done"
+else
+    echo " exists"
+fi
 # ---------------------------------------------------------------------------
 OUTPUT="installing oh my zsh"
 echo -n "$(pad_output "$OUTPUT"):"
