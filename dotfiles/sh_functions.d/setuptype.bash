@@ -9,7 +9,7 @@ setuptype() {
     if (( $EUID == 0 )); then
         if [[ $container == "lxc" ]]; then
           echo "lxc"
-          return 
+          return
         fi
 
         echo "root"
@@ -24,22 +24,22 @@ setuptype() {
             echo "linux-server"
             return
         elif [[ $(dmesg | grep "Booting paravirtualized kernel") ]]; then
-	    echo "linux-virtual"
-	    return
+            echo "linux-virtual"
+            return
         elif [[ $(uname -n) == "pi" ]]; then
             echo "linux-rpi"
             export MALT_SETUPTYPE="Raspberry Pi"
             return
         fi
 
-	case $(hostname) in
-	    duro*)
-		echo "linux-server"
-		;;
-	    *)
-		echo "linux"
-		;;
-	esac
+        case $(hostname) in
+            duro*)
+                echo "linux-server"
+                ;;
+            *)
+                echo "linux"
+                ;;
+        esac
         return
      fi
 
