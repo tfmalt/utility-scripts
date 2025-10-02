@@ -73,18 +73,24 @@ if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
   ZSH_DISABLE_COMPFIX=true
   DEFAULT_USER="tm"
   plugins=(
+    git
     docker
     history
     macos
+    brew
     npm
+    yarn
+    node
     vi-mode
     rust
     wakeonlan
-    yarn
     gatsby
     gh
     volta
     pip
+    fzf
+    zsh-autosuggestions
+    zsh-syntax-highlighting
   )
 
   POWERLEVEL9K_MODE='nerdfont-complete'
