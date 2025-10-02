@@ -1,12 +1,16 @@
 # -*- sh -*-
 # @author Thomas Malt
 #
-# HOMEBREW_GITHUB_API_TOKEN="45ef92b6b2a85077d86e9e7f8e595012f08dc5e6"
-HOMEBREW_GITHUB_API_TOKEN="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"
+# Configure Homebrew GitHub token if provided via environment.
+# Do not commit secrets here. Set HOMEBREW_GITHUB_API_TOKEN externally.
 
 case $(setuptype) in
     macbook)
-        export HOMEBREW_GITHUB_API_TOKEN
-        [ -t 0 ] && echo -e "$ICON_OK Setting github token for Homebrew"
+        if [ -n "$HOMEBREW_GITHUB_API_TOKEN" ]; then
+          export HOMEBREW_GITHUB_API_TOKEN
+          [ -t 0 ] && echo -e "$ICON_OK Using HOMEBREW_GITHUB_API_TOKEN from environment for Homebrew"
+        else
+          [ -t 0 ] && echo -e "$ICON_INFO HOMEBREW_GITHUB_API_TOKEN not set; proceeding without it"
+        fi
     ;;
 esac

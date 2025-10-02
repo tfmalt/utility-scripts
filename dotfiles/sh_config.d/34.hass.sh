@@ -11,10 +11,12 @@ export PATH
 
 if [[ -x $HOME/.local/bin/hass-cli ]]; then
   alias hass=hass-cli
-  export HASS_SERVER="http://192.168.71.3:8123"
-  export HASS_TOKEN="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJjZTRiYzIzM2I4ZjA0NjI0YmY0M2JhNmY4YTBlMzQ0NSIsImlhdCI6MTU5MTEzNjA2MSwiZXhwIjoxOTA2NDk2MDYxfQ.hXH3xdK3N2plRxPTqyXdSILlSXZn2BbSBkCm0G8-Lws"
-
+  # Default server can be overridden with environment
+  export HASS_SERVER="${HASS_SERVER:-http://192.168.71.3:8123}"
+  # Expect HASS_TOKEN to be provided via environment or a secrets manager
+  if [ -z "$HASS_TOKEN" ]; then
+    [ -t 0 ] && echo -e "$ICON_INFO HASS_TOKEN not set; hass-cli may prompt for authentication."
+  fi
   # source <($HOME/.local/bin/hass-cli completion zsh)
-
   [ -t 0 ] && echo -e "$ICON_OK Found hass-cli. Setting up."
 fi
