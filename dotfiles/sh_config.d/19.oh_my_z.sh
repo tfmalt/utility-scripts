@@ -89,8 +89,6 @@ if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
     volta
     pip
     fzf
-    zsh-autosuggestions
-    zsh-syntax-highlighting
   )
 
   POWERLEVEL9K_MODE='nerdfont-complete'
