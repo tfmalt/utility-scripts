@@ -1,3 +1,4 @@
 [submodule "dotfiles/vim/awesome-vim-colorschemes"]
 	path = dotfiles/vim/awesome-vim-colorschemes
 	url = https://github.com/rafi/awesome-vim-colorschemes.git
+	ignore = all
