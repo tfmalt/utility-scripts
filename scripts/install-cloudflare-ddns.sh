@@ -183,8 +183,9 @@ install_systemd() {
     fi
 
     # Copy and customize service file
-    # Replace %h/src/tfmalt/utility-scripts with actual path
-    sed "s|%h/src/tfmalt/utility-scripts|${REPO_ROOT}|g" \
+    # Replace %h with actual home directory and repo path
+    sed -e "s|%h|${HOME}|g" \
+        -e "s|${HOME}/src/tfmalt/utility-scripts|${REPO_ROOT}|g" \
         "${REPO_ROOT}/systemd/cloudflare-ddns.service" > "${SERVICE_FILE}"
 
     # Copy timer file
