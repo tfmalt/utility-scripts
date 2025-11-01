@@ -1,0 +1,17 @@
+[Unit]
+Description=Cloudflare Dynamic DNS Update Timer
+Documentation=https://github.com/tfmalt/utility-scripts
+Requires=cloudflare-ddns.service
+
+[Timer]
+# Run 2 minutes after boot
+OnBootSec=2min
+
+# Run every 3 minutes thereafter
+OnUnitActiveSec=3min
+
+# If system was down when timer should have triggered, run immediately on boot
+Persistent=true
+
+[Install]
+WantedBy=timers.target

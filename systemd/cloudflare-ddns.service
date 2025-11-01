@@ -1,0 +1,36 @@
+[Unit]
+Description=Cloudflare Dynamic DNS Update
+Documentation=https://github.com/tfmalt/utility-scripts
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+# Update with actual user
+User=%u
+Group=%u
+
+# Source Cloudflare credentials
+EnvironmentFile=%h/.config/cloudflare/credentials
+
+# Source shell functions if available (for myip function)
+# This enables the script to use shell environment
+ExecStartPre=/bin/bash -c 'if [ -f "%h/.zshrc" ]; then source "%h/.zshrc"; fi'
+
+# Run the DDNS update script
+ExecStart=/bin/bash %h/src/tfmalt/utility-scripts/scripts/cloudflare-ddns.sh
+
+# Security hardening
+PrivateTmp=yes
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=%h/.cache/cloudflare-ddns
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=cloudflare-ddns
+
+[Install]
+WantedBy=multi-user.target
