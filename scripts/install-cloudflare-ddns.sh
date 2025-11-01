@@ -176,8 +176,15 @@ install_systemd() {
     # Create systemd user directory
     mkdir -p "${SYSTEMD_USER_DIR}"
 
+    # Stop timer if running
+    if systemctl --user is-active --quiet cloudflare-ddns.timer 2>/dev/null; then
+        info "Stopping existing timer..."
+        systemctl --user stop cloudflare-ddns.timer
+    fi
+
     # Copy and customize service file
-    sed "s|%h/src/tfmalt/utility-scripts/scripts/cloudflare-ddns.sh|${SCRIPT_DIR}/cloudflare-ddns.sh|g" \
+    # Replace %h/src/tfmalt/utility-scripts with actual path
+    sed "s|%h/src/tfmalt/utility-scripts|${REPO_ROOT}|g" \
         "${REPO_ROOT}/systemd/cloudflare-ddns.service" > "${SERVICE_FILE}"
 
     # Copy timer file
@@ -237,22 +244,24 @@ main() {
     echo "============================================"
     echo ""
 
+    # Always check dependencies
+    check_dependencies
+    check_credentials
+
     # Check if already configured
     if [ -f "${CONFIG_FILE}" ]; then
         warning "Configuration file already exists: ${CONFIG_FILE}"
-        read -rp "Do you want to reconfigure? (y/N): " reconfigure
-        if [[ ! "${reconfigure}" =~ ^[Yy]$ ]]; then
-            info "Skipping configuration..."
-        else
+        read -rp "Do you want to reconfigure DNS records? (y/N): " reconfigure
+        if [[ "${reconfigure}" =~ ^[Yy]$ ]]; then
             configure_records
+        else
+            info "Keeping existing DNS configuration"
         fi
     else
-        check_dependencies
-        check_credentials
         configure_records
     fi
 
-    # Install systemd files
+    # Install systemd files (always update them)
     install_systemd
 
     # Enable timer

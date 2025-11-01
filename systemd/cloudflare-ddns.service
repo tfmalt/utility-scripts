@@ -6,19 +6,10 @@ Wants=network-online.target
 
 [Service]
 Type=oneshot
-# Update with actual user
-User=%u
-Group=%u
-
-# Source Cloudflare credentials
-EnvironmentFile=%h/.config/cloudflare/credentials
-
-# Source shell functions if available (for myip function)
-# This enables the script to use shell environment
-ExecStartPre=/bin/bash -c 'if [ -f "%h/.zshrc" ]; then source "%h/.zshrc"; fi'
 
 # Run the DDNS update script
-ExecStart=/bin/bash %h/src/tfmalt/utility-scripts/scripts/cloudflare-ddns.sh
+# Note: Script will source credentials internally
+ExecStart=/bin/bash -c 'source %h/.config/cloudflare/credentials && %h/src/tfmalt/utility-scripts/scripts/cloudflare-ddns.sh'
 
 # Security hardening
 PrivateTmp=yes
