@@ -1,0 +1,43 @@
+name: ShellCheck
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  shellcheck:
+    name: Shellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: '.'
+          severity: warning
+          ignore_paths: |
+            dotfiles/vim
+            .git
+            node_modules
+          ignore_names: |
+            p10k.zsh
+        env:
+          SHELLCHECK_OPTS: -e SC1090 -e SC1091
+
+      - name: Check install.sh specifically
+        run: |
+          shellcheck install.sh
+
+      - name: Check all shell config files
+        run: |
+          find dotfiles/sh_config.d -name "*.sh" -exec shellcheck {} +
+
+      - name: Check all shell function files
+        run: |
+          find dotfiles/sh_functions.d -name "*.bash" -exec shellcheck {} +
