@@ -417,6 +417,33 @@ OUTPUT=""
 echo "Installation complete!"
 echo "--------------------------------------------------------------------------------"
 
+# Check for Cloudflare credentials
+CLOUDFLARE_CREDS="$INSTALL_PREFIX/.config/cloudflare/credentials"
+if [ ! -f "$CLOUDFLARE_CREDS" ]; then
+    if command -v flarectl &> /dev/null; then
+        echo ""
+        echo "Note: flarectl is installed but Cloudflare credentials not found."
+        echo ""
+        echo "To configure Cloudflare API integration:"
+        echo "  1. Create the directory: mkdir -p ~/.config/cloudflare"
+        echo "  2. Create credentials file: touch ~/.config/cloudflare/credentials"
+        echo "  3. Set secure permissions: chmod 600 ~/.config/cloudflare/credentials"
+        echo "  4. Add your token: echo 'export CF_API_TOKEN=your_token_here' > ~/.config/cloudflare/credentials"
+        echo ""
+        echo "See README.md for detailed instructions on creating a Cloudflare API token."
+        echo "--------------------------------------------------------------------------------"
+    fi
+else
+    # Verify permissions
+    PERM=$(stat -f '%A' "$CLOUDFLARE_CREDS" 2>/dev/null || stat -c '%a' "$CLOUDFLARE_CREDS" 2>/dev/null)
+    if [ "$PERM" != "600" ]; then
+        echo ""
+        echo "Warning: Cloudflare credentials file has insecure permissions ($PERM)"
+        echo "  Run: chmod 600 $CLOUDFLARE_CREDS"
+        echo "--------------------------------------------------------------------------------"
+    fi
+fi
+
 # Offer to source the new configuration
 if [ -f "$INSTALL_PREFIX/.zshrc" ]; then
     echo "Your new shell configuration is ready."
