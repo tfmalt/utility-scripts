@@ -11,12 +11,8 @@ Type=oneshot
 # Note: Script will source credentials internally
 ExecStart=/bin/bash -c 'source %h/.config/cloudflare/credentials && %h/src/tfmalt/utility-scripts/scripts/cloudflare-ddns.sh'
 
-# Security hardening
+# Basic security hardening (compatible with user services)
 PrivateTmp=yes
-NoNewPrivileges=yes
-ProtectSystem=strict
-ProtectHome=read-only
-ReadWritePaths=%h/.cache/cloudflare-ddns
 
 # Logging
 StandardOutput=journal
