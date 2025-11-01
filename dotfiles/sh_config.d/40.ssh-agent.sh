@@ -30,8 +30,9 @@ function start_agent {
 
 if [ -f "${SSH_ENV}" ]; then
   source "${SSH_ENV}" >/dev/null
-  if [[ $(ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$) ]]; then
-    [ -t 0 ] && echo -e "$ICON_INFO ssh-agent aleady running ($SSH_AGENT_PID)"
+  # Check if the SSH_AGENT_PID process exists and is actually ssh-agent
+  if [ -n "${SSH_AGENT_PID}" ] && ps -p "${SSH_AGENT_PID}" >/dev/null 2>&1 && ps -p "${SSH_AGENT_PID}" -o comm= 2>/dev/null | grep -q '^ssh-agent$'; then
+    [ -t 0 ] && echo -e "$ICON_INFO ssh-agent already running ($SSH_AGENT_PID)"
   else
     start_agent
   fi
