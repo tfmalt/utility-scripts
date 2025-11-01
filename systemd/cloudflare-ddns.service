@@ -6,13 +6,12 @@ Wants=network-online.target
 
 [Service]
 Type=oneshot
+Environment="CF_API_TOKEN_FILE=%h/.config/cloudflare/credentials"
+# Add Homebrew to PATH (Linux Homebrew location)
+Environment="PATH=/home/linuxbrew/.linuxbrew/bin:/usr/local/bin:/usr/bin:/bin"
 
-# Run the DDNS update script
-# Note: Script will source credentials internally
-ExecStart=/bin/bash -c 'source %h/.config/cloudflare/credentials && %h/src/tfmalt/utility-scripts/scripts/cloudflare-ddns.sh'
-
-# Basic security hardening (compatible with user services)
-PrivateTmp=yes
+# Run the DDNS update script with explicit bash and sourcing
+ExecStart=/bin/bash -c 'set -a; source ${CF_API_TOKEN_FILE}; set +a; exec %h/src/tfmalt/utility-scripts/scripts/cloudflare-ddns.sh'
 
 # Logging
 StandardOutput=journal
