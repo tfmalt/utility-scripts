@@ -17,9 +17,9 @@ function start_agent {
     ssh-add -A 2>/dev/null
     [ -t 0 ] && echo -e "$ICON_INFO Adding ssh identities found in keychain to ssh-agent."
     ;;
-  windows)
-    [ -t 0 ] && echo -e "$ICON_INFO Adding ssh identities to ssh-agent: "
-    ssh-add
+  windows | linux-server | linux | linux-virtual)
+    [ -t 0 ] && echo -e "$ICON_INFO Adding ssh identities to ssh-agent"
+    ssh-add 2>/dev/null
     ;;
   linux-rpi | root) ;;
 
