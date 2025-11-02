@@ -16,9 +16,12 @@ CLOUDFLARE_CREDENTIALS="$HOME/.config/cloudflare/credentials"
 
 if [ -f "$CLOUDFLARE_CREDENTIALS" ]; then
   # Check file permissions for security
-  if [ "$(stat -f '%A' "$CLOUDFLARE_CREDENTIALS" 2>/dev/null || stat -c '%a' "$CLOUDFLARE_CREDENTIALS" 2>/dev/null)" != "600" ]; then
+  # Use lowercase %a for Linux (numeric), uppercase %Lp for macOS (octal)
+  PERMS=$(stat -c '%a' "$CLOUDFLARE_CREDENTIALS" 2>/dev/null || stat -f '%Lp' "$CLOUDFLARE_CREDENTIALS" 2>/dev/null)
+  if [ "$PERMS" != "600" ]; then
     [ -t 0 ] && echo -e "${ICON_WARN:-⚠️ } Warning: $CLOUDFLARE_CREDENTIALS has insecure permissions. Run: chmod 600 $CLOUDFLARE_CREDENTIALS"
   fi
+  unset PERMS
 
   # Source the credentials file
   source "$CLOUDFLARE_CREDENTIALS"
