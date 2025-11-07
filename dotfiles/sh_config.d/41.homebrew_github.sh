@@ -31,6 +31,9 @@ case $(setuptype) in
         ;;
 esac
 
+# Disable Homebrew environment hints
+export HOMEBREW_NO_ENV_HINTS=1
+
 # Configure Homebrew GitHub token if provided via environment
 # This helps avoid GitHub API rate limits when installing from Homebrew
 if command -v brew &> /dev/null; then
