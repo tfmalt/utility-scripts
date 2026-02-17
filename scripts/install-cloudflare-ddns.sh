@@ -164,7 +164,7 @@ EOF
     echo "  Zone: ${zone}"
     echo "  Records:"
     for record in "${records[@]}"; do
-        IFS=':' read -r id name proxy <<< "${record}"
+        IFS=':' read -r _ name proxy <<< "${record}"
         echo "    - ${name} (proxy: ${proxy})"
     done
 }

@@ -1,36 +1,44 @@
 #!/bin/bash
 
-CACHEDIR=/var/lib/squeezeboxserver/cache/spotifycache/Storage 
+CACHEDIR="/var/lib/squeezeboxserver/cache/spotifycache/Storage"
 
-cd $CACHEDIR
+cd "$CACHEDIR" || exit 1
 
-clear;
-while true; do 
-	tput eo
-	tput cup 0 0  
-	echo "Cache Size:      $(du -sh .)"
- 	echo "Directory Count: $(ls -1 | grep -v index.dat | wc -l) " 
-	tput el
-	echo "" 
+clear
+while true; do
+    tput eo
+    tput cup 0 0
+    echo "Cache Size:      $(du -sh .)"
+    dir_count=$(find . -maxdepth 1 -mindepth 1 ! -name 'index.dat' | wc -l)
+    echo "Directory Count: ${dir_count}"
+    tput el
+    echo ""
 
-	OPENFILES=$(sudo lsof +D $CACHEDIR | grep 'file$' | cut -d'/' -f8-)
-	for FILE in $OPENFILES; do 
-		SIZE=$(stat -c %s $CACHEDIR/$FILE)
-		CTIME=$(stat -c %x $CACHEDIR/$FILE)	
-		printf "File: %s %9s, Time: $CTIME\n" $FILE $SIZE 
-	done
-	tput el
-	echo ""
-	for DIR in $(ls -1tr | grep -v index.dat | tail -n 10); do 
-		printf "%2s: %s,    " $DIR $(du -sh $DIR | cut -f1) 
-	done 
+    OPENFILES=$(sudo lsof +D "$CACHEDIR" 2>/dev/null | grep 'file$' | cut -d'/' -f8-)
+    for FILE in $OPENFILES; do
+        SIZE=$(stat -c %s "$CACHEDIR/$FILE")
+        CTIME=$(stat -c %x "$CACHEDIR/$FILE")
+        printf "File: %s %9s, Time: %s\n" "$FILE" "$SIZE" "$CTIME"
+    done
+    tput el
+    echo ""
 
-	echo ""; 
+    mapfile -t recent_entries < <(
+        find . -maxdepth 1 -mindepth 1 ! -name 'index.dat' -printf '%T@ %P\n' \
+            | sort -n \
+            | tail -n 10 \
+            | awk '{print $2}'
+    )
+    for DIR in "${recent_entries[@]}"; do
+        printf "%2s: %s,    " "$DIR" "$(du -sh "$DIR" | cut -f1)"
+    done
 
-	tput el
-	for I in {1..5}; do 
-		sleep 1; 
-		echo -n "."; 
-	done 
-	tput el1
+    echo ""
+
+    tput el
+    for _ in {1..5}; do
+        sleep 1
+        echo -n "."
+    done
+    tput el1
 done

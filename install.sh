@@ -101,7 +101,8 @@ log_verbose() {
 backup_file() {
     local file="$1"
     if [ -e "$file" ] && [ ! -L "$file" ]; then
-        local backup="${file}.backup.$(date +%Y%m%d_%H%M%S)"
+        local backup
+        backup="${file}.backup.$(date +%Y%m%d_%H%M%S)"
         log_verbose "Creating backup: $file -> $backup"
         cp -r "$file" "$backup"
         echo "  backed up to: $backup"
@@ -111,7 +112,13 @@ backup_file() {
 # Function to restore latest backup
 restore_backup() {
     local file="$1"
-    local latest_backup=$(ls -t "${file}.backup."* 2>/dev/null | head -n1)
+    local latest_backup=""
+    local backup
+    for backup in "${file}.backup."*; do
+        if [ -e "$backup" ]; then
+            latest_backup="$backup"
+        fi
+    done
     if [ -n "$latest_backup" ]; then
         log_verbose "Restoring backup: $latest_backup -> $file"
         rm -rf "$file"
@@ -137,7 +144,8 @@ create_symlink() {
     local target_name="$3"
     
     if [ -L "$target" ]; then
-        local current_target=$(readlink "$target")
+        local current_target
+        current_target=$(readlink "$target")
         if [ "$current_target" = "$source" ]; then
             log_verbose "Symlink already correct: $target -> $source"
             echo "  already linked correctly"
@@ -172,7 +180,7 @@ init_submodules() {
         if [ "$VERBOSE" = true ]; then
             git submodule update --init --recursive "$submodule_path"
         else
-            git submodule update --init --recursive "$submodule_path" 2>&1 > /dev/null
+            git submodule update --init --recursive "$submodule_path" > /dev/null 2>&1
         fi
         return 0
     else
@@ -350,7 +358,7 @@ if [ ! -d "$ZSH" ]; then
                 -c fsck.zeroPaddedFilemode=ignore \
                 -c fetch.fsck.zeroPaddedFilemode=ignore \
                 -c receive.fsck.zeroPaddedFilemode=ignore \
-                --depth=1 https://github.com/ohmyzsh/ohmyzsh.git "$ZSH" 2>&1 > /dev/null
+                --depth=1 https://github.com/ohmyzsh/ohmyzsh.git "$ZSH" > /dev/null 2>&1
         fi
         echo " Done"
     else
@@ -369,9 +377,9 @@ if [ ! -d "$ZSH_CUSTOM/themes/powerlevel10k" ]; then
     if [ -d "$ZSH" ] && confirm "Install Powerlevel10k theme?"; then
         log_verbose "Cloning Powerlevel10k theme to $ZSH_CUSTOM/themes/powerlevel10k"
         if [ "$VERBOSE" = true ]; then
-            git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/themes/powerlevel10k
+            git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$ZSH_CUSTOM"/themes/powerlevel10k
         else
-            git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/themes/powerlevel10k 2>&1 > /dev/null 
+            git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$ZSH_CUSTOM"/themes/powerlevel10k > /dev/null 2>&1
         fi
         echo " Done"
     else

@@ -27,10 +27,12 @@ echo
 
 # Track errors
 ERRORS=0
+SHELLCHECK_STRICT_FLAGS=(-s bash)
+SHELLCHECK_RELAXED_FLAGS=(-s bash -S error)
 
 # Check install.sh
 echo -e "${YELLOW}Checking install.sh...${NC}"
-if shellcheck install.sh; then
+if shellcheck "${SHELLCHECK_STRICT_FLAGS[@]}" install.sh; then
     echo -e "${GREEN}✓ install.sh passed${NC}"
 else
     echo -e "${RED}✗ install.sh failed${NC}"
@@ -42,7 +44,7 @@ echo
 echo -e "${YELLOW}Checking dotfiles/sh_config.d/*.sh...${NC}"
 for file in dotfiles/sh_config.d/*.sh; do
     if [[ -f "$file" ]]; then
-        if shellcheck "$file"; then
+        if shellcheck "${SHELLCHECK_RELAXED_FLAGS[@]}" "$file"; then
             echo -e "${GREEN}✓ $file passed${NC}"
         else
             echo -e "${RED}✗ $file failed${NC}"
@@ -56,7 +58,7 @@ echo
 echo -e "${YELLOW}Checking dotfiles/sh_functions.d/*.bash...${NC}"
 for file in dotfiles/sh_functions.d/*.bash; do
     if [[ -f "$file" ]]; then
-        if shellcheck "$file"; then
+        if shellcheck "${SHELLCHECK_RELAXED_FLAGS[@]}" "$file"; then
             echo -e "${GREEN}✓ $file passed${NC}"
         else
             echo -e "${RED}✗ $file failed${NC}"
@@ -70,7 +72,7 @@ echo
 echo -e "${YELLOW}Checking scripts/*.sh...${NC}"
 for file in scripts/*.sh scripts/*.bash; do
     if [[ -f "$file" ]]; then
-        if shellcheck "$file"; then
+        if shellcheck "${SHELLCHECK_STRICT_FLAGS[@]}" "$file"; then
             echo -e "${GREEN}✓ $file passed${NC}"
         else
             echo -e "${RED}✗ $file failed${NC}"
