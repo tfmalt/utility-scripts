@@ -1,4 +1,5 @@
 # -*- sh -*-
+# shellcheck shell=bash
 # @author Thomas Malt
 #
 # Configure Cloudflare API token for flarectl CLI tool.

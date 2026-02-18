@@ -1,3 +1,6 @@
+# -*- sh -*-
+# shellcheck shell=bash
+# Bash prompt configuration
 
 if [[ $SHELL == *bash ]]; then
   # Setting the different command prompts.

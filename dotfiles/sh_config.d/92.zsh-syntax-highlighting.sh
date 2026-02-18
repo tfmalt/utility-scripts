@@ -1,4 +1,5 @@
 # -*- sh -*-
+# shellcheck shell=bash
 # Source zsh-syntax-highlighting
 
 if [ -n "$ZSH_VERSION" ]; then

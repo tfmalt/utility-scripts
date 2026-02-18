@@ -1,4 +1,5 @@
 # -*- sh -*-
+# shellcheck shell=bash
 # Load fzf completion and key-bindings when installed via Homebrew
 
 if [ -n "$ZSH_VERSION" ]; then

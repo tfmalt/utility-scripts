@@ -1,4 +1,5 @@
-
+# -*- sh -*-
+# shellcheck shell=bash
 # Linux and MacOS specific setup
 # Configuring dircolors
 case $(uname) in

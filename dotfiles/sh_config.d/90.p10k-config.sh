@@ -1,4 +1,5 @@
 # -*- sh -*-
+# shellcheck shell=bash
 # Load user powerlevel10k configuration late so it overrides earlier defaults
 # Only for zsh sessions
 

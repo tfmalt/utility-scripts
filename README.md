@@ -58,6 +58,48 @@ You can also control installation using environment variables:
 - `CONFIG_ROOT`: Override config directory
 - `INSTALL_PREFIX`: Override installation target (default: `$HOME`)
 
+**Precedence**: Command-line options (`--dotfiles-dir`) override environment variables (`DOTFILES_ROOT`), which override defaults.
+
+### Installer Behavior
+
+#### Symlink Creation
+
+The installer creates symbolic links in your home directory pointing to files in this repository:
+
+```
+~/.zshrc     → $DOTFILES/zshrc.sh
+~/.vimrc     → $DOTFILES/vimrc
+~/.tmux.conf → $DOTFILES/tmux.conf
+```
+
+#### Backup Strategy
+
+Before creating symlinks, the installer backs up any existing files:
+
+- **Backup format**: `filename.backup.YYYYMMDD_HHMMSS`
+- **Example**: `~/.zshrc.backup.20250217_143022`
+- Backups are created in the same directory as the original file
+
+#### Uninstall & Recovery
+
+To restore your original configuration:
+
+```bash
+./install.sh -u
+```
+
+This will:
+1. Remove all symlinks created by the installer
+2. Restore the most recent backup for each file
+3. Leave additional backups intact for manual recovery
+
+#### Interrupted Installation
+
+If installation is interrupted:
+- Partial symlinks may exist alongside backups
+- Run `./install.sh -u` to clean up, then reinstall
+- Backups are never deleted during normal operation
+
 ## Dependencies
 
 Some of the scripts and dotfiles depend on external tools or modules.
@@ -74,6 +116,36 @@ This will install the following dependencies:
 - [git-extras](https://github.com/tj/git-extras): a set of useful git commands
 - [zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting): a zsh plugin that enables syntax highlighting for commands
 - [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions): a zsh plugin that suggests commands based on your history
+
+## Compatibility
+
+### Supported Platforms
+
+- **macOS** (primary development platform)
+- **Linux** (Debian/Ubuntu, Fedora, Raspberry Pi OS)
+- **WSL** (Windows Subsystem for Linux)
+
+### Required Tools
+
+| Tool | Purpose | Install |
+|------|---------|---------|
+| `git` | Version control, submodules | Pre-installed on most systems |
+| `curl` | Downloading dependencies | Pre-installed on most systems |
+| `zsh` | Default shell | `brew install zsh` / `apt install zsh` |
+
+### Optional Tools
+
+| Tool | Purpose | Install |
+|------|---------|---------|
+| `shellcheck` | Linting shell scripts | `brew install shellcheck` / `apt install shellcheck` |
+| `flarectl` | Cloudflare DNS management | `brew install cloudflare/cloudflare/flarectl` |
+| `systemd` | Timer-based script execution | Linux only (not available on macOS) |
+
+### Platform Differences
+
+- **GNU vs BSD utilities**: macOS uses BSD versions of `sed`, `awk`, `grep`. Scripts are written to be compatible with both where possible.
+- **systemd**: The `systemd/` directory contains Linux-only service files. On macOS, use `launchd` or cron instead.
+- **Homebrew paths**: macOS with Apple Silicon uses `/opt/homebrew`, Intel Macs use `/usr/local`.
 
 ## Optional Configuration
 
@@ -122,6 +194,68 @@ The `CF_API_TOKEN` environment variable will be automatically loaded and exporte
 6. Create the token and copy it to your credentials file
 
 The install script will check for the credentials file and provide setup instructions if it's not found.
+
+## Security & Credentials
+
+### Credential Files
+
+This dotfiles system may source or create files containing secrets. Keep these secure:
+
+| File | Purpose | Required Permissions |
+|------|---------|---------------------|
+| `~/.config/cloudflare/credentials` | Cloudflare API token | `600` |
+| `~/.ssh/config` | SSH host configurations | `600` |
+| `~/.ssh/id_*` | SSH private keys | `600` |
+| `~/.aws/credentials` | AWS access keys | `600` |
+
+### Permission Checks
+
+The shell configuration includes runtime checks for credential files. If permissions are too open, you'll see warnings like:
+
+```
+WARNING: Cloudflare credentials have unsafe permissions.
+Please run: chmod 600 ~/.config/cloudflare/credentials
+```
+
+### Avoiding Secret Leaks
+
+- **Never commit credentials** to this repository
+- Use environment variables or local config files for secrets
+- The `.gitignore` excludes common secret patterns, but always verify before committing
+- SSH keys and cloud credentials belong in `~/.ssh/` and `~/.config/`, not in this repo
+
+### SSH Agent
+
+The configuration automatically starts `ssh-agent` if not running and loads keys from `~/.ssh/`. Keys are cached for the session to avoid repeated passphrase prompts.
+
+## Verification / Smoke Tests
+
+Quick commands to verify the installation is working:
+
+```bash
+# Check that dotfiles are properly symlinked
+ls -la ~/.zshrc ~/.vimrc ~/.tmux.conf
+
+# Verify shell configuration loads without errors
+zsh -i -c 'echo "Shell loaded successfully"'
+
+# Run linter on all scripts
+./scripts/lint.sh
+
+# Test system detection function
+source dotfiles/sh_functions.d/setuptype.bash && setuptype
+
+# Verify install script help works
+./install.sh --help
+```
+
+### Expected Outputs
+
+| Command | Expected Result |
+|---------|-----------------|
+| `ls -la ~/.zshrc` | Symlink pointing to `dotfiles/zshrc.sh` |
+| `setuptype` | One of: `macbook`, `linux`, `linux-server`, `linux-virtual`, `linux-rpi`, `windows` |
+| `./scripts/lint.sh` | "All checks passed!" with exit code 0 |
 
 ## License
 

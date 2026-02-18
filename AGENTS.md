@@ -27,10 +27,22 @@ This repo is a collection of shell-focused utilities and dotfiles.
 - Prefer small, focused scripts and add usage examples in comments if helpful.
 
 ## Commit & Pull Request Guidelines
-- Commit messages are short, imperative, and lowercase (e.g., “fix ssh-agent issue”).
+- Commit messages are short, imperative, and lowercase (e.g., "fix ssh-agent issue").
 - PRs should include a concise summary, the affected paths, and any setup steps.
 - If changes affect installation behavior, note new env vars or flags.
 - For config or credential-related changes, include safety notes (permissions, paths).
+
+## PR Checklist
+
+Before submitting a pull request, verify the following:
+
+- [ ] `./scripts/lint.sh` passes without errors
+- [ ] Tested `./install.sh` on a clean environment (if installation changes)
+- [ ] Tested `./install.sh -u` restores previous state (if installation changes)
+- [ ] Added/updated usage notes for new scripts in `scripts/README.md`
+- [ ] Noted any OS-specific constraints (macOS vs Linux, GNU vs BSD tools)
+- [ ] No secrets or credentials committed (check `.gitignore` coverage)
+- [ ] New shell scripts have `#!/bin/bash` shebang and `# shellcheck shell=bash` directive
 
 ## Security & Configuration Tips
 - Cloudflare integration expects `~/.config/cloudflare/credentials` with `600` perms.

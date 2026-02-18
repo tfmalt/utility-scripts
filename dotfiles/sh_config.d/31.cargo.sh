@@ -1,11 +1,12 @@
 # -*- sh -*-
-# Config snippet to enable platformio
+# shellcheck shell=bash
+# Config snippet to enable cargo/rust
 # @author Thomas Malt
 #
 
-CARGO=$HOME/.cargo/bin
+CARGO="$HOME/.cargo/bin"
 
-if [ -d $CARGO ]; then
+if [ -d "$CARGO" ]; then
   [ -t 0 ] && echo -e "$ICON_OK Found $CARGO. Adding to path."
   export PATH="$PATH:$CARGO"
 else

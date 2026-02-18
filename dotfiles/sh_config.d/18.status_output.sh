@@ -1,4 +1,5 @@
 # -*- sh -*-
+# shellcheck shell=bash
 # @author Thomas Malt
 #
 

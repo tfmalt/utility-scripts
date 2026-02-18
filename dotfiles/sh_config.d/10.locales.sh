@@ -1,4 +1,5 @@
 # -*- sh -*-
+# shellcheck shell=bash
 # Various helpers to pimp my sh
 # @author Thomas Malt
 #

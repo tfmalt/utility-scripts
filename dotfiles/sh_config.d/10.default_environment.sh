@@ -1,4 +1,5 @@
 # -*- sh -*-
+# shellcheck shell=bash
 # Various default environment variables
 #
 # @author Thomas Malt

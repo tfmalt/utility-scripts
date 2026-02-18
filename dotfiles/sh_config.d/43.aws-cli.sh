@@ -1,5 +1,6 @@
 # -*- sh -*-
-# config snippet to setup paths in a managable way across systems
+# shellcheck shell=bash
+# config snippet to setup AWS CLI completion
 #
 # @author Thomas Malt
 #

@@ -1,4 +1,5 @@
 # -*- sh -*-
+# shellcheck shell=bash
 # Ensure zsh-completions is in fpath before Oh My Zsh initializes compinit
 
 if [ -n "$ZSH_VERSION" ]; then

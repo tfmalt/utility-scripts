@@ -1,5 +1,6 @@
 # -*- sh -*-
-# 
+# shellcheck shell=bash
+#
 # Include gcloud functions, autocomplete and tools
 #
 # @author Thomas Malt

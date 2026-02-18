@@ -1,4 +1,5 @@
 # -*- sh -*-
+# shellcheck shell=bash
 # Tweak zsh-autosuggestions behavior and style
 
 if [ -n "$ZSH_VERSION" ]; then

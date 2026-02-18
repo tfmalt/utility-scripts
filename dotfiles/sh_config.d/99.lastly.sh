@@ -1,5 +1,6 @@
 # -*- sh -*-
-# config snippet to setup paths in a managable way across systems
+# shellcheck shell=bash
+# Final configuration tasks
 #
 # @author Thomas Malt
 #

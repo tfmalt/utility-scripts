@@ -1,4 +1,5 @@
 # -*- sh -*-
+# shellcheck shell=bash
 # Config snippet to configure volta
 # @author Thomas Malt
 #
