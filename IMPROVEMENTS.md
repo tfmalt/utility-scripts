@@ -38,8 +38,8 @@ All improvement items have been implemented.
 - Includes quick commands and expected outputs table
 
 ### 4) Standardize Shell Directives
-- Added `# shellcheck shell=bash` to all config files in `dotfiles/sh_config.d/`
-- Added directive to `dotfiles/zshrc.sh` and `dotfiles/bashrc.sh`
+- Added `# shellcheck shell=bash` to all config files in `profile/sh_config.d/`
+- Added directive to `profile/zshrc.sh` and `profile/bashrc.sh`
 
 ### 5) Document Installer Behavior
 - Added "Installer Behavior" section to `README.md`

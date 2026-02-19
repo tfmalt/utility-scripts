@@ -1,12 +1,12 @@
-# ShellCheck configuration for dotfiles project
+# ShellCheck configuration for profile project
 
 # SC1090: Can't follow non-constant source. Use a directive to specify location.
 # SC1091: Not following: file not found
-# These are expected in modular dotfiles that source from variables
+# These are expected in modular profile files that source from variables
 disable=SC1090,SC1091
 
 # SC2034: Variable appears unused. Verify use (or export if used externally).
-# Many variables in dotfiles are exported for use in child shells
+# Many variables in profile files are exported for use in child shells
 # disable=SC2034
 
 # SC2154: Variable is referenced but not assigned

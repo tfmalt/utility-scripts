@@ -41,8 +41,8 @@ fi
 echo
 
 # Check shell config files
-echo -e "${YELLOW}Checking dotfiles/sh_config.d/*.sh...${NC}"
-for file in dotfiles/sh_config.d/*.sh; do
+echo -e "${YELLOW}Checking profile/sh_config.d/*.sh...${NC}"
+for file in profile/sh_config.d/*.sh; do
     if [[ -f "$file" ]]; then
         if shellcheck "${SHELLCHECK_RELAXED_FLAGS[@]}" "$file"; then
             echo -e "${GREEN}✓ $file passed${NC}"
@@ -55,8 +55,8 @@ done
 echo
 
 # Check shell function files
-echo -e "${YELLOW}Checking dotfiles/sh_functions.d/*.bash...${NC}"
-for file in dotfiles/sh_functions.d/*.bash; do
+echo -e "${YELLOW}Checking profile/sh_functions.d/*.bash...${NC}"
+for file in profile/sh_functions.d/*.bash; do
     if [[ -f "$file" ]]; then
         if shellcheck "${SHELLCHECK_RELAXED_FLAGS[@]}" "$file"; then
             echo -e "${GREEN}✓ $file passed${NC}"

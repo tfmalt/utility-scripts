@@ -22,7 +22,7 @@ jobs:
           scandir: '.'
           severity: warning
           ignore_paths: |
-            dotfiles/vim
+            profile/vim
             .git
             node_modules
           ignore_names: |
@@ -36,8 +36,8 @@ jobs:
 
       - name: Check all shell config files
         run: |
-          find dotfiles/sh_config.d -name "*.sh" -exec shellcheck {} +
+          find profile/sh_config.d -name "*.sh" -exec shellcheck {} +
 
       - name: Check all shell function files
         run: |
-          find dotfiles/sh_functions.d -name "*.bash" -exec shellcheck {} +
+          find profile/sh_functions.d -name "*.bash" -exec shellcheck {} +

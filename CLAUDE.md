@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a comprehensive dotfiles management system that provides a complete Unix/POSIX shell environment setup. The project manages configuration files for zsh, vim, tmux, and various development tools using a symlink-based installation approach with comprehensive backup and restore capabilities.
+This is a comprehensive profile management system that provides a complete Unix/POSIX shell environment setup. The project manages configuration files for zsh, vim, tmux, and various development tools using a symlink-based installation approach with comprehensive backup and restore capabilities.
 
 ## Essential Commands
 
@@ -15,7 +15,8 @@ This is a comprehensive dotfiles management system that provides a complete Unix
 ./install.sh -v                 # Verbose mode with detailed logging
 ./install.sh -y                 # Skip all confirmation prompts
 ./install.sh -u                 # Uninstall mode - removes symlinks and restores backups
-./install.sh --dotfiles-dir DIR # Use custom dotfiles directory
+./install.sh --profile-dir DIR  # Use custom profile directory
+./install.sh --dotfiles-dir DIR # Deprecated alias for --profile-dir
 ./install.sh --help             # Show all available options
 ```
 
@@ -30,7 +31,7 @@ git submodule update --init --recursive  # Initialize vim colorscheme submodule
 
 ### Modular Configuration System
 
-The shell configuration uses a numbered loading system in `dotfiles/sh_config.d/`:
+The shell configuration uses a numbered loading system in `profile/sh_config.d/`:
 
 - `01-09`: Helper functions and core utilities
 - `10-19`: Environment setup and shell framework configuration  
@@ -49,14 +50,14 @@ The shell configuration uses a numbered loading system in `dotfiles/sh_config.d/
 - Dependency checking and installation (Oh My Zsh, Powerlevel10k, Volta)
 - Cross-platform support with verbose logging
 
-**`dotfiles/sh_functions.d/setuptype.bash`**: System detection function that identifies:
+**`profile/sh_functions.d/setuptype.bash`**: System detection function that identifies:
 
 - Linux variants (server, virtual, WSL, Raspberry Pi)
 - macOS systems
 - Container environments (LXC)
 - Used throughout configuration for conditional behavior
 
-**`dotfiles/zshrc.sh`**: Main configuration loader that:
+**`profile/zshrc.sh`**: Main configuration loader that:
 
 - Sources all modular configurations in order
 - Handles function pre-loading
@@ -64,7 +65,7 @@ The shell configuration uses a numbered loading system in `dotfiles/sh_config.d/
 
 ### Configuration Flow
 
-1. `~/.zshrc` → `$DOTFILES/zshrc.sh` (entry point)
+1. `~/.zshrc` → `$PROFILE/zshrc.sh` (entry point)
 2. Load `sh_functions.d/*.bash` (system utilities)
 3. Source `sh_config.d/*.sh` in numerical order (modular config)
 4. Apply platform-specific configurations based on `setuptype()`
@@ -73,9 +74,9 @@ The shell configuration uses a numbered loading system in `dotfiles/sh_config.d/
 
 ### Adding New Configurations
 
-- Place shell configs in `dotfiles/sh_config.d/` with appropriate number prefix
+- Place shell configs in `profile/sh_config.d/` with appropriate number prefix
 - Use `setuptype()` function for platform-specific logic
-- Add functions to `dotfiles/sh_functions.d/` for reusable utilities
+- Add functions to `profile/sh_functions.d/` for reusable utilities
 
 ### Modifying install.sh
 
@@ -86,13 +87,13 @@ The shell configuration uses a numbered loading system in `dotfiles/sh_config.d/
 
 ### Working with Submodules
 
-- Vim colorschemes are managed as git submodule in `dotfiles/vim/awesome-vim-colorschemes`
-- Use `git config submodule.dotfiles/vim/awesome-vim-colorschemes.ignore all` to ignore changes
+- Vim colorschemes are managed as git submodule in `profile/vim/awesome-vim-colorschemes`
+- Use `git config submodule.profile/vim/awesome-vim-colorschemes.ignore all` to ignore changes
 - Install script automatically initializes submodules during setup
 
 ## Testing Approach
 
-Since this is a dotfiles repository, testing primarily involves:
+Since this is a profile repository, testing primarily involves:
 
 - Running `./install.sh -v` in a clean environment
 - Verifying symlinks are created correctly in `$HOME`

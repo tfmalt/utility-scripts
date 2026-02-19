@@ -6,13 +6,13 @@ line tools.
 
 ## Features
 
-- **dotfiles**: personal configuration files for zsh, tmux, vim and other tools
+- **profile**: personal shell/editor/terminal profile files for zsh, tmux, vim and related tools
 - **scripts**: various scripts to make work easier, such as backup, git, ssh and more
 - **config**: additional configuration files for tools like git and ssh
 
 ## Installation
 
-To install the scripts and dotfiles, run the following command:
+To install the scripts and profile setup, run the following command:
 
 ```bash
 ./install.sh
@@ -27,9 +27,10 @@ This will create symbolic links in your home directory to the files in this repo
 
 Options:
   -v, --verbose           Enable verbose output for debugging
-  -u, --uninstall         Remove dotfiles setup and restore backups
+  -u, --uninstall         Remove profile setup and restore backups
   -y, --yes               Skip confirmation prompts (assume yes)
-  --dotfiles-dir DIR      Use custom dotfiles directory
+  --profile-dir DIR       Use custom profile directory
+  --dotfiles-dir DIR      Deprecated alias for --profile-dir
   --config-dir DIR        Use custom config directory
   -h, --help              Show help message
 ```
@@ -44,7 +45,7 @@ Options:
 ./install.sh -y
 
 # Install with custom directories
-./install.sh --dotfiles-dir /path/to/dotfiles --config-dir /path/to/config
+./install.sh --profile-dir /path/to/profile --config-dir /path/to/config
 
 # Uninstall and restore backups
 ./install.sh -u
@@ -54,11 +55,22 @@ Options:
 
 You can also control installation using environment variables:
 
-- `DOTFILES_ROOT`: Override dotfiles directory
+- `PROFILE_ROOT`: Override profile directory
+- `DOTFILES_ROOT`: Deprecated alias for `PROFILE_ROOT`
 - `CONFIG_ROOT`: Override config directory
 - `INSTALL_PREFIX`: Override installation target (default: `$HOME`)
 
-**Precedence**: Command-line options (`--dotfiles-dir`) override environment variables (`DOTFILES_ROOT`), which override defaults.
+**Precedence**: Command-line options (`--profile-dir`, then deprecated `--dotfiles-dir`) override environment variables (`PROFILE_ROOT`, then deprecated `DOTFILES_ROOT`), which override defaults.
+
+### Profile Directory (Intended Usage)
+
+The repository directory `profile/` is the source of truth for your interactive shell environment.
+
+- It stores modular shell config, shell functions, completions, prompt config, and related CLI UX files.
+- It is intentionally named `profile` to align with UNIX/POSIX profile terminology.
+- It is **not** the same thing as your local `~/.profile` file.
+- The installer links target files in `$HOME` to content in this repository and writes `~/.zshrc` to source `profile/zshrc.sh`.
+- Legacy names (`--dotfiles-dir`, `DOTFILES_ROOT`, `$DOTFILES`) still work for compatibility, but are deprecated.
 
 ### Installer Behavior
 
@@ -67,9 +79,10 @@ You can also control installation using environment variables:
 The installer creates symbolic links in your home directory pointing to files in this repository:
 
 ```
-~/.zshrc     → $DOTFILES/zshrc.sh
-~/.vimrc     → $DOTFILES/vimrc
-~/.tmux.conf → $DOTFILES/tmux.conf
+~/.zshrc     → $PROFILE/zshrc.sh
+~/.vimrc     → $PROFILE/vimrc
+~/.vim       → $PROFILE/vim
+~/.dircolors → $CONFIG/dircolors
 ```
 
 #### Backup Strategy
@@ -102,7 +115,7 @@ If installation is interrupted:
 
 ## Dependencies
 
-Some of the scripts and dotfiles depend on external tools or modules.
+Some of the scripts and profile files depend on external tools or modules.
 You can install them with the following command:
 
 ```bash
@@ -199,7 +212,7 @@ The install script will check for the credentials file and provide setup instruc
 
 ### Credential Files
 
-This dotfiles system may source or create files containing secrets. Keep these secure:
+This profile system may source or create files containing secrets. Keep these secure:
 
 | File | Purpose | Required Permissions |
 |------|---------|---------------------|
@@ -233,8 +246,8 @@ The configuration automatically starts `ssh-agent` if not running and loads keys
 Quick commands to verify the installation is working:
 
 ```bash
-# Check that dotfiles are properly symlinked
-ls -la ~/.zshrc ~/.vimrc ~/.tmux.conf
+# Check that profile files are properly symlinked
+ls -la ~/.zshrc ~/.vimrc ~/.vim ~/.dircolors
 
 # Verify shell configuration loads without errors
 zsh -i -c 'echo "Shell loaded successfully"'
@@ -243,7 +256,7 @@ zsh -i -c 'echo "Shell loaded successfully"'
 ./scripts/lint.sh
 
 # Test system detection function
-source dotfiles/sh_functions.d/setuptype.bash && setuptype
+source profile/sh_functions.d/setuptype.bash && setuptype
 
 # Verify install script help works
 ./install.sh --help
@@ -253,7 +266,7 @@ source dotfiles/sh_functions.d/setuptype.bash && setuptype
 
 | Command | Expected Result |
 |---------|-----------------|
-| `ls -la ~/.zshrc` | Symlink pointing to `dotfiles/zshrc.sh` |
+| `ls -la ~/.zshrc` | Symlink pointing to `profile/zshrc.sh` |
 | `setuptype` | One of: `macbook`, `linux`, `linux-server`, `linux-virtual`, `linux-rpi`, `windows` |
 | `./scripts/lint.sh` | "All checks passed!" with exit code 0 |
 

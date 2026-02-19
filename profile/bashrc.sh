@@ -29,9 +29,11 @@ XDG_CONFIG_HOME="$HOME/.config"
 
 export XDG_CONFIG_HOME LANGUAGE EDITOR RSYNC_RSH TERM VISUAL
 
+PROFILE_DIR="${PROFILE:-${DOTFILES:-}}"
+
 # Load bash functions
-if [ -d "$DOTFILES/sh_functions.d" ]; then
-    for FILE in "$DOTFILES"/sh_functions.d/*sh; do
+if [ -d "$PROFILE_DIR/sh_functions.d" ]; then
+    for FILE in "$PROFILE_DIR"/sh_functions.d/*sh; do
         source "$FILE"
     done
     export BASH_FUNCTIONS_LOADED="yes"
@@ -40,8 +42,8 @@ else
 fi
 
 # load additional config if exists
-if [ -d "$DOTFILES/sh_config.d" ]; then
-    for FILE in "$DOTFILES"/sh_config.d/*sh; do
+if [ -d "$PROFILE_DIR/sh_config.d" ]; then
+    for FILE in "$PROFILE_DIR"/sh_config.d/*sh; do
         source "$FILE"
     done
 fi
@@ -51,8 +53,8 @@ if [ -f /etc/bash_completion ]; then
   source /etc/bash_completion
 fi
 
-if [ -d "$DOTFILES/bash_completion.d" ]; then
-  for FILE in "$DOTFILES"/bash_completion.d/*sh; do
+if [ -d "$PROFILE_DIR/bash_completion.d" ]; then
+  for FILE in "$PROFILE_DIR"/bash_completion.d/*sh; do
     source "$FILE"
   done
   export BASH_COMPLETION_LOADED="yes"

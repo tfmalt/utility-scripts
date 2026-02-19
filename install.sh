@@ -4,9 +4,11 @@ set -e
 # Parse command line arguments
 VERBOSE=false
 UNINSTALL=false
+CUSTOM_PROFILE_DIR=""
 CUSTOM_DOTFILES_DIR=""
 CUSTOM_CONFIG_DIR=""
 SKIP_CONFIRM=false
+USED_DEPRECATED_DOTFILES_ARG=false
 
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -18,8 +20,13 @@ while [[ $# -gt 0 ]]; do
             UNINSTALL=true
             shift
             ;;
+        --profile-dir)
+            CUSTOM_PROFILE_DIR="$2"
+            shift 2
+            ;;
         --dotfiles-dir)
             CUSTOM_DOTFILES_DIR="$2"
+            USED_DEPRECATED_DOTFILES_ARG=true
             shift 2
             ;;
         --config-dir)
@@ -34,14 +41,16 @@ while [[ $# -gt 0 ]]; do
             echo "Usage: $0 [OPTIONS]"
             echo "Options:"
             echo "  -v, --verbose         Enable verbose output"
-            echo "  -u, --uninstall       Remove dotfiles setup and restore backups"
-            echo "  --dotfiles-dir DIR    Use custom dotfiles directory (default: script_dir/dotfiles)"
+            echo "  -u, --uninstall       Remove profile setup and restore backups"
+            echo "  --profile-dir DIR     Use custom profile directory (default: script_dir/profile)"
+            echo "  --dotfiles-dir DIR    Deprecated alias for --profile-dir"
             echo "  --config-dir DIR      Use custom config directory (default: script_dir/config)"
             echo "  -y, --yes             Skip confirmation prompts (assume yes)"
             echo "  -h, --help            Show this help message"
             echo ""
             echo "Environment variables:"
-            echo "  DOTFILES_ROOT         Override dotfiles directory"
+            echo "  PROFILE_ROOT          Override profile directory"
+            echo "  DOTFILES_ROOT         Deprecated alias for PROFILE_ROOT"
             echo "  CONFIG_ROOT           Override config directory"
             echo "  INSTALL_PREFIX        Override installation prefix (default: \$HOME)"
             exit 0
@@ -58,17 +67,24 @@ done
 THIS=$(readlink -f "$0")
 ROOT=$(dirname "$THIS")
 
-# Installation prefix (where dotfiles will be installed)
+# Installation prefix (where profile files will be installed)
 INSTALL_PREFIX="${INSTALL_PREFIX:-$HOME}"
 
-# Dotfiles directory
-if [ -n "$CUSTOM_DOTFILES_DIR" ]; then
-    DOTFILES="$CUSTOM_DOTFILES_DIR"
+# Profile directory
+if [ -n "$CUSTOM_PROFILE_DIR" ]; then
+    PROFILE="$CUSTOM_PROFILE_DIR"
+elif [ -n "$CUSTOM_DOTFILES_DIR" ]; then
+    PROFILE="$CUSTOM_DOTFILES_DIR"
+elif [ -n "$PROFILE_ROOT" ]; then
+    PROFILE="$PROFILE_ROOT"
 elif [ -n "$DOTFILES_ROOT" ]; then
-    DOTFILES="$DOTFILES_ROOT"
+    PROFILE="$DOTFILES_ROOT"
 else
-    DOTFILES="$ROOT/dotfiles"
+    PROFILE="$ROOT/profile"
 fi
+
+# Backward compatibility alias for older configs/scripts
+DOTFILES="$PROFILE"
 
 # Config directory
 if [ -n "$CUSTOM_CONFIG_DIR" ]; then
@@ -236,8 +252,8 @@ confirm() {
 
 # Function to validate paths exist
 validate_paths() {
-    if [ ! -d "$DOTFILES" ]; then
-        echo "Error: Dotfiles directory does not exist: $DOTFILES"
+    if [ ! -d "$PROFILE" ]; then
+        echo "Error: Profile directory does not exist: $PROFILE"
         exit 1
     fi
     
@@ -251,7 +267,7 @@ validate_paths() {
 
 # Uninstall function
 uninstall() {
-    echo "Uninstalling dotfiles setup..."
+    echo "Uninstalling profile setup..."
     log_verbose "Starting uninstall process"
     
     if ! confirm "This will remove dotfile symlinks and restore backups. Continue?"; then
@@ -296,6 +312,13 @@ echo "Setting up utility scripts ..."
 log_verbose "Verbose mode enabled"
 log_verbose "Script location: $THIS"
 
+if [ "$USED_DEPRECATED_DOTFILES_ARG" = true ]; then
+    echo "Warning: --dotfiles-dir is deprecated; use --profile-dir instead."
+fi
+if [ -n "$DOTFILES_ROOT" ] && [ -z "$PROFILE_ROOT" ]; then
+    echo "Warning: DOTFILES_ROOT is deprecated; use PROFILE_ROOT instead."
+fi
+
 # Check dependencies before proceeding
 check_dependencies
 
@@ -304,8 +327,8 @@ validate_paths
 
 OUTPUT="source directory"
 echo "$(pad_output "$OUTPUT"): $ROOT"
-OUTPUT="dotfiles directory"
-echo "$(pad_output "$OUTPUT"): $DOTFILES"
+OUTPUT="profile directory"
+echo "$(pad_output "$OUTPUT"): $PROFILE"
 OUTPUT="config directory"
 echo "$(pad_output "$OUTPUT"): $CONFIG"
 OUTPUT="destination"
@@ -313,7 +336,7 @@ echo "$(pad_output "$OUTPUT"): $INSTALL_PREFIX"
 
 # Ask for confirmation before proceeding
 echo ""
-if ! confirm "Proceed with dotfiles installation?"; then
+if ! confirm "Proceed with profile installation?"; then
     echo "Installation cancelled."
     exit 0
 fi
@@ -329,14 +352,14 @@ OUTPUT="setting up vim"
 echo -n "$(pad_output "$OUTPUT"):"
 backup_file "$INSTALL_PREFIX/.vimrc"
 backup_file "$INSTALL_PREFIX/.vim"
-create_symlink "$DOTFILES/vimrc" "$INSTALL_PREFIX/.vimrc" ".vimrc"
-create_symlink "$DOTFILES/vim" "$INSTALL_PREFIX/.vim" ".vim"
+create_symlink "$PROFILE/vimrc" "$INSTALL_PREFIX/.vimrc" ".vimrc"
+create_symlink "$PROFILE/vim" "$INSTALL_PREFIX/.vim" ".vim"
 echo ""
 
 # ---------------------------------------------------------------------------
 OUTPUT="initializing vim themes"
 echo -n "$(pad_output "$OUTPUT"):"
-if init_submodules "$DOTFILES/vim/awesome-vim-colorschemes" "awesome-vim-colorschemes"; then
+if init_submodules "$PROFILE/vim/awesome-vim-colorschemes" "awesome-vim-colorschemes"; then
     echo " Done"
 else
     echo " exists"
@@ -418,8 +441,9 @@ backup_file "$FILE"
 log_verbose "Writing new .zshrc configuration"
 
 cat > "$FILE" <<- EOD
-export DOTFILES="$DOTFILES"
-source \$DOTFILES/zshrc.sh
+export PROFILE="$PROFILE"
+export DOTFILES="\$PROFILE" # Deprecated alias for compatibility
+source \$PROFILE/zshrc.sh
 EOD
 
 OUTPUT=""
@@ -475,5 +499,5 @@ if [ -f "$INSTALL_PREFIX/.zshrc" ]; then
         echo "  # OR restart your terminal"
     fi
 else
-    echo "Note: .zshrc was not created. Please restart your terminal to use the new dotfiles."
+    echo "Note: .zshrc was not created. Please restart your terminal to use the new profile setup."
 fi
