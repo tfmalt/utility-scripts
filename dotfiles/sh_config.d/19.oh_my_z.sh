@@ -87,7 +87,6 @@ if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
     wakeonlan
     gatsby
     gh
-    volta
     pip
     fzf
   )

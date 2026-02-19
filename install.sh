@@ -278,10 +278,11 @@ uninstall() {
     restore_backup "$INSTALL_PREFIX/.zshrc"
     echo " Done"
     
-    echo "Uninstall complete. Oh My Zsh and Volta installations were left intact."
+    echo "Uninstall complete. Oh My Zsh and mise installations were left intact."
     echo "To remove them manually:"
     echo "  rm -rf $ZSH"
-    echo "  rm -rf $INSTALL_PREFIX/.volta"
+    echo "  rm -rf $INSTALL_PREFIX/.local/share/mise"
+    echo "  rm -f $INSTALL_PREFIX/.local/bin/mise"
 }
 
 # ---------------------------------------------------------------------------
@@ -391,18 +392,18 @@ else
 fi
 # ---------------------------------------------------------------------------
 
-OUTPUT="installing volta"
-echo -n "$(pad_output "$OUTPUT"):" 
-if [ -e "$INSTALL_PREFIX/.volta" ]; then
-    log_verbose "Volta already installed at $INSTALL_PREFIX/.volta"
+OUTPUT="installing mise"
+echo -n "$(pad_output "$OUTPUT"):"
+if command_exists mise; then
+    log_verbose "mise already installed"
     echo " exists"
-else 
-    if confirm "Install Volta (Node.js version manager)?"; then
-        log_verbose "Installing Volta from https://get.volta.sh"
+else
+    if confirm "Install mise (polyglot runtime manager)?"; then
+        log_verbose "Installing mise from https://mise.run"
         if [ "$VERBOSE" = true ]; then
-            VOLTA_HOME="$INSTALL_PREFIX/.volta" curl https://get.volta.sh | bash -s -- --skip-setup
+            curl https://mise.run | sh
         else
-            VOLTA_HOME="$INSTALL_PREFIX/.volta" curl -s https://get.volta.sh | bash -s -- --skip-setup
+            curl -sSL https://mise.run | sh
         fi
         echo " Done"
     else
