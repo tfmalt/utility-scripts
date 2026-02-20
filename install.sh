@@ -358,12 +358,42 @@ create_symlink "$PROFILE/vim" "$INSTALL_PREFIX/.vim" ".vim"
 echo ""
 
 # ---------------------------------------------------------------------------
+COLORSCHEME_REPO="https://github.com/rafi/awesome-vim-colorschemes.git"
+COLORSCHEME_DIR="$PROFILE/vim/awesome-vim-colorschemes"
+COLORSCHEME_COLORS_LINK="$PROFILE/vim/colors"
+
 OUTPUT="initializing vim themes"
 echo -n "$(pad_output "$OUTPUT"):"
-if init_submodules "$PROFILE/vim/awesome-vim-colorschemes" "awesome-vim-colorschemes"; then
-    echo " Done"
-else
+if [ -d "$COLORSCHEME_DIR/.git" ]; then
+    log_verbose "awesome-vim-colorschemes already present"
     echo " exists"
+else
+    log_verbose "Cloning awesome-vim-colorschemes from $COLORSCHEME_REPO"
+    # Try submodule first; if it doesn't populate the repo, fall back to direct clone
+    git submodule update --init --recursive "$COLORSCHEME_DIR" > /dev/null 2>&1 || true
+    if [ ! -d "$COLORSCHEME_DIR/.git" ]; then
+        log_verbose "Submodule init did not populate repo; cloning directly"
+        if [ "$VERBOSE" = true ]; then
+            git clone "$COLORSCHEME_REPO" "$COLORSCHEME_DIR"
+        else
+            git clone -q "$COLORSCHEME_REPO" "$COLORSCHEME_DIR"
+        fi
+    fi
+    echo " Done"
+fi
+
+OUTPUT="linking vim colors"
+echo -n "$(pad_output "$OUTPUT"):"
+if [ -L "$COLORSCHEME_COLORS_LINK" ] && [ "$(readlink "$COLORSCHEME_COLORS_LINK")" = "$COLORSCHEME_DIR/colors" ]; then
+    log_verbose "vim/colors symlink already correct"
+    echo " exists"
+elif [ -e "$COLORSCHEME_COLORS_LINK" ] && [ ! -L "$COLORSCHEME_COLORS_LINK" ]; then
+    log_verbose "vim/colors exists as real directory, skipping symlink"
+    echo " exists (real dir)"
+else
+    ln -sf "$COLORSCHEME_DIR/colors" "$COLORSCHEME_COLORS_LINK"
+    log_verbose "Created symlink: vim/colors -> awesome-vim-colorschemes/colors"
+    echo " Done"
 fi
 # ---------------------------------------------------------------------------
 OUTPUT="installing oh my zsh"

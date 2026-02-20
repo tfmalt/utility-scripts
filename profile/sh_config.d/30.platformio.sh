@@ -16,7 +16,6 @@ case $(setuptype) in
 esac
 
 if [[ -n "$PIOPATH" ]] && [ -d "$PIOPATH" ]; then
-    status_ok "platformio" "found; adding $PIOPATH to PATH"
     PATH="$PATH:$PIOPATH"
     export PATH
 else 

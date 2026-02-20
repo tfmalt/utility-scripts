@@ -29,12 +29,9 @@ if [ -f "$CLOUDFLARE_CREDENTIALS" ]; then
 
   if [ -n "$CF_API_TOKEN" ]; then
     export CF_API_TOKEN
-    status_ok "cloudflare" "loaded CF_API_TOKEN from $CLOUDFLARE_CREDENTIALS"
   else
     status_warn "cloudflare" "$CLOUDFLARE_CREDENTIALS exists but CF_API_TOKEN is not set"
   fi
-else
-  status_info "cloudflare" "credentials file not found at $CLOUDFLARE_CREDENTIALS"
 fi
 
 # Cleanup

@@ -54,5 +54,4 @@ if [[ $SHELL == *bash ]]; then
           ;;
   esac
   export PS1
-  status_ok "prompt" "bash detected; prompt configured for $(setuptype)"
 fi

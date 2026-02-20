@@ -13,11 +13,9 @@ case $(setuptype) in
         if [ -x /opt/homebrew/bin/brew ]; then
             # Apple Silicon Macs
             eval "$(/opt/homebrew/bin/brew shellenv)"
-            status_ok "homebrew" "initialized (Apple Silicon)"
         elif [ -x /usr/local/bin/brew ]; then
             # Intel Macs
             eval "$(/usr/local/bin/brew shellenv)"
-            status_ok "homebrew" "initialized (Intel)"
         fi
         ;;
 
@@ -25,7 +23,6 @@ case $(setuptype) in
         # Linux - Homebrew installs to /home/linuxbrew/.linuxbrew
         if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
             eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-            status_ok "homebrew" "initialized (Linux)"
         elif [ -d /home/linuxbrew/.linuxbrew ]; then
             status_warn "homebrew" "directory found but brew binary is not executable"
         fi
@@ -40,6 +37,5 @@ export HOMEBREW_NO_ENV_HINTS=1
 if command -v brew &> /dev/null; then
     if [ -n "$HOMEBREW_GITHUB_API_TOKEN" ]; then
         export HOMEBREW_GITHUB_API_TOKEN
-        status_ok "homebrew" "using HOMEBREW_GITHUB_API_TOKEN from environment"
     fi
 fi

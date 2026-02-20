@@ -15,9 +15,5 @@ if [[ -x $HOME/.local/bin/hass-cli ]]; then
   # Default server can be overridden with environment
   export HASS_SERVER="${HASS_SERVER:-http://192.168.71.3:8123}"
   # Expect HASS_TOKEN to be provided via environment or a secrets manager
-  if [ -z "$HASS_TOKEN" ]; then
-    status_info "hass" "HASS_TOKEN not set; hass-cli may prompt for authentication"
-  fi
   # source <($HOME/.local/bin/hass-cli completion zsh)
-  status_ok "hass" "hass-cli found; setup complete"
 fi

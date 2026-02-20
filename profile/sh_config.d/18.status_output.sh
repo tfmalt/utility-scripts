@@ -3,5 +3,4 @@
 # @author Thomas Malt
 #
 
-status_info "startup" "uptime: $(uptime)"
-status_info "startup" "setuptype: $(setuptype)"
+# Startup info is available via the envstatus function

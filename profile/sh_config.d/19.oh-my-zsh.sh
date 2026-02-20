@@ -26,7 +26,6 @@ custom_js() {
 
 if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
 
-  status_ok "oh-my-zsh" "zsh detected; loading oh-my-zsh configuration"
   export ZSH="$HOME/.oh-my-zsh"
 
   # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes

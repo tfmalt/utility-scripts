@@ -11,12 +11,14 @@ COL_YELLOW="\e[38;05;220m"
 COL_BG_BLUE="\e[48;05;33m"
 COL_RED="\e[38;05;160m"
 COL_STOP="\e[0m"
+COL_DIM="\e[38;05;240m"
+COL_BOLD="\e[1m"
 
-# Icons
-ICON_OK="$COL_GREEN2  ✔$COL_STOP"
-ICON_ERR="$COL_RED  ✘$COL_STOP"
-ICON_INFO="$COL_BG_BLUE  i $COL_STOP"
-ICON_WARN="$COL_YELLOW  ! $COL_STOP"
+# Icons — Nerd Font filled circles (Font Awesome \uf0xx, requires Nerd Font)
+ICON_OK="$COL_GREEN2\uf058$COL_STOP"    # nf-fa-check_circle
+ICON_ERR="$COL_RED\uf057$COL_STOP"      # nf-fa-times_circle
+ICON_WARN="$COL_YELLOW\uf06a$COL_STOP"  # nf-fa-exclamation_circle
+ICON_INFO="$COL_BG_BLUE\uf05a$COL_STOP" # nf-fa-info_circle
 
 status_emit() {
     local level="$1"
@@ -65,4 +67,4 @@ status_err() {
 
 # delay to set vim mode
 KEYTIMEOUT=1
-export KEYTIMEOUT ICON_OK ICON_ERR ICON_INFO ICON_WARN
+export KEYTIMEOUT ICON_OK ICON_ERR ICON_INFO ICON_WARN COL_DIM COL_BOLD

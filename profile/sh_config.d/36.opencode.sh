@@ -10,7 +10,6 @@ prepend_path_if_dir() {
             *":$dir:"*) ;;
             *)
                 PATH="$dir:$PATH"
-                status_info "opencode" "added $dir to PATH"
                 ;;
         esac
     fi
@@ -22,8 +21,6 @@ prepend_path_if_dir "$HOME/bin"
 export PATH
 
 if command -v opencode >/dev/null 2>&1; then
-    status_ok "opencode" "found; setting up completion"
-
     if [ -n "${ZSH_VERSION:-}" ]; then
         if ! type bashcompinit >/dev/null 2>&1; then
             autoload -U bashcompinit
@@ -37,11 +34,5 @@ if command -v opencode >/dev/null 2>&1; then
         source <(opencode completion 2>/dev/null)
     else
         status_err "opencode" "unknown shell; completion setup skipped"
-    fi
-else
-    if [ -t 0 ]; then
-        status_info "opencode" "not found; install with one of:"
-        printf '  - brew install anomalyco/tap/opencode (recommended on macOS/Linux)\n'
-        printf '  - curl -fsSL https://opencode.ai/install | bash\n'
     fi
 fi
