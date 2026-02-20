@@ -40,6 +40,8 @@ There is no unit test framework in this repository.
   - `shellcheck -s bash install.sh`
   - `shellcheck -s bash profile/zshrc.sh`
   - `shellcheck -s bash scripts/cloudflare-ddns.sh`
+  - `shellcheck -s bash -x scripts/cloudflare-ddns.sh` (verbose output)
+  - `shellcheck -s bash -S error profile/sh_config.d/20.editor.sh` (relaxed severity)
 
 ## Code Style Guidelines
 
@@ -136,3 +138,9 @@ Shell has no static types; use predictable conventions instead:
 ## Agent-Specific Instruction Sources
 - Cursor rules: none found (`.cursor/rules/` and `.cursorrules` absent).
 - Copilot rules: none found (`.github/copilot-instructions.md` absent).
+
+## Debugging
+- Profile loading: `zsh -x -i -c 'exit'` (verbose shell startup)
+- Install debug: `./install.sh -v` (verbose output), `./install.sh -u` (uninstall/cleanup)
+- ShellCheck fails on sourced files: Add `# shellcheck source=/dev/null` or disable directives.
+- Profile not loading: Verify `~/.zshrc` points to `profile/zshrc.sh` via symlink.

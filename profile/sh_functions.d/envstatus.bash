@@ -78,10 +78,20 @@ envstatus() {
         _err "cargo"      "$HOME/.cargo/bin not found"
     fi
 
-    local _piopath
+    local _piopath _platformio_win_home
     case $(setuptype) in
         macbook) _piopath="$HOME/.platformio/penv/bin" ;;
-        windows) _piopath="/mnt/c/Users/thoma/.platformio/penv/Scripts" ;;
+        windows)
+            _platformio_win_home="${PLATFORMIO_WIN_HOME:-}"
+            if [ -z "$_platformio_win_home" ]; then
+                if [ -n "${USERPROFILE:-}" ] && command -v wslpath &>/dev/null; then
+                    _platformio_win_home="$(wslpath "$USERPROFILE")"
+                else
+                    _platformio_win_home="/mnt/c/Users/${USER:-Default}"
+                fi
+            fi
+            _piopath="$_platformio_win_home/.platformio/penv/Scripts"
+            ;;
     esac
     if [[ -n "$_piopath" ]] && [ -d "$_piopath" ]; then
         _ok  "platformio" "$_piopath"
@@ -191,5 +201,5 @@ envstatus() {
 
     unset -f _section _row _ok _info _warn _err
     unset _profile _width _sep _nok _nwarn _nerr
-    unset _uptime _mise_data _piopath _cf_creds _perms _cs_dir _cs_link
+    unset _uptime _mise_data _piopath _platformio_win_home _cf_creds _perms _cs_dir _cs_link
 }
