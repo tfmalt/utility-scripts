@@ -178,13 +178,13 @@ envstatus() {
 
     printf '\n%s\n' "$_sep"
     printf '  '
-    printf '%b%s %d ok%b' "$COL_GREEN2" "$ICON_OK" "$_nok" "$COL_STOP"
+    printf '%b %d ok' "$ICON_OK" "$_nok"
     if [ "$_nwarn" -gt 0 ]; then
-        printf '   %b%s %d warning%b' "$COL_YELLOW" "$ICON_WARN" "$_nwarn" "$COL_STOP"
+        printf '   %b %d warning' "$ICON_WARN" "$_nwarn"
         [ "$_nwarn" -gt 1 ] && printf 's'
     fi
     if [ "$_nerr" -gt 0 ]; then
-        printf '   %b%s %d error%b' "$COL_RED" "$ICON_ERR" "$_nerr" "$COL_STOP"
+        printf '   %b %d error' "$ICON_ERR" "$_nerr"
         [ "$_nerr" -gt 1 ] && printf 's'
     fi
     printf '\n%s\n\n' "$_sep"
