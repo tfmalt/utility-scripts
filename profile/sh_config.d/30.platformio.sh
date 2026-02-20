@@ -16,10 +16,9 @@ case $(setuptype) in
 esac
 
 if [[ -n "$PIOPATH" ]] && [ -d "$PIOPATH" ]; then
-    [ -t 0 ] &&  echo -e "$ICON_OK Found platformio. Adding to path."
+    status_ok "platformio" "found; adding $PIOPATH to PATH"
     PATH="$PATH:$PIOPATH"
     export PATH
 else 
-    [ -t 0 ] && echo -e "$ICON_ERR Platformio Not Found. Skipping."
+    status_err "platformio" "not found; setup skipped"
 fi
-

@@ -16,8 +16,8 @@ if [[ -x $HOME/.local/bin/hass-cli ]]; then
   export HASS_SERVER="${HASS_SERVER:-http://192.168.71.3:8123}"
   # Expect HASS_TOKEN to be provided via environment or a secrets manager
   if [ -z "$HASS_TOKEN" ]; then
-    [ -t 0 ] && echo -e "$ICON_INFO HASS_TOKEN not set; hass-cli may prompt for authentication."
+    status_info "hass" "HASS_TOKEN not set; hass-cli may prompt for authentication"
   fi
   # source <($HOME/.local/bin/hass-cli completion zsh)
-  [ -t 0 ] && echo -e "$ICON_OK Found hass-cli. Setting up."
+  status_ok "hass" "hass-cli found; setup complete"
 fi

@@ -54,5 +54,5 @@ if [[ $SHELL == *bash ]]; then
           ;;
   esac
   export PS1
-  [ -t 0 ] && echo -e "$ICON_OK Shell is bash. Setting prompt for $(setuptype)"
+  status_ok "prompt" "bash detected; prompt configured for $(setuptype)"
 fi

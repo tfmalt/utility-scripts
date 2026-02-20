@@ -20,7 +20,7 @@ if [ -f "$CLOUDFLARE_CREDENTIALS" ]; then
   # Use lowercase %a for Linux (numeric), uppercase %Lp for macOS (octal)
   PERMS=$(stat -c '%a' "$CLOUDFLARE_CREDENTIALS" 2>/dev/null || stat -f '%Lp' "$CLOUDFLARE_CREDENTIALS" 2>/dev/null)
   if [ "$PERMS" != "600" ]; then
-    [ -t 0 ] && echo -e "${ICON_WARN:-⚠️ } Warning: $CLOUDFLARE_CREDENTIALS has insecure permissions. Run: chmod 600 $CLOUDFLARE_CREDENTIALS"
+    status_warn "cloudflare" "$CLOUDFLARE_CREDENTIALS has insecure permissions; run: chmod 600 $CLOUDFLARE_CREDENTIALS"
   fi
   unset PERMS
 
@@ -29,12 +29,12 @@ if [ -f "$CLOUDFLARE_CREDENTIALS" ]; then
 
   if [ -n "$CF_API_TOKEN" ]; then
     export CF_API_TOKEN
-    [ -t 0 ] && echo -e "${ICON_OK:-✓} Loaded Cloudflare API token from $CLOUDFLARE_CREDENTIALS"
+    status_ok "cloudflare" "loaded CF_API_TOKEN from $CLOUDFLARE_CREDENTIALS"
   else
-    [ -t 0 ] && echo -e "${ICON_WARN:-⚠️ } $CLOUDFLARE_CREDENTIALS exists but CF_API_TOKEN not set"
+    status_warn "cloudflare" "$CLOUDFLARE_CREDENTIALS exists but CF_API_TOKEN is not set"
   fi
 else
-  [ -t 0 ] && echo -e "${ICON_INFO:-ℹ️ } Cloudflare credentials not found at $CLOUDFLARE_CREDENTIALS"
+  status_info "cloudflare" "credentials file not found at $CLOUDFLARE_CREDENTIALS"
 fi
 
 # Cleanup

@@ -7,5 +7,5 @@
 if [ -f "$HOME/.sbanken" ]; then
   source "$HOME/.sbanken"
 else 
-  [ -t 0 ] && echo -e "$ICON_ERR Sbanken config Not Found. Skipping."
+  status_err "sbanken" "config file not found; setup skipped"
 fi

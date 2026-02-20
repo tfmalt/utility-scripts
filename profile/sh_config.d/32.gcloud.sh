@@ -7,7 +7,7 @@
 #
 
 if [[ -e $(command -v gcloud) ]]; then
-  [ -t 0 ] && echo -e "$ICON_OK Found gcloud. Setting up completion."
+  status_ok "gcloud" "found; setting up completion"
   case $(setuptype) in
     macbook)
       export CLOUDSDK_PYTHON=/usr/local/bin/python
@@ -21,10 +21,9 @@ if [[ -e $(command -v gcloud) ]]; then
       fi
       ;;
     *)
-      [ -t 0 ] && echo -e "   $ICON_ERR Don't know path to include files for $(setuptype)"
+      status_warn "gcloud" "unknown include path for $(setuptype); completion skipped"
       ;;
   esac
 else
-  [ -t 0 ] && echo -e "$ICON_ERR google-cloud-sdk not found. Skipping."
+  status_err "gcloud" "google-cloud-sdk not found; setup skipped"
 fi 
-

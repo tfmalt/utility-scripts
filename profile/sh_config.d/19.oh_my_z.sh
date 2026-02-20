@@ -26,7 +26,7 @@ custom_js() {
 
 if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
 
-  [ -t 0 ] && echo "$ICON_OK Shell is zsh and found oh-my-zsh. Doing configuration."
+  status_ok "oh-my-zsh" "zsh detected; loading oh-my-zsh configuration"
   export ZSH="$HOME/.oh-my-zsh"
 
   # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
@@ -140,5 +140,5 @@ if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
   source $ZSH/oh-my-zsh.sh
 
 else
-  [ -t 0 ] && echo -e "$ICON_ERR zsh not running ($0). Skipping zsh setup."
+  status_err "oh-my-zsh" "zsh not running ($0); setup skipped"
 fi

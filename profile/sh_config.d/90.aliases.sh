@@ -20,7 +20,6 @@ linux-server) ;;
 
 windows)
   alias dotnet="dotnet.exe"
-  alias code="code-insiders"
   ;;
 esac
 

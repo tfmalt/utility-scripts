@@ -43,6 +43,11 @@ There is no unit test framework in this repository.
 
 ## Code Style Guidelines
 
+### Tool Installation Policy
+- For profile snippets that configure developer tools, use **install guidance only**.
+- Do **not** auto-install tools during shell startup.
+- Snippets should detect presence, configure environment/completions when available, and print clear install commands when missing.
+
 ### Shell and Shebang
 - Use `#!/bin/bash` for executable scripts.
 - Add `# shellcheck shell=bash` to sourced shell fragments.

@@ -7,10 +7,9 @@
 CARGO="$HOME/.cargo/bin"
 
 if [ -d "$CARGO" ]; then
-  [ -t 0 ] && echo -e "$ICON_OK Found $CARGO. Adding to path."
+  status_ok "cargo" "found; adding $CARGO to PATH"
   export PATH="$PATH:$CARGO"
 else
-  [ -t 0 ] && echo -e "$ICON_ERR Cargo Not Found. Skipping."
+  status_err "cargo" "not found; setup skipped"
 fi 
-
 
