@@ -294,11 +294,12 @@ uninstall() {
     restore_backup "$INSTALL_PREFIX/.zshrc"
     echo " Done"
     
-    echo "Uninstall complete. Oh My Zsh and mise installations were left intact."
+    echo "Uninstall complete. Oh My Zsh, mise, and opencode installations were left intact."
     echo "To remove them manually:"
     echo "  rm -rf $ZSH"
     echo "  rm -rf $INSTALL_PREFIX/.local/share/mise"
     echo "  rm -f $INSTALL_PREFIX/.local/bin/mise"
+    echo "  rm -rf $INSTALL_PREFIX/.opencode"
 }
 
 # ---------------------------------------------------------------------------
@@ -427,6 +428,25 @@ else
             curl https://mise.run | sh
         else
             curl -sSL https://mise.run | sh
+        fi
+        echo " Done"
+    else
+        echo " Skipped"
+    fi
+fi
+
+OUTPUT="installing opencode"
+echo -n "$(pad_output "$OUTPUT"):"
+if command_exists opencode; then
+    log_verbose "opencode already installed"
+    echo " exists"
+else
+    if confirm "Install opencode (AI coding assistant)?"; then
+        log_verbose "Installing opencode from https://opencode.ai/install"
+        if [ "$VERBOSE" = true ]; then
+            curl -fsSL https://opencode.ai/install | bash
+        else
+            curl -fsSL https://opencode.ai/install | bash
         fi
         echo " Done"
     else
