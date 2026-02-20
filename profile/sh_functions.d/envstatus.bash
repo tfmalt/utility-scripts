@@ -7,7 +7,9 @@
 # Usage: envstatus
 #
 envstatus() {
-    local _profile="${PROFILE_DIR:-${PROFILE:-${DOTFILES:-}}}"
+    local _profile="${PROFILE_DIR:-${PROFILE:-}}"
+    local _hosttype
+    _hosttype=$(setuptype)
     local _width
     _width=$(tput cols 2>/dev/null || echo 60)
     [ "$_width" -gt 72 ] && _width=72
@@ -54,7 +56,7 @@ envstatus() {
     _uptime=$(uptime | sed 's/.*up //; s/,  [0-9]* user.*//')
     printf '\n%s\n' "$_sep"
     printf '%b  Environment Status%b\n' "$COL_BOLD" "$COL_STOP"
-    printf '%b  %s  •  up %s%b\n' "$COL_DIM" "$(setuptype)" "$_uptime" "$COL_STOP"
+    printf '%b  %s  •  up %s%b\n' "$COL_DIM" "$_hosttype" "$_uptime" "$COL_STOP"
     printf '%s\n' "$_sep"
 
     # --- Dev Tools --------------------------------------------------------
@@ -79,7 +81,7 @@ envstatus() {
     fi
 
     local _piopath _platformio_win_home
-    case $(setuptype) in
+    case $_hosttype in
         macbook) _piopath="$HOME/.platformio/penv/bin" ;;
         windows)
             _platformio_win_home="${PLATFORMIO_WIN_HOME:-}"
@@ -160,28 +162,45 @@ envstatus() {
 
     _section "Shell Config"
 
+    if [ -z "$_profile" ]; then
+        _warn "profile"    "PROFILE_DIR and PROFILE are unset — run install.sh"
+    fi
+
     if [ -d "$HOME/.oh-my-zsh" ]; then
         _ok   "oh-my-zsh" "$HOME/.oh-my-zsh"
     else
         _err  "oh-my-zsh" "not installed"
     fi
 
-    local _cs_dir="$_profile/vim/awesome-vim-colorschemes"
-    local _cs_link="$_profile/vim/colors"
-    if [ -L "$_cs_dir" ] && [ ! -e "$_cs_dir" ]; then
-        _err  "vim-colors" "awesome-vim-colorschemes is a stale symlink"
-    elif [ ! -d "$_cs_dir/.git" ]; then
-        _err  "vim-colors" "not cloned — run install.sh"
-    elif [ -z "$(ls -A "$_cs_dir/colors" 2>/dev/null)" ]; then
-        _err  "vim-colors" "colors dir empty — git submodule update --init"
-    elif [ -L "$_cs_link" ] && [ ! -e "$_cs_link" ]; then
-        _err  "vim-colors" "vim/colors is a stale symlink — run install.sh"
-    elif [ ! -e "$_cs_link" ]; then
-        _err  "vim-colors" "vim/colors not linked — run install.sh"
-    elif [ -L "$_cs_link" ] && [ "$(readlink "$_cs_link")" != "$_cs_dir/colors" ]; then
-        _err  "vim-colors" "vim/colors wrong target: $(readlink "$_cs_link")"
-    else
-        _ok   "vim-colors" "colorschemes present and linked"
+    if [ -n "$_profile" ]; then
+        local _cs_dir="$_profile/vim/awesome-vim-colorschemes"
+        local _cs_link="$_profile/vim/colors"
+        if [ -L "$_cs_dir" ] && [ ! -e "$_cs_dir" ]; then
+            _err  "vim-colors" "awesome-vim-colorschemes is a stale symlink"
+        elif [ ! -d "$_cs_dir/.git" ]; then
+            _err  "vim-colors" "not cloned — run install.sh"
+        elif [ -z "$(ls -A "$_cs_dir/colors" 2>/dev/null)" ]; then
+            _err  "vim-colors" "colors dir empty — git submodule update --init"
+        elif [ -L "$_cs_link" ] && [ ! -e "$_cs_link" ]; then
+            _err  "vim-colors" "vim/colors is a stale symlink — run install.sh"
+        elif [ ! -e "$_cs_link" ]; then
+            _err  "vim-colors" "vim/colors not linked — run install.sh"
+        elif [ -L "$_cs_link" ]; then
+            local _actual _expected
+            _actual=$(realpath "$_cs_link" 2>/dev/null \
+                || readlink -f "$_cs_link" 2>/dev/null \
+                || readlink "$_cs_link")
+            _expected=$(realpath "$_cs_dir/colors" 2>/dev/null \
+                || readlink -f "$_cs_dir/colors" 2>/dev/null \
+                || echo "$_cs_dir/colors")
+            if [ "$_actual" != "$_expected" ]; then
+                _err  "vim-colors" "vim/colors wrong target: $(readlink "$_cs_link")"
+            else
+                _ok   "vim-colors" "colorschemes present and linked"
+            fi
+        else
+            _ok   "vim-colors" "colorschemes present and linked"
+        fi
     fi
 
     # --- Footer / summary -------------------------------------------------
@@ -200,6 +219,6 @@ envstatus() {
     printf '\n%s\n\n' "$_sep"
 
     unset -f _section _row _ok _info _warn _err
-    unset _profile _width _sep _nok _nwarn _nerr
-    unset _uptime _mise_data _piopath _platformio_win_home _cf_creds _perms _cs_dir _cs_link
+    unset _profile _hosttype _width _sep _nok _nwarn _nerr
+    unset _uptime _mise_data _piopath _platformio_win_home _cf_creds _perms _cs_dir _cs_link _actual _expected
 }

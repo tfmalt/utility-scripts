@@ -29,7 +29,7 @@ XDG_CONFIG_HOME="$HOME/.config"
 
 export XDG_CONFIG_HOME LANGUAGE EDITOR RSYNC_RSH TERM VISUAL
 
-PROFILE_DIR="${PROFILE:-${DOTFILES:-}}"
+PROFILE_DIR="${PROFILE:-}"
 
 # Load bash functions
 if [ -d "$PROFILE_DIR/sh_functions.d" ]; then

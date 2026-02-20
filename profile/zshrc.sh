@@ -8,7 +8,7 @@ zmodload zsh/zprof
 # autoload -U compinit
 # compinit -i
 
-PROFILE_DIR="${PROFILE:-${DOTFILES:-}}"
+PROFILE_DIR="${PROFILE:-}"
 
 
 # First include all functions

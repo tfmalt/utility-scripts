@@ -2,8 +2,8 @@
 # shellcheck shell=bash
 # Check that awesome-vim-colorschemes is cloned and vim/colors is linked correctly
 
-_COLORSCHEME_DIR="${PROFILE_DIR:-${PROFILE:-${DOTFILES:-}}}/vim/awesome-vim-colorschemes"
-_COLORSCHEME_LINK="${PROFILE_DIR:-${PROFILE:-${DOTFILES:-}}}/vim/colors"
+_COLORSCHEME_DIR="${PROFILE_DIR:-${PROFILE:-}}/vim/awesome-vim-colorschemes"
+_COLORSCHEME_LINK="${PROFILE_DIR:-${PROFILE:-}}/vim/colors"
 
 # Verify the repo is a valid, non-empty git clone with actual colorscheme files
 if [ -L "$_COLORSCHEME_DIR" ] && [ ! -e "$_COLORSCHEME_DIR" ]; then

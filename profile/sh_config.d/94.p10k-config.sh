@@ -4,7 +4,7 @@
 # Only for zsh sessions
 
 if [ -n "$ZSH_VERSION" ]; then
-  PROFILE_DIR="${PROFILE:-${DOTFILES:-}}"
+  PROFILE_DIR="${PROFILE:-}"
   if [ -r "$PROFILE_DIR/p10k.zsh" ]; then
     # shellcheck disable=SC1090
     . "$PROFILE_DIR/p10k.zsh"
