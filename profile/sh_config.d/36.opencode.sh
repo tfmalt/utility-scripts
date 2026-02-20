@@ -18,6 +18,10 @@ prepend_path_if_dir() {
 prepend_path_if_dir "$HOME/.opencode/bin"
 prepend_path_if_dir "$HOME/.local/bin"
 prepend_path_if_dir "$HOME/bin"
+# if [ "$(uname -s)" = "Linux" ] && command -v brew >/dev/null 2>&1; then
+prepend_path_if_dir "$(brew --prefix)/bin"
+# fi
+
 export PATH
 
 if command -v opencode >/dev/null 2>&1; then
