@@ -33,12 +33,14 @@ git submodule update --init --recursive  # Initialize vim colorscheme submodule
 
 The shell configuration uses a numbered loading system in `profile/sh_config.d/`:
 
-- `01-09`: Helper functions and core utilities
-- `10-19`: Environment setup and shell framework configuration  
-- `20-29`: Display and color configurations
-- `30-39`: Development tool configurations (cargo, gcloud, platformio)
-- `40-49`: Authentication and credential management (SSH, AWS)
-- `90-99`: User interface elements (aliases, prompts, cleanup)
+- `01-09`: Bootstrap — helper functions and early init (icons, p10k instant prompt)
+- `10-19`: Foundation — environment variables, locales, core tool setup (zoxide, fzf, completions, Oh My Zsh)
+- `20-29`: Display — colors, dircolors
+- `30-39`: Dev tools — language-specific version managers and toolchains (cargo, gcloud, platformio, fnm)
+- `40-49`: Auth & credentials — SSH agent, API tokens (Homebrew, Cloudflare, AWS)
+- `90-99`: Finalization — aliases, shell-specific config, prompts, plugins, last-mile setup
+
+Files use a `NN.descriptive-name.sh` naming convention with kebab-case for multi-word names. Each prefix number must be unique.
 
 ### Key Components
 
@@ -47,7 +49,7 @@ The shell configuration uses a numbered loading system in `profile/sh_config.d/`
 - Symlink creation with collision detection
 - Comprehensive backup system with timestamped backups
 - Uninstall capability with backup restoration
-- Dependency checking and installation (Oh My Zsh, Powerlevel10k, Volta)
+- Dependency checking and installation (Oh My Zsh, Powerlevel10k, fnm)
 - Cross-platform support with verbose logging
 
 **`profile/sh_functions.d/setuptype.bash`**: System detection function that identifies:
