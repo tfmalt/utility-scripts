@@ -10,7 +10,7 @@ if [[ -d $HOME/.local/bin ]]; then
 fi
 export PATH
 
-if [[ -x $HOME/.local/bin/hass-cli ]]; then
+if ! envstatus_tool_disabled "hass" && [[ -x $HOME/.local/bin/hass-cli ]]; then
   alias hass=hass-cli
   # Default server can be overridden with environment
   export HASS_SERVER="${HASS_SERVER:-http://192.168.71.3:8123}"

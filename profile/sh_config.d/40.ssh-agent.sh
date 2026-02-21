@@ -23,16 +23,17 @@ function start_agent {
   esac
 }
 
-# Source SSH settings, if applicable
-
-if [ -f "${SSH_ENV}" ]; then
-  source "${SSH_ENV}" >/dev/null
-  # Check if the SSH_AGENT_PID process exists and is actually ssh-agent
-  if [ -n "${SSH_AGENT_PID}" ] && ps -p "${SSH_AGENT_PID}" >/dev/null 2>&1 && ps -p "${SSH_AGENT_PID}" -o comm= 2>/dev/null | grep -q '^ssh-agent$'; then
-    : # already running
+if ! envstatus_tool_disabled "ssh-agent"; then
+  # Source SSH settings, if applicable
+  if [ -f "${SSH_ENV}" ]; then
+    source "${SSH_ENV}" >/dev/null
+    # Check if the SSH_AGENT_PID process exists and is actually ssh-agent
+    if [ -n "${SSH_AGENT_PID}" ] && ps -p "${SSH_AGENT_PID}" >/dev/null 2>&1 && ps -p "${SSH_AGENT_PID}" -o comm= 2>/dev/null | grep -q '^ssh-agent$'; then
+      : # already running
+    else
+      start_agent
+    fi
   else
     start_agent
   fi
-else
-  start_agent
 fi

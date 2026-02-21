@@ -15,7 +15,7 @@
 
 CLOUDFLARE_CREDENTIALS="$HOME/.config/cloudflare/credentials"
 
-if [ -f "$CLOUDFLARE_CREDENTIALS" ]; then
+if ! envstatus_tool_disabled "cloudflare" && [ -f "$CLOUDFLARE_CREDENTIALS" ]; then
   # Check file permissions for security
   # Use lowercase %a for Linux (numeric), uppercase %Lp for macOS (octal)
   PERMS=$(stat -c '%a' "$CLOUDFLARE_CREDENTIALS" 2>/dev/null || stat -f '%Lp' "$CLOUDFLARE_CREDENTIALS" 2>/dev/null)

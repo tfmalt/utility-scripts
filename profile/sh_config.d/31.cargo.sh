@@ -6,9 +6,10 @@
 
 CARGO="$HOME/.cargo/bin"
 
-if [ -d "$CARGO" ]; then
-  export PATH="$PATH:$CARGO"
-else
-  status_err "cargo" "not found; setup skipped"
-fi 
-
+if ! envstatus_tool_disabled "cargo"; then
+  if [ -d "$CARGO" ]; then
+    export PATH="$PATH:$CARGO"
+  else
+    status_err "cargo" "not found; setup skipped"
+  fi
+fi

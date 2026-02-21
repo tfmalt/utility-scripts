@@ -24,7 +24,9 @@ custom_js() {
   fi
 }
 
-if [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
+if envstatus_tool_disabled "oh-my-zsh"; then
+  :
+elif [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
 
   export ZSH="$HOME/.oh-my-zsh"
 

@@ -65,6 +65,21 @@ status_err() {
     status_emit "err" "$1" "$2"
 }
 
+envstatus_config_file() {
+    printf '%s' "${XDG_CONFIG_HOME:-$HOME/.config}/envstatus/disabled-tools.conf"
+}
+
+envstatus_tool_disabled() {
+    local tool="$1"
+    local config_file
+
+    [ -n "$tool" ] || return 1
+    config_file="$(envstatus_config_file)"
+    [ -f "$config_file" ] || return 1
+
+    grep -Fqx -- "$tool" "$config_file"
+}
+
 # delay to set vim mode
 KEYTIMEOUT=1
 export KEYTIMEOUT ICON_OK ICON_ERR ICON_INFO ICON_WARN COL_DIM COL_BOLD

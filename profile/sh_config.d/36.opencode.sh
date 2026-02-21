@@ -28,7 +28,7 @@ fi
 
 export PATH
 
-if command -v opencode >/dev/null 2>&1; then
+if ! envstatus_tool_disabled "opencode" && command -v opencode >/dev/null 2>&1; then
     if [ -n "${ZSH_VERSION:-}" ]; then
         if ! type bashcompinit >/dev/null 2>&1; then
             autoload -U bashcompinit
