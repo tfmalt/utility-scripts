@@ -496,6 +496,58 @@ else
     fi
 fi
 
+MISE_CMD=""
+if command_exists mise; then
+    MISE_CMD=$(command -v mise)
+elif [ -x "$INSTALL_PREFIX/.local/bin/mise" ]; then
+    MISE_CMD="$INSTALL_PREFIX/.local/bin/mise"
+fi
+
+OUTPUT="installing node"
+echo -n "$(pad_output "$OUTPUT"):"
+if command_exists node; then
+    log_verbose "node already installed"
+    echo " exists"
+elif [ -n "$MISE_CMD" ]; then
+    if confirm "Install Node.js (node@latest) via mise globally?"; then
+        log_verbose "Installing node@latest via mise ($MISE_CMD)"
+        if [ "$VERBOSE" = true ]; then
+            if "$MISE_CMD" use -g node@latest; then
+                :
+            else
+                echo " Failed"
+                echo "Error: Node.js installation via mise failed."
+                echo "Try again manually with:"
+                echo "  $MISE_CMD use -g node@latest"
+                exit 1
+            fi
+        else
+            if "$MISE_CMD" use -g node@latest > /dev/null 2>&1; then
+                :
+            else
+                echo " Failed"
+                echo "Error: Node.js installation via mise failed."
+                echo "Try again manually with:"
+                echo "  $MISE_CMD use -g node@latest"
+                exit 1
+            fi
+        fi
+
+        if [ -d "$INSTALL_PREFIX/.local/bin" ] && [[ ":$PATH:" != *":$INSTALL_PREFIX/.local/bin:"* ]]; then
+            PATH="$INSTALL_PREFIX/.local/bin:$PATH"
+            export PATH
+        fi
+
+        eval "$("$MISE_CMD" activate bash)"
+        echo " Done"
+    else
+        echo " Skipped"
+    fi
+else
+    echo " Skipped"
+    echo "Error: mise is required to install Node.js. Install mise first."
+fi
+
 OUTPUT="installing cargo"
 echo -n "$(pad_output "$OUTPUT"):"
 if command_exists cargo; then
