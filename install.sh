@@ -322,7 +322,7 @@ uninstall() {
     fi
     echo " Done"
     
-    echo "Uninstall complete. Oh My Zsh, cargo/rustup, platformio, mise, and opencode installations were left intact."
+    echo "Uninstall complete. Oh My Zsh, cargo/rustup, platformio, mise, opencode, and claude installations were left intact."
     echo "To remove them manually:"
     echo "  rm -rf $ZSH"
     echo "  rm -rf $HOME/.cargo"
@@ -331,6 +331,8 @@ uninstall() {
     echo "  rm -rf $INSTALL_PREFIX/.local/share/mise"
     echo "  rm -f $INSTALL_PREFIX/.local/bin/mise"
     echo "  rm -rf $INSTALL_PREFIX/.opencode"
+    echo "  rm -f $HOME/.local/bin/claude"
+    echo "  rm -rf $HOME/.local/share/claude"
 }
 
 # ---------------------------------------------------------------------------
@@ -546,6 +548,40 @@ elif [ -n "$MISE_CMD" ]; then
 else
     echo " Skipped"
     echo "Error: mise is required to install Node.js. Install mise first."
+fi
+
+OUTPUT="installing claude"
+echo -n "$(pad_output "$OUTPUT"):"
+if command_exists claude; then
+    log_verbose "claude already installed"
+    echo " exists"
+else
+    if confirm "Install Claude Code (native installer)?"; then
+        log_verbose "Installing Claude Code from https://claude.ai/install.sh"
+        if [ "$VERBOSE" = true ]; then
+            if curl -fsSL https://claude.ai/install.sh | bash; then
+                echo " Done"
+            else
+                echo " Failed"
+                echo "Error: Claude Code installation failed."
+                echo "Try again manually with:"
+                echo "  curl -fsSL https://claude.ai/install.sh | bash"
+                exit 1
+            fi
+        else
+            if curl -fsSL https://claude.ai/install.sh | bash > /dev/null 2>&1; then
+                echo " Done"
+            else
+                echo " Failed"
+                echo "Error: Claude Code installation failed."
+                echo "Try again manually with:"
+                echo "  curl -fsSL https://claude.ai/install.sh | bash"
+                exit 1
+            fi
+        fi
+    else
+        echo " Skipped"
+    fi
 fi
 
 OUTPUT="installing cargo"
