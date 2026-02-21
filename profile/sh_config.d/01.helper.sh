@@ -6,10 +6,10 @@
 
 # Colors
 COL_GREEN="\e[32m"
-COL_GREEN2="\e[38;05;34m"
-COL_YELLOW="\e[38;05;220m"
-COL_BG_BLUE="\e[48;05;33m"
-COL_RED="\e[38;05;160m"
+COL_GREEN2="\e[38;05;41m"
+COL_YELLOW="\e[38;05;214m"
+COL_BLUE_LIGHT="\e[38;05;117m"
+COL_RED="\e[38;05;167m"
 COL_STOP="\e[0m"
 COL_DIM="\e[38;05;240m"
 COL_BOLD="\e[1m"
@@ -18,7 +18,7 @@ COL_BOLD="\e[1m"
 ICON_OK="$COL_GREEN2\uf058$COL_STOP"    # nf-fa-check_circle
 ICON_ERR="$COL_RED\uf057$COL_STOP"      # nf-fa-times_circle
 ICON_WARN="$COL_YELLOW\uf06a$COL_STOP"  # nf-fa-exclamation_circle
-ICON_INFO="$COL_BG_BLUE\uf05a$COL_STOP" # nf-fa-info_circle
+ICON_INFO="$COL_BLUE_LIGHT\uf05a$COL_STOP" # nf-fa-info_circle
 
 status_emit() {
     local level="$1"
