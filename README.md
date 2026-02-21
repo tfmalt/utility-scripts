@@ -160,6 +160,35 @@ This will install the following dependencies:
 
 ## Optional Configuration
 
+### envstatus Tool Overrides (Local Only)
+
+The `envstatus` function now supports per-user, per-host local overrides so you can disable checks for tools that are not relevant on a specific machine.
+
+- Overrides are stored in: `${XDG_CONFIG_HOME:-$HOME/.config}/envstatus/disabled-tools.conf`
+- This file is local to the current user and host
+- By default, all checks remain enabled unless explicitly disabled in this file
+
+**Commands:**
+
+```bash
+# Show environment status (default behavior)
+envstatus
+
+# Disable a tool check locally (example: linux-server)
+envstatus disable platformio
+
+# Re-enable a tool check
+envstatus enable platformio
+
+# List currently disabled tools
+envstatus disabled
+
+# Show command help
+envstatus help
+```
+
+When a tool is disabled, `envstatus` shows it as `disabled via local config` and does not count it as a warning or error.
+
 ### Cloudflare API Integration
 
 If you use [flarectl](https://github.com/cloudflare/cloudflare-go/tree/master/cmd/flarectl) to manage Cloudflare DNS records, you can configure your API token to be automatically loaded.
