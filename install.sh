@@ -322,11 +322,12 @@ uninstall() {
     fi
     echo " Done"
     
-    echo "Uninstall complete. Oh My Zsh, cargo/rustup, mise, and opencode installations were left intact."
+    echo "Uninstall complete. Oh My Zsh, cargo/rustup, platformio, mise, and opencode installations were left intact."
     echo "To remove them manually:"
     echo "  rm -rf $ZSH"
     echo "  rm -rf $HOME/.cargo"
     echo "  rm -rf $HOME/.rustup"
+    echo "  rm -rf $HOME/.platformio"
     echo "  rm -rf $INSTALL_PREFIX/.local/share/mise"
     echo "  rm -f $INSTALL_PREFIX/.local/bin/mise"
     echo "  rm -rf $INSTALL_PREFIX/.opencode"
@@ -510,6 +511,35 @@ else
             echo "Error: rustup installation failed."
             echo "Try again manually with:"
             echo "  curl -fsSL https://sh.rustup.rs | sh -s -- -y --no-modify-path"
+            exit 1
+        fi
+    else
+        echo " Skipped"
+    fi
+fi
+
+OUTPUT="installing platformio"
+echo -n "$(pad_output "$OUTPUT"):"
+if command_exists pio || command_exists pio.exe; then
+    log_verbose "platformio already installed"
+    echo " exists"
+else
+    if confirm "Install PlatformIO Core?"; then
+        if command_exists python3; then
+            log_verbose "Installing PlatformIO Core from official installer"
+            if curl -fsSL https://raw.githubusercontent.com/platformio/platformio-core-installer/master/get-platformio.py \
+                | python3; then
+                echo " Done"
+            else
+                echo " Failed"
+                echo "Error: PlatformIO Core installation failed."
+                echo "Try again manually with:"
+                echo "  curl -fsSL https://raw.githubusercontent.com/platformio/platformio-core-installer/master/get-platformio.py | python3"
+                exit 1
+            fi
+        else
+            echo " Failed"
+            echo "Error: python3 is required to install PlatformIO Core."
             exit 1
         fi
     else
