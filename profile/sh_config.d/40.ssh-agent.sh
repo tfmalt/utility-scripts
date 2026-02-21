@@ -24,11 +24,17 @@ function start_agent {
 }
 
 if ! envstatus_tool_disabled "ssh-agent"; then
+  _ssh_agent_comm=""
+  _ssh_agent_name=""
   # Source SSH settings, if applicable
   if [ -f "${SSH_ENV}" ]; then
     source "${SSH_ENV}" >/dev/null
     # Check if the SSH_AGENT_PID process exists and is actually ssh-agent
-    if [ -n "${SSH_AGENT_PID}" ] && ps -p "${SSH_AGENT_PID}" >/dev/null 2>&1 && ps -p "${SSH_AGENT_PID}" -o comm= 2>/dev/null | grep -q '^ssh-agent$'; then
+    if [ -n "${SSH_AGENT_PID:-}" ] && ps -p "${SSH_AGENT_PID}" >/dev/null 2>&1; then
+      _ssh_agent_comm=$(ps -p "${SSH_AGENT_PID}" -o comm= 2>/dev/null || true)
+      _ssh_agent_name=${_ssh_agent_comm##*/}
+    fi
+    if [ "${_ssh_agent_name}" = "ssh-agent" ]; then
       : # already running
     else
       start_agent
