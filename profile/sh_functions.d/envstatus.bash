@@ -397,15 +397,17 @@ envstatus() {
 
     _section "Auth & Credentials"
 
-    local _ssh_agent_comm
+    local _ssh_agent_comm _ssh_agent_name
     _ssh_agent_comm=""
+    _ssh_agent_name=""
     if _is_disabled "ssh-agent"; then
         _info "ssh-agent" "disabled via local config"
     else
         if [ -n "${SSH_AGENT_PID:-}" ]; then
             _ssh_agent_comm=$(ps -p "$SSH_AGENT_PID" -o comm= 2>/dev/null || true)
+            _ssh_agent_name=${_ssh_agent_comm##*/}
         fi
-        if [ "$_ssh_agent_comm" = "ssh-agent" ]; then
+        if [ "$_ssh_agent_name" = "ssh-agent" ]; then
             _ok   "ssh-agent" "running (pid $SSH_AGENT_PID)"
         else
             _warn "ssh-agent" "not running"
