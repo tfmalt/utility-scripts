@@ -12,18 +12,27 @@ envstatus() {
     _hosttype=$(setuptype)
     local _width
     _width=$(tput cols 2>/dev/null || echo 60)
+    [ "$_width" -lt 40 ] && _width=40
     [ "$_width" -gt 72 ] && _width=72
 
+    local _col_bold="${COL_BOLD:-}"
+    local _col_dim="${COL_DIM:-}"
+    local _col_stop="${COL_STOP:-}"
+    local _icon_ok="${ICON_OK:-[ok]}"
+    local _icon_info="${ICON_INFO:-[i]}"
+    local _icon_warn="${ICON_WARN:-[!]}"
+    local _icon_err="${ICON_ERR:-[x]}"
+
     local _sep
-    _sep=$(printf "${COL_DIM}%${_width}s${COL_STOP}" | tr ' ' '─')
+    _sep=$(printf '%*s' "$_width" '' | tr ' ' '─')
 
     local _nok=0 _nwarn=0 _nerr=0
 
     # --- Local helpers ----------------------------------------------------
 
     _section() {
-        printf '\n%b  %s%b\n' "$COL_BOLD" "$1" "$COL_STOP"
-        printf '%b%*s%b\n' "$COL_DIM" "$_width" '' "$COL_STOP" | tr ' ' '─'
+        printf '\n%b  %s%b\n' "$_col_bold" "$1" "$_col_stop"
+        printf '%b%*s%b\n' "$_col_dim" "$_width" '' "$_col_stop" | tr ' ' '─'
     }
 
     _row() {
@@ -32,32 +41,40 @@ envstatus() {
     }
 
     _ok() {
-        _row "$ICON_OK" "$1" "$2"
+        _row "$_icon_ok" "$1" "$2"
         (( _nok++ )) || true
     }
 
     _info() {
-        _row "$ICON_INFO" "$1" "$2"
+        _row "$_icon_info" "$1" "$2"
     }
 
     _warn() {
-        _row "$ICON_WARN" "$1" "$2"
+        _row "$_icon_warn" "$1" "$2"
         (( _nwarn++ )) || true
     }
 
     _err() {
-        _row "$ICON_ERR" "$1" "$2"
+        _row "$_icon_err" "$1" "$2"
         (( _nerr++ )) || true
     }
 
     # --- Header -----------------------------------------------------------
 
-    local _uptime
-    _uptime=$(uptime | sed 's/.*up //; s/,  [0-9]* user.*//')
-    printf '\n%s\n' "$_sep"
-    printf '%b  Environment Status%b\n' "$COL_BOLD" "$COL_STOP"
-    printf '%b  %s  •  up %s%b\n' "$COL_DIM" "$_hosttype" "$_uptime" "$COL_STOP"
-    printf '%s\n' "$_sep"
+    local _uptime _uptime_raw _uptime_parsed
+    _uptime_raw=$(uptime 2>/dev/null || true)
+    _uptime_parsed=$(printf '%s\n' "$_uptime_raw" | sed -E 's/^.* up //; s/, *[0-9]+ users?,.*$//; s/, *load averages?:.*$//; s/, *[0-9]+ users?$//')
+    if [ -n "$_uptime_parsed" ] && [ "$_uptime_parsed" != "$_uptime_raw" ]; then
+        _uptime="$_uptime_parsed"
+    elif [ -n "$_uptime_raw" ]; then
+        _uptime="$_uptime_raw"
+    else
+        _uptime="unknown"
+    fi
+    printf '\n%b%s%b\n' "$_col_dim" "$_sep" "$_col_stop"
+    printf '%b  Environment Status%b\n' "$_col_bold" "$_col_stop"
+    printf '%b  %s  •  up %s%b\n' "$_col_dim" "$_hosttype" "$_uptime" "$_col_stop"
+    printf '%b%s%b\n' "$_col_dim" "$_sep" "$_col_stop"
 
     # --- Dev Tools --------------------------------------------------------
 
@@ -74,8 +91,16 @@ envstatus() {
         _err "mise"       "not installed"
     fi
 
-    if [ -d "$HOME/.cargo/bin" ]; then
-        _ok  "cargo"      "$HOME/.cargo/bin"
+    local _cargo_path
+    _cargo_path=$(command -v cargo 2>/dev/null || true)
+    if [ -n "$_cargo_path" ]; then
+        if [ -d "$HOME/.cargo/bin" ]; then
+            _ok  "cargo"      "$_cargo_path (home bin: $HOME/.cargo/bin)"
+        else
+            _ok  "cargo"      "$_cargo_path"
+        fi
+    elif [ -d "$HOME/.cargo/bin" ]; then
+        _warn "cargo"      "$HOME/.cargo/bin exists but cargo is not on PATH"
     else
         _err "cargo"      "$HOME/.cargo/bin not found"
     fi
@@ -125,8 +150,12 @@ envstatus() {
 
     _section "Auth & Credentials"
 
-    if [ -n "${SSH_AGENT_PID:-}" ] && \
-       ps -p "$SSH_AGENT_PID" -o comm= 2>/dev/null | grep -q '^ssh-agent$'; then
+    local _ssh_agent_comm
+    _ssh_agent_comm=""
+    if [ -n "${SSH_AGENT_PID:-}" ]; then
+        _ssh_agent_comm=$(ps -p "$SSH_AGENT_PID" -o comm= 2>/dev/null || true)
+    fi
+    if [ "$_ssh_agent_comm" = "ssh-agent" ]; then
         _ok   "ssh-agent" "running (pid $SSH_AGENT_PID)"
     else
         _warn "ssh-agent" "not running"
@@ -205,20 +234,23 @@ envstatus() {
 
     # --- Footer / summary -------------------------------------------------
 
-    printf '\n%s\n' "$_sep"
+    printf '\n%b%s%b\n' "$_col_dim" "$_sep" "$_col_stop"
     printf '  '
-    printf '%b %d ok' "$ICON_OK" "$_nok"
+    printf '%b %d ok' "$_icon_ok" "$_nok"
     if [ "$_nwarn" -gt 0 ]; then
-        printf '   %b %d warning' "$ICON_WARN" "$_nwarn"
+        printf '   %b %d warning' "$_icon_warn" "$_nwarn"
         [ "$_nwarn" -gt 1 ] && printf 's'
     fi
     if [ "$_nerr" -gt 0 ]; then
-        printf '   %b %d error' "$ICON_ERR" "$_nerr"
+        printf '   %b %d error' "$_icon_err" "$_nerr"
         [ "$_nerr" -gt 1 ] && printf 's'
     fi
-    printf '\n%s\n\n' "$_sep"
+    printf '\n%b%s%b\n\n' "$_col_dim" "$_sep" "$_col_stop"
 
     unset -f _section _row _ok _info _warn _err
     unset _profile _hosttype _width _sep _nok _nwarn _nerr
-    unset _uptime _mise_data _piopath _platformio_win_home _cf_creds _perms _cs_dir _cs_link _actual _expected
+    unset _col_bold _col_dim _col_stop _icon_ok _icon_info _icon_warn _icon_err
+    unset _uptime _uptime_raw _uptime_parsed _mise_data _cargo_path
+    unset _piopath _platformio_win_home _ssh_agent_comm _cf_creds _perms
+    unset _cs_dir _cs_link _actual _expected
 }
