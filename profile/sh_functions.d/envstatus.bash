@@ -59,6 +59,11 @@ envstatus() {
         (( _nerr++ )) || true
     }
 
+    _tool_msg() {
+        local _version="$1" _path="$2"
+        printf '%-14s %s' "$_version" "$_path"
+    }
+
     # --- Header -----------------------------------------------------------
 
     local _uptime _uptime_raw _uptime_parsed
@@ -93,13 +98,13 @@ envstatus() {
             }
         }')
         [ -z "$_mise_version" ] && _mise_version="unknown"
-        _ok  "mise"       "$_mise_version $_mise_path"
+        _ok  "mise"       "$(_tool_msg "$_mise_version" "$_mise_path")"
     elif [ -d "$_mise_data/shims" ]; then
-        _ok  "mise"       "shims at $_mise_data/shims"
+        _warn "mise"      "$(_tool_msg "unknown" "$_mise_data/shims")"
     elif [ -d "$_mise_data" ]; then
-        _err "mise"       "data dir found but shims missing"
+        _warn "mise"      "$(_tool_msg "unknown" "$_mise_data (shims missing)")"
     else
-        _err "mise"       "not installed"
+        _err "mise"       "$(_tool_msg "missing" "-")"
     fi
 
     local _cargo_path _cargo_version
@@ -107,11 +112,11 @@ envstatus() {
     if [ -n "$_cargo_path" ]; then
         _cargo_version=$(cargo --version 2>/dev/null | awk '{print $2}')
         [ -z "$_cargo_version" ] && _cargo_version="unknown"
-        _ok  "cargo"      "$_cargo_version $_cargo_path"
+        _ok  "cargo"      "$(_tool_msg "$_cargo_version" "$_cargo_path")"
     elif [ -d "$HOME/.cargo/bin" ]; then
-        _warn "cargo"      "$HOME/.cargo/bin exists but cargo is not on PATH"
+        _warn "cargo"     "$(_tool_msg "unknown" "$HOME/.cargo/bin (not on PATH)")"
     else
-        _err "cargo"      "$HOME/.cargo/bin not found"
+        _err "cargo"      "$(_tool_msg "missing" "-")"
     fi
 
     local _piopath _platformio_win_home _pio_path _pio_version
@@ -133,11 +138,11 @@ envstatus() {
     if [ -n "$_pio_path" ]; then
         _pio_version=$(pio --version 2>/dev/null | awk '{print $NF}')
         [ -z "$_pio_version" ] && _pio_version="unknown"
-        _ok  "platformio" "$_pio_version $_pio_path"
+        _ok  "platformio" "$(_tool_msg "$_pio_version" "$_pio_path")"
     elif [[ -n "$_piopath" ]] && [ -d "$_piopath" ]; then
-        _warn "platformio" "unknown $_piopath"
+        _warn "platformio" "$(_tool_msg "unknown" "$_piopath")"
     else
-        _err "platformio" "not found"
+        _err "platformio" "$(_tool_msg "missing" "-")"
     fi
 
     local _opencode_path _opencode_version
@@ -145,9 +150,9 @@ envstatus() {
     if [ -n "$_opencode_path" ]; then
         _opencode_version=$(opencode --version 2>/dev/null | awk '{print $1}')
         [ -z "$_opencode_version" ] && _opencode_version="unknown"
-        _ok  "opencode"   "$_opencode_version $_opencode_path"
+        _ok  "opencode"   "$(_tool_msg "$_opencode_version" "$_opencode_path")"
     else
-        _err "opencode"   "not found — brew install anomalyco/tap/opencode"
+        _err "opencode"   "$(_tool_msg "missing" "-")"
     fi
 
     # --- Home Automation --------------------------------------------------
@@ -265,7 +270,7 @@ envstatus() {
     fi
     printf '\n%b%s%b\n\n' "$_col_dim" "$_sep" "$_col_stop"
 
-    unset -f _section _row _ok _info _warn _err
+    unset -f _section _row _ok _info _warn _err _tool_msg
     unset _profile _hosttype _width _sep _nok _nwarn _nerr
     unset _col_bold _col_dim _col_stop _icon_ok _icon_info _icon_warn _icon_err
     unset _uptime _uptime_raw _uptime_parsed _mise_data _mise_path _mise_version
