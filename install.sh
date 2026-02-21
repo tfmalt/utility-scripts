@@ -305,7 +305,7 @@ uninstall() {
     fi
     echo " Done"
     
-    echo "Uninstall complete. Oh My Zsh, cargo/rustup, platformio, mise, opencode, and claude installations were left intact."
+    echo "Uninstall complete. Oh My Zsh, cargo/rustup, platformio, mise, gh, opencode, and claude installations were left intact."
     echo "To remove them manually:"
     echo "  rm -rf $ZSH"
     echo "  rm -rf $HOME/.cargo"
@@ -524,6 +524,81 @@ elif [ -n "$MISE_CMD" ]; then
 else
     echo " Skipped"
     echo "Error: mise is required to install Node.js. Install mise first."
+fi
+
+OUTPUT="installing gh"
+echo -n "$(pad_output "$OUTPUT"):"
+if command_exists gh; then
+    log_verbose "gh already installed"
+    echo " exists"
+else
+    if confirm "Install GitHub CLI (gh)?"; then
+        if command_exists brew; then
+            log_verbose "Installing gh with Homebrew"
+            if [ "$VERBOSE" = true ]; then
+                brew install gh
+            else
+                brew install gh > /dev/null 2>&1
+            fi
+            echo " Done"
+        elif command_exists apt-get; then
+            log_verbose "Installing gh with apt-get"
+            if sudo apt-get update && sudo apt-get install -y gh; then
+                echo " Done"
+            else
+                echo " Failed"
+                echo "Error: GitHub CLI installation via apt-get failed."
+                echo "Try again manually with:"
+                echo "  sudo apt-get update && sudo apt-get install -y gh"
+                exit 1
+            fi
+        elif command_exists dnf; then
+            log_verbose "Installing gh with dnf"
+            if sudo dnf install -y gh; then
+                echo " Done"
+            else
+                echo " Failed"
+                echo "Error: GitHub CLI installation via dnf failed."
+                echo "Try again manually with:"
+                echo "  sudo dnf install -y gh"
+                exit 1
+            fi
+        elif command_exists yum; then
+            log_verbose "Installing gh with yum"
+            if sudo yum install -y gh; then
+                echo " Done"
+            else
+                echo " Failed"
+                echo "Error: GitHub CLI installation via yum failed."
+                echo "Try again manually with:"
+                echo "  sudo yum install -y gh"
+                exit 1
+            fi
+        elif command_exists winget; then
+            log_verbose "Installing gh with winget"
+            if winget install --id GitHub.cli -e; then
+                echo " Done"
+            else
+                echo " Failed"
+                echo "Error: GitHub CLI installation via winget failed."
+                echo "Try again manually with:"
+                echo "  winget install --id GitHub.cli -e"
+                exit 1
+            fi
+        else
+            echo " Failed"
+            echo "Error: Could not find a supported package manager for GitHub CLI."
+            echo "Install manually with one of:"
+            echo "  brew install gh"
+            echo "  sudo apt-get install gh"
+            echo "  sudo dnf install gh"
+            echo "  sudo yum install gh"
+            echo "  winget install --id GitHub.cli -e"
+            exit 1
+        fi
+    else
+        echo " Skipped"
+    fi
 fi
 
 OUTPUT="installing claude"
