@@ -30,7 +30,6 @@ Options:
   -u, --uninstall         Remove profile setup and restore backups
   -y, --yes               Skip confirmation prompts (assume yes)
   --profile-dir DIR       Use custom profile directory
-  --dotfiles-dir DIR      Deprecated alias for --profile-dir
   --config-dir DIR        Use custom config directory
   -h, --help              Show help message
 ```
@@ -56,11 +55,10 @@ Options:
 You can also control installation using environment variables:
 
 - `PROFILE_ROOT`: Override profile directory
-- `DOTFILES_ROOT`: Deprecated alias for `PROFILE_ROOT`
 - `CONFIG_ROOT`: Override config directory
 - `INSTALL_PREFIX`: Override installation target (default: `$HOME`)
 
-**Precedence**: Command-line options (`--profile-dir`, then deprecated `--dotfiles-dir`) override environment variables (`PROFILE_ROOT`, then deprecated `DOTFILES_ROOT`), which override defaults.
+**Precedence**: Command-line options (`--profile-dir`) override environment variables (`PROFILE_ROOT`), which override defaults.
 
 ### Profile Directory (Intended Usage)
 
@@ -70,7 +68,6 @@ The repository directory `profile/` is the source of truth for your interactive 
 - It is intentionally named `profile` to align with UNIX/POSIX profile terminology.
 - It is **not** the same thing as your local `~/.profile` file.
 - The installer links target files in `$HOME` to content in this repository and writes `~/.zshrc` to source `profile/zshrc.sh`.
-- Legacy names (`--dotfiles-dir`, `DOTFILES_ROOT`, `$DOTFILES`) still work for compatibility, but are deprecated.
 
 ### Installer Behavior
 

@@ -16,7 +16,6 @@ This is a comprehensive profile management system that provides a complete Unix/
 ./install.sh -y                 # Skip all confirmation prompts
 ./install.sh -u                 # Uninstall mode - removes symlinks and restores backups
 ./install.sh --profile-dir DIR  # Use custom profile directory
-./install.sh --dotfiles-dir DIR # Deprecated alias for --profile-dir
 ./install.sh --help             # Show all available options
 ```
 

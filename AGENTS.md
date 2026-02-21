@@ -116,10 +116,6 @@ Shell has no static types; use predictable conventions instead:
 
 ## Compatibility and Migration Notes
 - Canonical names are `profile/`, `--profile-dir`, and `PROFILE_ROOT`.
-- Deprecated aliases still supported for compatibility:
-  - `--dotfiles-dir`
-  - `DOTFILES_ROOT`
-  - `$DOTFILES` (runtime alias exported by installer)
 - Prefer canonical names for all new changes.
 
 ## Security and Credentials

@@ -5,10 +5,8 @@ set -e
 VERBOSE=false
 UNINSTALL=false
 CUSTOM_PROFILE_DIR=""
-CUSTOM_DOTFILES_DIR=""
 CUSTOM_CONFIG_DIR=""
 SKIP_CONFIRM=false
-USED_DEPRECATED_DOTFILES_ARG=false
 
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -22,11 +20,6 @@ while [[ $# -gt 0 ]]; do
             ;;
         --profile-dir)
             CUSTOM_PROFILE_DIR="$2"
-            shift 2
-            ;;
-        --dotfiles-dir)
-            CUSTOM_DOTFILES_DIR="$2"
-            USED_DEPRECATED_DOTFILES_ARG=true
             shift 2
             ;;
         --config-dir)
@@ -43,14 +36,12 @@ while [[ $# -gt 0 ]]; do
             echo "  -v, --verbose         Enable verbose output"
             echo "  -u, --uninstall       Remove profile setup and restore backups"
             echo "  --profile-dir DIR     Use custom profile directory (default: script_dir/profile)"
-            echo "  --dotfiles-dir DIR    Deprecated alias for --profile-dir"
             echo "  --config-dir DIR      Use custom config directory (default: script_dir/config)"
             echo "  -y, --yes             Skip confirmation prompts (assume yes)"
             echo "  -h, --help            Show this help message"
             echo ""
             echo "Environment variables:"
             echo "  PROFILE_ROOT          Override profile directory"
-            echo "  DOTFILES_ROOT         Deprecated alias for PROFILE_ROOT"
             echo "  CONFIG_ROOT           Override config directory"
             echo "  INSTALL_PREFIX        Override installation prefix (default: \$HOME)"
             exit 0
@@ -73,18 +64,11 @@ INSTALL_PREFIX="${INSTALL_PREFIX:-$HOME}"
 # Profile directory
 if [ -n "$CUSTOM_PROFILE_DIR" ]; then
     PROFILE="$CUSTOM_PROFILE_DIR"
-elif [ -n "$CUSTOM_DOTFILES_DIR" ]; then
-    PROFILE="$CUSTOM_DOTFILES_DIR"
 elif [ -n "$PROFILE_ROOT" ]; then
     PROFILE="$PROFILE_ROOT"
-elif [ -n "$DOTFILES_ROOT" ]; then
-    PROFILE="$DOTFILES_ROOT"
 else
     PROFILE="$ROOT/profile"
 fi
-
-# Backward compatibility alias for older configs/scripts
-DOTFILES="$PROFILE"
 
 # Config directory
 if [ -n "$CUSTOM_CONFIG_DIR" ]; then
@@ -193,9 +177,8 @@ is_managed_zshrc() {
         return 0
     fi
 
-    # Backward compatibility with the previous unmanaged 3-line template
+    # Backward compatibility with the previous unmanaged template
     if grep -q '^export PROFILE=' "$file" \
-        && grep -q "^export DOTFILES=\"\\\$PROFILE\" # Deprecated alias for compatibility$" "$file" \
         && grep -q "^source \\\$PROFILE/zshrc.sh$" "$file"; then
         return 0
     fi
@@ -345,13 +328,6 @@ fi
 echo "Setting up utility scripts ..."
 log_verbose "Verbose mode enabled"
 log_verbose "Script location: $THIS"
-
-if [ "$USED_DEPRECATED_DOTFILES_ARG" = true ]; then
-    echo "Warning: --dotfiles-dir is deprecated; use --profile-dir instead."
-fi
-if [ -n "$DOTFILES_ROOT" ] && [ -z "$PROFILE_ROOT" ]; then
-    echo "Warning: DOTFILES_ROOT is deprecated; use PROFILE_ROOT instead."
-fi
 
 # Check dependencies before proceeding
 check_dependencies
@@ -678,7 +654,6 @@ log_verbose "Writing new .zshrc configuration"
 cat > "$FILE" <<- EOD
 # managed-by: utility-scripts-install
 export PROFILE="$PROFILE"
-export DOTFILES="\$PROFILE" # Deprecated alias for compatibility
 source \$PROFILE/zshrc.sh
 EOD
 
