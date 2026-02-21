@@ -16,9 +16,14 @@ envstatus() {
     local _hosttype
     _hosttype=$(setuptype)
     local _width
-    _width=$(tput cols 2>/dev/null || echo 60)
-    [ "$_width" -lt 40 ] && _width=40
-    [ "$_width" -gt 72 ] && _width=72
+    _width="${COLUMNS:-}"
+    if [ -z "$_width" ]; then
+        _width=$(tput cols 2>/dev/null || echo 80)
+    fi
+    case "$_width" in
+        ''|*[!0-9]*) _width=80 ;;
+        0) _width=80 ;;
+    esac
 
     local _col_bold="${COL_BOLD:-}"
     local _col_dim="${COL_DIM:-}"
