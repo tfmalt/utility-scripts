@@ -527,14 +527,29 @@ else
     if confirm "Install PlatformIO Core?"; then
         if command_exists python3; then
             log_verbose "Installing PlatformIO Core from official installer"
+            PLATFORMIO_INSTALLER=$(mktemp "${TMPDIR:-/tmp}/get-platformio.XXXXXX.py")
+
             if curl -fsSL https://raw.githubusercontent.com/platformio/platformio-core-installer/master/get-platformio.py \
-                | python3; then
-                echo " Done"
+                -o "$PLATFORMIO_INSTALLER"; then
+                if python3 "$PLATFORMIO_INSTALLER"; then
+                    rm -f "$PLATFORMIO_INSTALLER"
+                    echo " Done"
+                else
+                    rm -f "$PLATFORMIO_INSTALLER"
+                    echo " Failed"
+                    echo "Error: PlatformIO Core installation failed."
+                    echo "Try again manually with:"
+                    echo "  curl -fsSL https://raw.githubusercontent.com/platformio/platformio-core-installer/master/get-platformio.py -o /tmp/get-platformio.py"
+                    echo "  python3 /tmp/get-platformio.py"
+                    exit 1
+                fi
             else
+                rm -f "$PLATFORMIO_INSTALLER"
                 echo " Failed"
-                echo "Error: PlatformIO Core installation failed."
+                echo "Error: Failed to download PlatformIO installer."
                 echo "Try again manually with:"
-                echo "  curl -fsSL https://raw.githubusercontent.com/platformio/platformio-core-installer/master/get-platformio.py | python3"
+                echo "  curl -fsSL https://raw.githubusercontent.com/platformio/platformio-core-installer/master/get-platformio.py -o /tmp/get-platformio.py"
+                echo "  python3 /tmp/get-platformio.py"
                 exit 1
             fi
         else
