@@ -107,6 +107,16 @@ envstatus() {
         _err "mise"       "$(_tool_msg "missing" "-")"
     fi
 
+    local _node_path _node_version
+    _node_path=$(command -v node 2>/dev/null || true)
+    if [ -n "$_node_path" ]; then
+        _node_version=$(node --version 2>/dev/null | sed 's/^v//')
+        [ -z "$_node_version" ] && _node_version="unknown"
+        _ok  "node"       "$(_tool_msg "$_node_version" "$_node_path")"
+    else
+        _err "node"       "$(_tool_msg "missing" "-")"
+    fi
+
     local _cargo_path _cargo_version
     _cargo_path=$(command -v cargo 2>/dev/null || true)
     if [ -n "$_cargo_path" ]; then
@@ -274,6 +284,7 @@ envstatus() {
     unset _profile _hosttype _width _sep _nok _nwarn _nerr
     unset _col_bold _col_dim _col_stop _icon_ok _icon_info _icon_warn _icon_err
     unset _uptime _uptime_raw _uptime_parsed _mise_data _mise_path _mise_version
+    unset _node_path _node_version
     unset _cargo_path _cargo_version _piopath _platformio_win_home _pio_path _pio_version
     unset _opencode_path _opencode_version _ssh_agent_comm _cf_creds _perms
     unset _cs_dir _cs_link _actual _expected
