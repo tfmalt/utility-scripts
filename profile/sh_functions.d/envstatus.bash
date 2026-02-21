@@ -165,6 +165,16 @@ envstatus() {
         _err "opencode"   "$(_tool_msg "missing" "-")"
     fi
 
+    local _claude_path _claude_version
+    _claude_path=$(command -v claude 2>/dev/null || true)
+    if [ -n "$_claude_path" ]; then
+        _claude_version=$(claude --version 2>/dev/null | awk '{print $1}')
+        [ -z "$_claude_version" ] && _claude_version="unknown"
+        _ok  "claude"     "$(_tool_msg "$_claude_version" "$_claude_path")"
+    else
+        _err "claude"     "$(_tool_msg "missing" "-")"
+    fi
+
     # --- Home Automation --------------------------------------------------
 
     _section "Home Automation"
@@ -286,6 +296,7 @@ envstatus() {
     unset _uptime _uptime_raw _uptime_parsed _mise_data _mise_path _mise_version
     unset _node_path _node_version
     unset _cargo_path _cargo_version _piopath _platformio_win_home _pio_path _pio_version
-    unset _opencode_path _opencode_version _ssh_agent_comm _cf_creds _perms
+    unset _opencode_path _opencode_version _claude_path _claude_version
+    unset _ssh_agent_comm _cf_creds _perms
     unset _cs_dir _cs_link _actual _expected
 }
