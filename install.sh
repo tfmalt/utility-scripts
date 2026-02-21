@@ -140,7 +140,10 @@ restore_backup() {
         rm -rf "$file"
         mv "$latest_backup" "$file"
         echo "  restored from: $latest_backup"
+        return 0
     fi
+
+    return 1
 }
 
 # Function to remove symlink if it exists
@@ -171,14 +174,33 @@ create_symlink() {
             rm "$target"
         fi
     elif [ -e "$target" ]; then
-        log_verbose "Target exists as regular file/directory: $target"
-        echo "  exists as regular file"
-        return 1
+        log_verbose "Replacing existing regular file/directory: $target"
+        rm -rf "$target"
     fi
     
     log_verbose "Creating symlink: $source -> $target"
     ln -s "$source" "$target"
     echo "  created: $target_name"
+}
+
+# Function to check whether .zshrc is managed by this installer
+is_managed_zshrc() {
+    local file="$1"
+
+    [ -f "$file" ] || return 1
+
+    if grep -q "^# managed-by: utility-scripts-install$" "$file"; then
+        return 0
+    fi
+
+    # Backward compatibility with the previous unmanaged 3-line template
+    if grep -q '^export PROFILE=' "$file" \
+        && grep -q "^export DOTFILES=\"\\\$PROFILE\" # Deprecated alias for compatibility$" "$file" \
+        && grep -q "^source \\\$PROFILE/zshrc.sh$" "$file"; then
+        return 0
+    fi
+
+    return 1
 }
 
 # Function to check if command exists
@@ -278,25 +300,33 @@ uninstall() {
     OUTPUT="removing dircolors"
     echo -n "$(pad_output "$OUTPUT"):"
     remove_symlink "$INSTALL_PREFIX/.dircolors"
-    restore_backup "$INSTALL_PREFIX/.dircolors"
+    restore_backup "$INSTALL_PREFIX/.dircolors" || true
     echo " Done"
     
     OUTPUT="removing vim setup"
     echo -n "$(pad_output "$OUTPUT"):"
     remove_symlink "$INSTALL_PREFIX/.vimrc"
     remove_symlink "$INSTALL_PREFIX/.vim"
-    restore_backup "$INSTALL_PREFIX/.vimrc"
-    restore_backup "$INSTALL_PREFIX/.vim"
+    restore_backup "$INSTALL_PREFIX/.vimrc" || true
+    restore_backup "$INSTALL_PREFIX/.vim" || true
     echo " Done"
     
     OUTPUT="removing zshrc"
     echo -n "$(pad_output "$OUTPUT"):"
-    restore_backup "$INSTALL_PREFIX/.zshrc"
+    remove_symlink "$INSTALL_PREFIX/.zshrc"
+    if ! restore_backup "$INSTALL_PREFIX/.zshrc"; then
+        if is_managed_zshrc "$INSTALL_PREFIX/.zshrc"; then
+            rm -f "$INSTALL_PREFIX/.zshrc"
+            echo "  removed managed file: $INSTALL_PREFIX/.zshrc"
+        fi
+    fi
     echo " Done"
     
-    echo "Uninstall complete. Oh My Zsh, mise, and opencode installations were left intact."
+    echo "Uninstall complete. Oh My Zsh, cargo/rustup, mise, and opencode installations were left intact."
     echo "To remove them manually:"
     echo "  rm -rf $ZSH"
+    echo "  rm -rf $HOME/.cargo"
+    echo "  rm -rf $HOME/.rustup"
     echo "  rm -rf $INSTALL_PREFIX/.local/share/mise"
     echo "  rm -f $INSTALL_PREFIX/.local/bin/mise"
     echo "  rm -rf $INSTALL_PREFIX/.opencode"
@@ -465,6 +495,28 @@ else
     fi
 fi
 
+OUTPUT="installing cargo"
+echo -n "$(pad_output "$OUTPUT"):"
+if command_exists cargo; then
+    log_verbose "cargo already installed"
+    echo " exists"
+else
+    if confirm "Install Rust (cargo) via rustup?"; then
+        log_verbose "Installing rustup from https://sh.rustup.rs"
+        if curl -fsSL https://sh.rustup.rs | sh -s -- -y --no-modify-path; then
+            echo " Done"
+        else
+            echo " Failed"
+            echo "Error: rustup installation failed."
+            echo "Try again manually with:"
+            echo "  curl -fsSL https://sh.rustup.rs | sh -s -- -y --no-modify-path"
+            exit 1
+        fi
+    else
+        echo " Skipped"
+    fi
+fi
+
 OUTPUT="installing opencode"
 echo -n "$(pad_output "$OUTPUT"):"
 if command_exists opencode; then
@@ -491,6 +543,7 @@ backup_file "$FILE"
 log_verbose "Writing new .zshrc configuration"
 
 cat > "$FILE" <<- EOD
+# managed-by: utility-scripts-install
 export PROFILE="$PROFILE"
 export DOTFILES="\$PROFILE" # Deprecated alias for compatibility
 source \$PROFILE/zshrc.sh
