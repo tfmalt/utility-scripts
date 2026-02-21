@@ -131,6 +131,9 @@ Shell has no static types; use predictable conventions instead:
 - Note OS-specific constraints (macOS vs Linux, GNU vs BSD tools).
 - Ensure no credentials are introduced.
 
+## Commit Discipline
+- Always create a git commit for each distinct change or patch.
+
 ## Agent-Specific Instruction Sources
 - Cursor rules: none found (`.cursor/rules/` and `.cursorrules` absent).
 - Copilot rules: none found (`.github/copilot-instructions.md` absent).
