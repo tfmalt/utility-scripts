@@ -35,7 +35,7 @@ envstatus() {
     printf -v _sep '%*s' "$_width" ''
     _sep=${_sep// /─}
 
-    local _nok=0 _nwarn=0 _nerr=0
+    local _nok=0 _nwarn=0 _nerr=0 _ndisabled=0
 
     # --- Local helpers ----------------------------------------------------
 
@@ -90,6 +90,26 @@ envstatus() {
     _is_disabled() {
         [ -f "$_config_file" ] || return 1
         grep -Fqx -- "$1" "$_config_file"
+    }
+
+    _count_disabled_tools() {
+        local _line _seen='|'
+
+        _ndisabled=0
+        [ -f "$_config_file" ] || return 0
+
+        while IFS= read -r _line; do
+            [ -z "$_line" ] && continue
+            _is_known_tool "$_line" || continue
+
+            case "$_seen" in
+                *"|$_line|"*) ;;
+                *)
+                    _seen="${_seen}${_line}|"
+                    (( _ndisabled++ )) || true
+                    ;;
+            esac
+        done < "$_config_file"
     }
 
     _print_help() {
@@ -219,6 +239,8 @@ envstatus() {
             return 2
             ;;
     esac
+
+    _count_disabled_tools
 
     # --- Header -----------------------------------------------------------
 
@@ -484,11 +506,16 @@ envstatus() {
         printf '   %b %d error' "$_icon_err" "$_nerr"
         [ "$_nerr" -gt 1 ] && printf 's'
     fi
+    if [ "$_ndisabled" -gt 0 ]; then
+        printf '   %b %d disabled' "$_icon_info" "$_ndisabled"
+        [ "$_ndisabled" -gt 1 ] && printf 's'
+    fi
     printf '\n%b%s%b\n\n' "$_col_dim" "$_sep" "$_col_stop"
 
     unset -f _section _row _ok _info _warn _err _tool_msg
-    unset -f _is_known_tool _is_disabled _print_help _disable_tool _enable_tool _list_disabled_tools
-    unset _profile _hosttype _width _sep _nok _nwarn _nerr _cmd
+    unset -f _is_known_tool _is_disabled _count_disabled_tools
+    unset -f _print_help _disable_tool _enable_tool _list_disabled_tools
+    unset _profile _hosttype _width _sep _nok _nwarn _nerr _ndisabled _cmd
     unset _config_dir _config_file _tmp _tool _line
     unset _col_bold _col_dim _col_stop _icon_ok _icon_info _icon_warn _icon_err
     unset _uptime _uptime_raw _uptime_parsed _mise_data _mise_path _mise_version
