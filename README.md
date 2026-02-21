@@ -151,6 +151,7 @@ This will install the following dependencies:
 | Tool | Purpose | Install |
 |------|---------|---------|
 | `shellcheck` | Linting shell scripts | `brew install shellcheck` / `apt install shellcheck` |
+| `cargo` | Rust package manager and tooling | `curl -fsSL https://sh.rustup.rs \| sh -s -- -y --no-modify-path` |
 | `flarectl` | Cloudflare DNS management | `brew install cloudflare/cloudflare/flarectl` |
 | `systemd` | Timer-based script execution | Linux only (not available on macOS) |
 
