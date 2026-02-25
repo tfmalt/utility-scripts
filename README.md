@@ -161,6 +161,12 @@ This will install the following dependencies:
 
 ## Optional Configuration
 
+### Truecolor Terminal Support
+
+The shell profile enables truecolor (24-bit color) support by exporting `COLORTERM=truecolor` in `profile/sh_config.d/22.truecolor.sh`.
+
+This helps terminal-aware tools (such as modern prompts, Vim/Neovim, and other TUI applications) detect full color capability.
+
 ### envstatus Tool Overrides (Local Only)
 
 The `envstatus` function now supports per-user, per-host local overrides so you can disable checks for tools that are not relevant on a specific machine.
