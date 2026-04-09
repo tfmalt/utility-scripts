@@ -6,9 +6,13 @@
 # License: MIT
 #
 # This script sets up the Cloudflare DDNS system:
-# - Creates configuration files
+# - Creates configuration files in ~/.config/cloudflare/ddns.conf.d/
 # - Installs systemd service and timer
 # - Configures DNS records to update
+#
+# Usage:
+#   ./install-cloudflare-ddns.sh                # First-time setup
+#   ./install-cloudflare-ddns.sh --add-account  # Add another Cloudflare account
 #
 
 set -euo pipefail
@@ -26,8 +30,7 @@ REPO_ROOT="$(dirname "${SCRIPT_DIR}")"
 
 # Configuration
 CONFIG_DIR="${HOME}/.config/cloudflare"
-CONFIG_FILE="${CONFIG_DIR}/ddns.conf"
-CREDENTIALS_FILE="${CONFIG_DIR}/credentials"
+CONF_D_DIR="${CONFIG_DIR}/ddns.conf.d"
 CACHE_DIR="${HOME}/.cache/cloudflare-ddns"
 
 SYSTEMD_USER_DIR="${HOME}/.config/systemd/user"
@@ -75,51 +78,44 @@ check_dependencies() {
     success "All dependencies found"
 }
 
-# Check for Cloudflare API token
-check_credentials() {
-    info "Checking Cloudflare credentials..."
+# Configure a single Cloudflare account
+configure_account() {
+    local conf_name="$1"
+    local conf_file="${CONF_D_DIR}/${conf_name}.conf"
 
-    if [ ! -f "${CREDENTIALS_FILE}" ]; then
-        error "Cloudflare credentials file not found: ${CREDENTIALS_FILE}"
-        echo ""
-        echo "Please create the credentials file first:"
-        echo "  mkdir -p ${CONFIG_DIR}"
-        echo "  touch ${CREDENTIALS_FILE}"
-        echo "  chmod 600 ${CREDENTIALS_FILE}"
-        echo "  echo 'export CF_API_TOKEN=your_token_here' > ${CREDENTIALS_FILE}"
-        echo ""
-        exit 1
-    fi
-
-    # Source credentials and check token
-    # shellcheck source=/dev/null
-    source "${CREDENTIALS_FILE}"
-
-    if [ -z "${CF_API_TOKEN:-}" ]; then
-        error_exit "CF_API_TOKEN not found in ${CREDENTIALS_FILE}"
-    fi
-
-    success "Cloudflare credentials found"
-}
-
-# Configure DNS records
-configure_records() {
-    info "Configuring DNS records..."
+    info "Configuring account: ${conf_name}"
     echo ""
 
+    # Prompt for API token
+    info "Enter the Cloudflare API token for this account"
+    info "(Token needs DNS:Edit permission for the zone)"
+    echo ""
+    local api_token=""
+    while [ -z "${api_token}" ]; do
+        read -rsp "API Token: " api_token
+        echo ""
+        if [ -z "${api_token}" ]; then
+            error "API token cannot be empty"
+        fi
+    done
+
+    # Export token so flarectl can use it for record listing
+    export CF_API_TOKEN="${api_token}"
+
     # Prompt for zone
-    read -rp "Enter your Cloudflare zone (e.g., malt.no): " zone
+    echo ""
+    read -rp "Enter the Cloudflare zone (e.g., malt.no): " zone
     if [ -z "${zone}" ]; then
         error_exit "Zone cannot be empty"
     fi
 
     echo ""
-    info "Listing DNS records for zone: ${zone}"
+    info "Listing A records for zone: ${zone}"
     echo ""
 
     # List A records in the zone
     if ! flarectl dns list --zone "${zone}" --type A 2>/dev/null; then
-        error_exit "Failed to list DNS records. Check your zone name and API token permissions."
+        error_exit "Failed to list DNS records. Check zone name and API token permissions."
     fi
 
     echo ""
@@ -141,10 +137,12 @@ configure_records() {
         error_exit "No records configured"
     fi
 
-    # Create configuration file
-    mkdir -p "${CONFIG_DIR}"
-    cat > "${CONFIG_FILE}" <<EOF
-# Cloudflare DDNS Configuration
+    # Create conf.d directory
+    mkdir -p "${CONF_D_DIR}"
+
+    # Write self-contained config file
+    cat > "${conf_file}" <<EOF
+# Cloudflare DDNS Configuration — ${conf_name}
 # Generated: $(date)
 
 # Cloudflare zone (domain)
@@ -153,15 +151,18 @@ CF_ZONE="${zone}"
 # DNS records to update (space-separated)
 # Format: record_id:record_name:proxy
 CF_RECORDS="${records[*]}"
+
+# Cloudflare API token (DNS:Edit permission required)
+CF_API_TOKEN="${api_token}"
 EOF
 
-    chmod 600 "${CONFIG_FILE}"
-    success "Configuration saved to ${CONFIG_FILE}"
+    chmod 600 "${conf_file}"
+    success "Configuration saved to ${conf_file}"
 
     # Show configuration summary
     echo ""
     info "Configuration summary:"
-    echo "  Zone: ${zone}"
+    echo "  Zone:   ${zone}"
     echo "  Records:"
     for record in "${records[@]}"; do
         IFS=':' read -r _ name proxy <<< "${record}"
@@ -183,7 +184,6 @@ install_systemd() {
     fi
 
     # Copy and customize service file
-    # Replace %h with actual home directory and repo path
     sed -e "s|%h|${HOME}|g" \
         -e "s|${HOME}/src/tfmalt/utility-scripts|${REPO_ROOT}|g" \
         "${REPO_ROOT}/systemd/cloudflare-ddns.service" > "${SERVICE_FILE}"
@@ -231,6 +231,9 @@ show_status() {
     echo "  # Check service status"
     echo "  systemctl --user status cloudflare-ddns.service"
     echo ""
+    echo "  # Add another Cloudflare account"
+    echo "  ${SCRIPT_DIR}/install-cloudflare-ddns.sh --add-account"
+    echo ""
     echo "  # Disable timer"
     echo "  systemctl --user stop cloudflare-ddns.timer"
     echo "  systemctl --user disable cloudflare-ddns.timer"
@@ -239,39 +242,70 @@ show_status() {
 
 # Main installation flow
 main() {
-    echo ""
-    echo "============================================"
-    echo "  Cloudflare Dynamic DNS Setup"
-    echo "============================================"
-    echo ""
+    local add_account=false
 
-    # Always check dependencies
-    check_dependencies
-    check_credentials
+    # Parse arguments
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --add-account)
+                add_account=true
+                shift
+                ;;
+            *)
+                echo "Usage: $0 [--add-account]"
+                echo "  --add-account  Add another Cloudflare account (skips systemd reinstall)"
+                exit 1
+                ;;
+        esac
+    done
 
-    # Check if already configured
-    if [ -f "${CONFIG_FILE}" ]; then
-        warning "Configuration file already exists: ${CONFIG_FILE}"
-        read -rp "Do you want to reconfigure DNS records? (y/N): " reconfigure
-        if [[ "${reconfigure}" =~ ^[Yy]$ ]]; then
-            configure_records
-        else
-            info "Keeping existing DNS configuration"
-        fi
+    echo ""
+    if [ "${add_account}" = true ]; then
+        echo "============================================"
+        echo "  Cloudflare DDNS — Add Account"
+        echo "============================================"
     else
-        configure_records
+        echo "============================================"
+        echo "  Cloudflare Dynamic DNS Setup"
+        echo "============================================"
+    fi
+    echo ""
+
+    check_dependencies
+
+    # Prompt for account/conf name
+    echo ""
+    info "Existing accounts:"
+    if ls "${CONF_D_DIR}"/*.conf 2>/dev/null | xargs -I{} basename {} .conf | sed 's/^/  - /'; then
+        true
+    else
+        echo "  (none)"
+    fi
+    echo ""
+    read -rp "Account name (used as filename, e.g. malt.no): " conf_name
+    if [ -z "${conf_name}" ]; then
+        error_exit "Account name cannot be empty"
     fi
 
-    # Install systemd files (always update them)
-    install_systemd
+    local conf_file="${CONF_D_DIR}/${conf_name}.conf"
+    if [ -f "${conf_file}" ]; then
+        warning "Config already exists: ${conf_file}"
+        read -rp "Overwrite? (y/N): " overwrite
+        if [[ ! "${overwrite}" =~ ^[Yy]$ ]]; then
+            info "Aborted"
+            exit 0
+        fi
+    fi
 
-    # Enable timer
-    enable_timer
+    configure_account "${conf_name}"
 
-    # Create cache directory
-    mkdir -p "${CACHE_DIR}"
+    if [ "${add_account}" = false ]; then
+        # First-time setup: install systemd and enable timer
+        mkdir -p "${CACHE_DIR}"
+        install_systemd
+        enable_timer
+    fi
 
-    # Show status
     show_status
 }
 

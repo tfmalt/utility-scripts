@@ -39,8 +39,8 @@ let g:solarized_termtrans=1
 let g:onedark_termcolors=256
 " let g:afterglow_inherit_background=1
 " autoload/onedark.vim
-colorscheme one
-" colorscheme afterglow
+colorscheme molokai
+colorscheme afterglow
 
 " let s:uname = system("uname -s")
 " if s:uname == "Linux\n"

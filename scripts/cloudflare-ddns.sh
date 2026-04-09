@@ -8,15 +8,20 @@
 # This script updates Cloudflare DNS A records when the external IP changes.
 # Designed to run via systemd timer or cron for automatic updates.
 #
-# Configuration file: ~/.config/cloudflare/ddns.conf
-# State file: ~/.cache/cloudflare-ddns/current-ip
-# Credentials: ~/.config/cloudflare/credentials (CF_API_TOKEN)
+# Configuration: ~/.config/cloudflare/ddns.conf.d/*.conf
+# State file:    ~/.cache/cloudflare-ddns/current-ip
+# Logs:          ~/.cache/cloudflare-ddns/ddns.log
+#
+# Each conf file is fully self-contained:
+#   CF_ZONE="example.com"
+#   CF_RECORDS="id:name:proxy ..."
+#   CF_API_TOKEN="your_token_here"
 #
 
 set -euo pipefail
 
 # Configuration
-CONFIG_FILE="${HOME}/.config/cloudflare/ddns.conf"
+CONF_D_DIR="${HOME}/.config/cloudflare/ddns.conf.d"
 STATE_DIR="${HOME}/.cache/cloudflare-ddns"
 STATE_FILE="${STATE_DIR}/current-ip"
 LOG_FILE="${STATE_DIR}/ddns.log"
@@ -55,32 +60,56 @@ check_dependencies() {
     fi
 }
 
-# Load configuration
-load_config() {
-    if [ ! -f "${CONFIG_FILE}" ]; then
-        error_exit "Configuration file not found: ${CONFIG_FILE}. Run setup first."
+# Collect all account config files from conf.d directory
+collect_config_files() {
+    if [ ! -d "${CONF_D_DIR}" ]; then
+        error_exit "Config directory not found: ${CONF_D_DIR}. Run setup first."
     fi
 
-    # Source the config file
-    # shellcheck source=/dev/null
-    source "${CONFIG_FILE}"
+    local files=()
+    for f in "${CONF_D_DIR}"/*.conf; do
+        [ -f "$f" ] && files+=("$f")
+    done
 
-    # Validate required variables
+    if [ ${#files[@]} -eq 0 ]; then
+        error_exit "No .conf files found in ${CONF_D_DIR}. Run setup first."
+    fi
+
+    printf '%s\n' "${files[@]}"
+}
+
+# Load a single account config, with variable isolation
+load_account_config() {
+    local conf_file="$1"
+
+    # Unset to prevent bleed-over between accounts
+    unset CF_ZONE CF_RECORDS CF_API_TOKEN
+
+    if [ ! -f "${conf_file}" ]; then
+        log "ERROR" "Config file not found: ${conf_file}"
+        return 1
+    fi
+
+    # shellcheck source=/dev/null
+    source "${conf_file}"
+
     if [ -z "${CF_ZONE:-}" ]; then
-        error_exit "CF_ZONE not set in ${CONFIG_FILE}"
+        log "ERROR" "CF_ZONE not set in ${conf_file}"
+        return 1
     fi
 
     if [ -z "${CF_RECORDS:-}" ]; then
-        error_exit "CF_RECORDS not set in ${CONFIG_FILE}"
+        log "ERROR" "CF_RECORDS not set in ${conf_file}"
+        return 1
     fi
 
-    # Validate CF_API_TOKEN is available
     if [ -z "${CF_API_TOKEN:-}" ]; then
-        error_exit "CF_API_TOKEN not set. Check ~/.config/cloudflare/credentials"
+        log "ERROR" "CF_API_TOKEN not set in ${conf_file}"
+        return 1
     fi
 }
 
-# Get external IP using the myip function or fallback methods
+# Get external IP using multiple fallback methods
 get_external_ip() {
     local ip=""
 
@@ -144,7 +173,7 @@ update_dns_record() {
     fi
 }
 
-# Update all configured DNS records
+# Update all configured DNS records for the current account
 update_all_records() {
     local new_ip="$1"
     local success=true
@@ -165,10 +194,30 @@ update_all_records() {
     fi
 }
 
+# Process a single account config file
+process_account() {
+    local conf_file="$1"
+    local current_ip="$2"
+    local account_name
+    account_name=$(basename "${conf_file}" .conf)
+
+    log "INFO" "Processing account: ${account_name}"
+
+    if ! load_account_config "${conf_file}"; then
+        log "ERROR" "Skipping account ${account_name} due to config errors"
+        return 1
+    fi
+
+    if ! update_all_records "${current_ip}"; then
+        log "ERROR" "DNS update failed for account: ${account_name}"
+        return 1
+    fi
+
+    return 0
+}
+
 # Main execution
 main() {
-    local current_ip
-    local cached_ip
     local force=false
 
     # Parse command line arguments
@@ -194,21 +243,26 @@ main() {
     # Check dependencies
     check_dependencies
 
-    # Load configuration
-    load_config
+    # Collect account configs
+    local config_files=()
+    while IFS= read -r f; do
+        config_files+=("$f")
+    done < <(collect_config_files)
 
-    # Get current external IP
+    log "INFO" "Found ${#config_files[@]} account(s) to process"
+
+    # Get current external IP (fetched once, shared across all accounts)
     log "INFO" "Checking external IP address..."
+    local current_ip
     if ! current_ip=$(get_external_ip); then
         error_exit "Failed to retrieve external IP address"
     fi
-
     log "INFO" "Current external IP: ${current_ip}"
 
-    # Get cached IP
+    # Check if update is needed
+    local cached_ip
     cached_ip=$(get_cached_ip)
 
-    # Check if update is needed
     if [ "${current_ip}" = "${cached_ip}" ] && [ "${force}" != true ]; then
         log "INFO" "IP address unchanged (${current_ip}), no update needed"
         exit 0
@@ -220,13 +274,20 @@ main() {
         log "INFO" "IP address changed from ${cached_ip:-none} to ${current_ip}"
     fi
 
-    # Update all DNS records
-    if update_all_records "${current_ip}"; then
-        # Save new IP to cache
+    # Process all accounts
+    local overall_success=true
+    for conf_file in "${config_files[@]}"; do
+        if ! process_account "${conf_file}" "${current_ip}"; then
+            overall_success=false
+        fi
+    done
+
+    # Only update the IP cache if all accounts succeeded
+    if [ "${overall_success}" = true ]; then
         echo "${current_ip}" > "${STATE_FILE}"
-        log "INFO" "DNS update completed successfully"
+        log "INFO" "All accounts updated successfully"
     else
-        error_exit "DNS update failed for one or more records"
+        error_exit "DNS update failed for one or more accounts"
     fi
 }
 
