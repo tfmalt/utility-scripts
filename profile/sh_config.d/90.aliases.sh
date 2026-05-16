@@ -18,6 +18,10 @@ esac
 case $(setuptype) in
 linux-server) ;;
 
+macbook)
+  alias ckan='/Applications/CKAN.app/Contents/MacOS/arm64/CKAN-CmdLine consoleui'
+  ;;
+
 windows)
   alias dotnet="dotnet.exe"
   ;;
