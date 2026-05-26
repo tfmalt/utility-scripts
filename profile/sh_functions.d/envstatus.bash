@@ -83,7 +83,7 @@ envstatus() {
 
     _is_known_tool() {
         case "$1" in
-            mise|node|cargo|platformio|opencode|claude|gh|hass|ssh-agent|homebrew|cloudflare|profile|oh-my-zsh|vim-colors)
+            mise|node|cargo|platformio|opencode|claude|gh|direnv|hass|ssh-agent|homebrew|cloudflare|profile|oh-my-zsh|vim-colors)
                 return 0
                 ;;
             *)
@@ -125,7 +125,7 @@ envstatus() {
         printf '  envstatus disabled\n'
         printf '  envstatus help\n\n'
         printf 'Config file: %s\n\n' "$_config_file"
-        printf 'Known tools: mise, node, cargo, platformio, opencode, claude, gh, hass, ssh-agent, homebrew, cloudflare, profile, oh-my-zsh, vim-colors\n'
+        printf 'Known tools: mise, node, cargo, platformio, opencode, claude, gh, direnv, hass, ssh-agent, homebrew, cloudflare, profile, oh-my-zsh, vim-colors\n'
     }
 
     _disable_tool() {
@@ -396,6 +396,20 @@ envstatus() {
         fi
     fi
 
+    local _direnv_path _direnv_version
+    if _is_disabled "direnv"; then
+        _info "direnv"    "disabled via local config"
+    else
+        _direnv_path=$(command -v direnv 2>/dev/null || true)
+        if [ -n "$_direnv_path" ]; then
+            _direnv_version=$(direnv version 2>/dev/null || true)
+            [ -z "$_direnv_version" ] && _direnv_version="unknown"
+            _ok  "direnv"     "$(_tool_msg "$_direnv_version" "$_direnv_path")"
+        else
+            _err "direnv"     "$(_tool_msg "missing" "-")"
+        fi
+    fi
+
     # --- Home Automation --------------------------------------------------
 
     _section "Home Automation"
@@ -543,6 +557,7 @@ envstatus() {
     unset _node_path _node_version
     unset _cargo_path _cargo_version _piopath _platformio_win_home _pio_path _pio_version
     unset _opencode_path _opencode_version _claude_path _claude_version _gh_path _gh_version
+    unset _direnv_path _direnv_version
     unset _ssh_agent_comm _cf_creds _perms
     unset _cs_dir _cs_link _actual _expected
 }
