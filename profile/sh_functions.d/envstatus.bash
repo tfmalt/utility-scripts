@@ -410,7 +410,7 @@ envstatus() {
         fi
     fi
 
-    local _kanban_bin_dir="${HOME}/src/vegvesen/ip-2.0/tools/kanban/target"
+    local _kanban_bin_dir="${HOME}/src/vegvesen/ip-2.0/tools/kanban/target/debug"
     local _kanban_path _kanban_version
     if _is_disabled "kanban"; then
         _info "kanban"    "disabled via local config"
