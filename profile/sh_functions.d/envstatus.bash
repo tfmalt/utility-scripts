@@ -83,7 +83,7 @@ envstatus() {
 
     _is_known_tool() {
         case "$1" in
-            mise|node|cargo|platformio|opencode|claude|gh|direnv|hass|ssh-agent|homebrew|cloudflare|profile|oh-my-zsh|vim-colors)
+            mise|node|cargo|platformio|opencode|claude|gh|direnv|kanban|hass|ssh-agent|homebrew|cloudflare|profile|oh-my-zsh|vim-colors)
                 return 0
                 ;;
             *)
@@ -125,7 +125,7 @@ envstatus() {
         printf '  envstatus disabled\n'
         printf '  envstatus help\n\n'
         printf 'Config file: %s\n\n' "$_config_file"
-        printf 'Known tools: mise, node, cargo, platformio, opencode, claude, gh, direnv, hass, ssh-agent, homebrew, cloudflare, profile, oh-my-zsh, vim-colors\n'
+        printf 'Known tools: mise, node, cargo, platformio, opencode, claude, gh, direnv, kanban, hass, ssh-agent, homebrew, cloudflare, profile, oh-my-zsh, vim-colors\n'
     }
 
     _disable_tool() {
@@ -410,6 +410,23 @@ envstatus() {
         fi
     fi
 
+    local _kanban_bin_dir="${HOME}/src/vegvesen/ip-2.0/tools/kanban/target"
+    local _kanban_path _kanban_version
+    if _is_disabled "kanban"; then
+        _info "kanban"    "disabled via local config"
+    else
+        _kanban_path=$(command -v kanban 2>/dev/null || true)
+        if [ -n "$_kanban_path" ]; then
+            _kanban_version=$(kanban --version 2>/dev/null | awk '{print $NF}')
+            [ -z "$_kanban_version" ] && _kanban_version="unknown"
+            _ok  "kanban"     "$(_tool_msg "$_kanban_version" "$_kanban_path")"
+        elif [ -d "$_kanban_bin_dir" ]; then
+            _warn "kanban"    "$(_tool_msg "missing" "$_kanban_bin_dir (not on PATH)")"
+        else
+            _err  "kanban"    "$(_tool_msg "missing" "-")"
+        fi
+    fi
+
     # --- Home Automation --------------------------------------------------
 
     _section "Home Automation"
@@ -557,7 +574,7 @@ envstatus() {
     unset _node_path _node_version
     unset _cargo_path _cargo_version _piopath _platformio_win_home _pio_path _pio_version
     unset _opencode_path _opencode_version _claude_path _claude_version _gh_path _gh_version
-    unset _direnv_path _direnv_version
+    unset _direnv_path _direnv_version _kanban_bin_dir _kanban_path _kanban_version
     unset _ssh_agent_comm _cf_creds _perms
     unset _cs_dir _cs_link _actual _expected
 }
