@@ -60,6 +60,17 @@ You can also control installation using environment variables:
 
 **Precedence**: Command-line options (`--profile-dir`) override environment variables (`PROFILE_ROOT`), which override defaults.
 
+### Optional Tool Installation
+
+`install.sh` only manages symlinks, backups, and the `~/.zshrc` entry point. It does **not** install developer tools. To install the optional tools that the shell profile configures (oh-my-zsh, powerlevel10k, mise, node, gh, claude, cargo, platformio, opencode):
+
+```bash
+./scripts/bootstrap.sh     # Interactive, confirms each tool
+./scripts/bootstrap.sh -y  # Skip confirmation prompts
+./scripts/bootstrap.sh -v  # Verbose installer output
+```
+
+
 ### Profile Directory (Intended Usage)
 
 The repository directory `profile/` is the source of truth for your interactive shell environment.
@@ -139,7 +150,7 @@ This will install the following dependencies:
 
 | Tool | Purpose | Install |
 |------|---------|---------|
-| `git` | Version control, submodules | Pre-installed on most systems |
+| `git` | Version control, cloning dependencies | Pre-installed on most systems |
 | `curl` | Downloading dependencies | Pre-installed on most systems |
 | `zsh` | Default shell | `brew install zsh` / `apt install zsh` |
 
@@ -196,51 +207,11 @@ envstatus help
 
 When a tool is disabled, `envstatus` shows it as `disabled via local config` and does not count it as a warning or error.
 
-### Cloudflare API Integration
+### Cloudflare Credentials
 
-If you use [flarectl](https://github.com/cloudflare/cloudflare-go/tree/master/cmd/flarectl) to manage Cloudflare DNS records, you can configure your API token to be automatically loaded.
+The Cloudflare DDNS scripts (`scripts/cloudflare-ddns.sh`, `scripts/install-cloudflare-ddns.sh`) read your API token from `~/.config/cloudflare/credentials`. See `scripts/README.md` for setup.
 
-**Setup:**
-
-1. Create the configuration directory:
-
-   ```bash
-   mkdir -p ~/.config/cloudflare
-   ```
-
-2. Create and secure the credentials file:
-
-   ```bash
-   touch ~/.config/cloudflare/credentials
-   chmod 600 ~/.config/cloudflare/credentials
-   ```
-
-3. Add your Cloudflare API token to the file:
-
-   ```bash
-   echo "export CF_API_TOKEN=your_token_here" > ~/.config/cloudflare/credentials
-   ```
-
-4. Reload your shell or source your configuration:
-
-   ```bash
-   source ~/.zshrc
-   ```
-
-The `CF_API_TOKEN` environment variable will be automatically loaded and exported when you start a new shell session. The configuration script will verify file permissions and warn you if the credentials file is not secure (should be `600`).
-
-**Creating a Cloudflare API Token:**
-
-1. Log in to the [Cloudflare Dashboard](https://dash.cloudflare.com/)
-2. Go to **My Profile** → **API Tokens**
-3. Click **Create Token**
-4. Use the "Edit zone DNS" template or create a custom token with the following permissions:
-   - Zone → DNS → Edit
-   - Zone → Zone → Read
-5. Select the specific zones you want to manage
-6. Create the token and copy it to your credentials file
-
-The install script will check for the credentials file and provide setup instructions if it's not found.
+The `envstatus` shell function also checks this file and warns if its permissions are not `600`.
 
 ## Security & Credentials
 

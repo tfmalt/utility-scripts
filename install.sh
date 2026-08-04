@@ -44,6 +44,10 @@ while [[ $# -gt 0 ]]; do
             echo "  PROFILE_ROOT          Override profile directory"
             echo "  CONFIG_ROOT           Override config directory"
             echo "  INSTALL_PREFIX        Override installation prefix (default: \$HOME)"
+            echo ""
+            echo "This script only manages symlinks, backups, and the .zshrc entry point."
+            echo "Optional developer tools are installed separately:"
+            echo "  ./scripts/bootstrap.sh"
             exit 0
             ;;
         *)
@@ -78,10 +82,6 @@ elif [ -n "$CONFIG_ROOT" ]; then
 else
     CONFIG="$ROOT/config"
 fi
-
-# Oh My Zsh paths
-ZSH="$INSTALL_PREFIX/.oh-my-zsh"
-ZSH_CUSTOM="$ZSH/custom"
 
 PAD=24
 
@@ -191,25 +191,6 @@ command_exists() {
     command -v "$1" >/dev/null 2>&1
 }
 
-# Function to initialize git submodules
-init_submodules() {
-    local submodule_path="$1"
-    local submodule_name="$2"
-    
-    if [ ! -d "$submodule_path" ] || [ -z "$(ls -A "$submodule_path" 2>/dev/null)" ]; then
-        log_verbose "Initializing submodule: $submodule_name"
-        if [ "$VERBOSE" = true ]; then
-            git submodule update --init --recursive "$submodule_path"
-        else
-            git submodule update --init --recursive "$submodule_path" > /dev/null 2>&1
-        fi
-        return 0
-    else
-        log_verbose "Submodule already initialized: $submodule_name"
-        return 1
-    fi
-}
-
 # Function to check dependencies
 check_dependencies() {
     local missing_deps=()
@@ -305,17 +286,8 @@ uninstall() {
     fi
     echo " Done"
     
-    echo "Uninstall complete. Oh My Zsh, cargo/rustup, platformio, mise, gh, opencode, and claude installations were left intact."
-    echo "To remove them manually:"
-    echo "  rm -rf $ZSH"
-    echo "  rm -rf $HOME/.cargo"
-    echo "  rm -rf $HOME/.rustup"
-    echo "  rm -rf $HOME/.platformio"
-    echo "  rm -rf $INSTALL_PREFIX/.local/share/mise"
-    echo "  rm -f $INSTALL_PREFIX/.local/bin/mise"
-    echo "  rm -rf $INSTALL_PREFIX/.opencode"
-    echo "  rm -f $HOME/.local/bin/claude"
-    echo "  rm -rf $HOME/.local/share/claude"
+    echo "Uninstall complete. Symlinks removed and backups restored."
+    echo "Optional tool installations are managed by ./scripts/bootstrap.sh and were left intact."
 }
 
 # ---------------------------------------------------------------------------
@@ -378,15 +350,10 @@ if [ -d "$COLORSCHEME_DIR/.git" ]; then
     echo " exists"
 else
     log_verbose "Cloning awesome-vim-colorschemes from $COLORSCHEME_REPO"
-    # Try submodule first; if it doesn't populate the repo, fall back to direct clone
-    git submodule update --init --recursive "$COLORSCHEME_DIR" > /dev/null 2>&1 || true
-    if [ ! -d "$COLORSCHEME_DIR/.git" ]; then
-        log_verbose "Submodule init did not populate repo; cloning directly"
-        if [ "$VERBOSE" = true ]; then
-            git clone "$COLORSCHEME_REPO" "$COLORSCHEME_DIR"
-        else
-            git clone -q "$COLORSCHEME_REPO" "$COLORSCHEME_DIR"
-        fi
+    if [ "$VERBOSE" = true ]; then
+        git clone "$COLORSCHEME_REPO" "$COLORSCHEME_DIR"
+    else
+        git clone -q "$COLORSCHEME_REPO" "$COLORSCHEME_DIR"
     fi
     echo " Done"
 fi
@@ -404,322 +371,8 @@ else
     log_verbose "Created symlink: vim/colors -> awesome-vim-colorschemes/colors"
     echo " Done"
 fi
-# ---------------------------------------------------------------------------
-OUTPUT="installing oh my zsh"
-echo -n "$(pad_output "$OUTPUT"):"
-
-if [ ! -d "$ZSH" ]; then
-    if confirm "Install Oh My Zsh?"; then
-        log_verbose "Cloning Oh My Zsh repository to $ZSH"
-        if [ "$VERBOSE" = true ]; then
-            git clone -c core.eol=lf -c core.autocrlf=false \
-                -c fsck.zeroPaddedFilemode=ignore \
-                -c fetch.fsck.zeroPaddedFilemode=ignore \
-                -c receive.fsck.zeroPaddedFilemode=ignore \
-                --depth=1 https://github.com/ohmyzsh/ohmyzsh.git "$ZSH"
-        else
-            git clone -c core.eol=lf -c core.autocrlf=false \
-                -c fsck.zeroPaddedFilemode=ignore \
-                -c fetch.fsck.zeroPaddedFilemode=ignore \
-                -c receive.fsck.zeroPaddedFilemode=ignore \
-                --depth=1 https://github.com/ohmyzsh/ohmyzsh.git "$ZSH" > /dev/null 2>&1
-        fi
-        echo " Done"
-    else
-        echo " Skipped"
-    fi
-else
-    log_verbose "Oh My Zsh already exists at $ZSH"
-    echo " exists"
-fi
 
 # ---------------------------------------------------------------------------
-OUTPUT="installing p10k theme"
-echo -n "$(pad_output "$OUTPUT"):" 
-
-if [ ! -d "$ZSH_CUSTOM/themes/powerlevel10k" ]; then
-    if [ -d "$ZSH" ] && confirm "Install Powerlevel10k theme?"; then
-        log_verbose "Cloning Powerlevel10k theme to $ZSH_CUSTOM/themes/powerlevel10k"
-        if [ "$VERBOSE" = true ]; then
-            git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$ZSH_CUSTOM"/themes/powerlevel10k
-        else
-            git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$ZSH_CUSTOM"/themes/powerlevel10k > /dev/null 2>&1
-        fi
-        echo " Done"
-    else
-        echo " Skipped"
-    fi
-else 
-    log_verbose "Powerlevel10k theme already exists"
-    echo " exists"
-fi
-# ---------------------------------------------------------------------------
-
-OUTPUT="installing mise"
-echo -n "$(pad_output "$OUTPUT"):"
-if command_exists mise; then
-    log_verbose "mise already installed"
-    echo " exists"
-else
-    if confirm "Install mise (polyglot runtime manager)?"; then
-        log_verbose "Installing mise from https://mise.run"
-        if [ "$VERBOSE" = true ]; then
-            curl https://mise.run | sh
-        else
-            curl -sSL https://mise.run | sh
-        fi
-        echo " Done"
-    else
-        echo " Skipped"
-    fi
-fi
-
-MISE_CMD=""
-if command_exists mise; then
-    MISE_CMD=$(command -v mise)
-elif [ -x "$INSTALL_PREFIX/.local/bin/mise" ]; then
-    MISE_CMD="$INSTALL_PREFIX/.local/bin/mise"
-fi
-
-OUTPUT="installing node"
-echo -n "$(pad_output "$OUTPUT"):"
-if command_exists node; then
-    log_verbose "node already installed"
-    echo " exists"
-elif [ -n "$MISE_CMD" ]; then
-    if confirm "Install Node.js (node@latest) via mise globally?"; then
-        log_verbose "Installing node@latest via mise ($MISE_CMD)"
-        if [ "$VERBOSE" = true ]; then
-            if "$MISE_CMD" use -g node@latest; then
-                :
-            else
-                echo " Failed"
-                echo "Error: Node.js installation via mise failed."
-                echo "Try again manually with:"
-                echo "  $MISE_CMD use -g node@latest"
-                exit 1
-            fi
-        else
-            if "$MISE_CMD" use -g node@latest > /dev/null 2>&1; then
-                :
-            else
-                echo " Failed"
-                echo "Error: Node.js installation via mise failed."
-                echo "Try again manually with:"
-                echo "  $MISE_CMD use -g node@latest"
-                exit 1
-            fi
-        fi
-
-        if [ -d "$INSTALL_PREFIX/.local/bin" ] && [[ ":$PATH:" != *":$INSTALL_PREFIX/.local/bin:"* ]]; then
-            PATH="$INSTALL_PREFIX/.local/bin:$PATH"
-            export PATH
-        fi
-
-        eval "$("$MISE_CMD" activate bash)"
-        echo " Done"
-    else
-        echo " Skipped"
-    fi
-else
-    echo " Skipped"
-    echo "Error: mise is required to install Node.js. Install mise first."
-fi
-
-OUTPUT="installing gh"
-echo -n "$(pad_output "$OUTPUT"):"
-if command_exists gh; then
-    log_verbose "gh already installed"
-    echo " exists"
-else
-    if confirm "Install GitHub CLI (gh)?"; then
-        if command_exists brew; then
-            log_verbose "Installing gh with Homebrew"
-            if [ "$VERBOSE" = true ]; then
-                brew install gh
-            else
-                brew install gh > /dev/null 2>&1
-            fi
-            echo " Done"
-        elif command_exists apt-get; then
-            log_verbose "Installing gh with apt-get"
-            if sudo apt-get update && sudo apt-get install -y gh; then
-                echo " Done"
-            else
-                echo " Failed"
-                echo "Error: GitHub CLI installation via apt-get failed."
-                echo "Try again manually with:"
-                echo "  sudo apt-get update && sudo apt-get install -y gh"
-                exit 1
-            fi
-        elif command_exists dnf; then
-            log_verbose "Installing gh with dnf"
-            if sudo dnf install -y gh; then
-                echo " Done"
-            else
-                echo " Failed"
-                echo "Error: GitHub CLI installation via dnf failed."
-                echo "Try again manually with:"
-                echo "  sudo dnf install -y gh"
-                exit 1
-            fi
-        elif command_exists yum; then
-            log_verbose "Installing gh with yum"
-            if sudo yum install -y gh; then
-                echo " Done"
-            else
-                echo " Failed"
-                echo "Error: GitHub CLI installation via yum failed."
-                echo "Try again manually with:"
-                echo "  sudo yum install -y gh"
-                exit 1
-            fi
-        elif command_exists winget; then
-            log_verbose "Installing gh with winget"
-            if winget install --id GitHub.cli -e; then
-                echo " Done"
-            else
-                echo " Failed"
-                echo "Error: GitHub CLI installation via winget failed."
-                echo "Try again manually with:"
-                echo "  winget install --id GitHub.cli -e"
-                exit 1
-            fi
-        else
-            echo " Failed"
-            echo "Error: Could not find a supported package manager for GitHub CLI."
-            echo "Install manually with one of:"
-            echo "  brew install gh"
-            echo "  sudo apt-get install gh"
-            echo "  sudo dnf install gh"
-            echo "  sudo yum install gh"
-            echo "  winget install --id GitHub.cli -e"
-            exit 1
-        fi
-    else
-        echo " Skipped"
-    fi
-fi
-
-OUTPUT="installing claude"
-echo -n "$(pad_output "$OUTPUT"):"
-if command_exists claude; then
-    log_verbose "claude already installed"
-    echo " exists"
-else
-    if confirm "Install Claude Code (native installer)?"; then
-        log_verbose "Installing Claude Code from https://claude.ai/install.sh"
-        if [ "$VERBOSE" = true ]; then
-            if curl -fsSL https://claude.ai/install.sh | bash; then
-                echo " Done"
-            else
-                echo " Failed"
-                echo "Error: Claude Code installation failed."
-                echo "Try again manually with:"
-                echo "  curl -fsSL https://claude.ai/install.sh | bash"
-                exit 1
-            fi
-        else
-            if curl -fsSL https://claude.ai/install.sh | bash > /dev/null 2>&1; then
-                echo " Done"
-            else
-                echo " Failed"
-                echo "Error: Claude Code installation failed."
-                echo "Try again manually with:"
-                echo "  curl -fsSL https://claude.ai/install.sh | bash"
-                exit 1
-            fi
-        fi
-    else
-        echo " Skipped"
-    fi
-fi
-
-OUTPUT="installing cargo"
-echo -n "$(pad_output "$OUTPUT"):"
-if command_exists cargo; then
-    log_verbose "cargo already installed"
-    echo " exists"
-else
-    if confirm "Install Rust (cargo) via rustup?"; then
-        log_verbose "Installing rustup from https://sh.rustup.rs"
-        if curl -fsSL https://sh.rustup.rs | sh -s -- -y --no-modify-path; then
-            echo " Done"
-        else
-            echo " Failed"
-            echo "Error: rustup installation failed."
-            echo "Try again manually with:"
-            echo "  curl -fsSL https://sh.rustup.rs | sh -s -- -y --no-modify-path"
-            exit 1
-        fi
-    else
-        echo " Skipped"
-    fi
-fi
-
-OUTPUT="installing platformio"
-echo -n "$(pad_output "$OUTPUT"):"
-if command_exists pio || command_exists pio.exe; then
-    log_verbose "platformio already installed"
-    echo " exists"
-else
-    if confirm "Install PlatformIO Core?"; then
-        if command_exists python3; then
-            log_verbose "Installing PlatformIO Core from official installer"
-            PLATFORMIO_INSTALLER=$(mktemp "${TMPDIR:-/tmp}/get-platformio.XXXXXX.py")
-
-            if curl -fsSL https://raw.githubusercontent.com/platformio/platformio-core-installer/master/get-platformio.py \
-                -o "$PLATFORMIO_INSTALLER"; then
-                if python3 "$PLATFORMIO_INSTALLER"; then
-                    rm -f "$PLATFORMIO_INSTALLER"
-                    echo " Done"
-                else
-                    rm -f "$PLATFORMIO_INSTALLER"
-                    echo " Failed"
-                    echo "Error: PlatformIO Core installation failed."
-                    echo "Try again manually with:"
-                    echo "  curl -fsSL https://raw.githubusercontent.com/platformio/platformio-core-installer/master/get-platformio.py -o /tmp/get-platformio.py"
-                    echo "  python3 /tmp/get-platformio.py"
-                    exit 1
-                fi
-            else
-                rm -f "$PLATFORMIO_INSTALLER"
-                echo " Failed"
-                echo "Error: Failed to download PlatformIO installer."
-                echo "Try again manually with:"
-                echo "  curl -fsSL https://raw.githubusercontent.com/platformio/platformio-core-installer/master/get-platformio.py -o /tmp/get-platformio.py"
-                echo "  python3 /tmp/get-platformio.py"
-                exit 1
-            fi
-        else
-            echo " Failed"
-            echo "Error: python3 is required to install PlatformIO Core."
-            exit 1
-        fi
-    else
-        echo " Skipped"
-    fi
-fi
-
-OUTPUT="installing opencode"
-echo -n "$(pad_output "$OUTPUT"):"
-if command_exists opencode; then
-    log_verbose "opencode already installed"
-    echo " exists"
-else
-    if confirm "Install opencode (AI coding assistant)?"; then
-        log_verbose "Installing opencode from https://opencode.ai/install"
-        if [ "$VERBOSE" = true ]; then
-            curl -fsSL https://opencode.ai/install | bash
-        else
-            curl -fsSL https://opencode.ai/install | bash
-        fi
-        echo " Done"
-    else
-        echo " Skipped"
-    fi
-fi
-
 OUTPUT="writing"
 FILE="$INSTALL_PREFIX/.zshrc"
 echo "$(pad_output "$OUTPUT"): $FILE"
@@ -735,33 +388,6 @@ EOD
 OUTPUT=""
 echo "Installation complete!"
 echo "--------------------------------------------------------------------------------"
-
-# Check for Cloudflare credentials
-CLOUDFLARE_CREDS="$INSTALL_PREFIX/.config/cloudflare/credentials"
-if [ ! -f "$CLOUDFLARE_CREDS" ]; then
-    if command -v flarectl &> /dev/null; then
-        echo ""
-        echo "Note: flarectl is installed but Cloudflare credentials not found."
-        echo ""
-        echo "To configure Cloudflare API integration:"
-        echo "  1. Create the directory: mkdir -p ~/.config/cloudflare"
-        echo "  2. Create credentials file: touch ~/.config/cloudflare/credentials"
-        echo "  3. Set secure permissions: chmod 600 ~/.config/cloudflare/credentials"
-        echo "  4. Add your token: echo 'export CF_API_TOKEN=your_token_here' > ~/.config/cloudflare/credentials"
-        echo ""
-        echo "See README.md for detailed instructions on creating a Cloudflare API token."
-        echo "--------------------------------------------------------------------------------"
-    fi
-else
-    # Verify permissions
-    PERM=$(stat -f '%A' "$CLOUDFLARE_CREDS" 2>/dev/null || stat -c '%a' "$CLOUDFLARE_CREDS" 2>/dev/null)
-    if [ "$PERM" != "600" ]; then
-        echo ""
-        echo "Warning: Cloudflare credentials file has insecure permissions ($PERM)"
-        echo "  Run: chmod 600 $CLOUDFLARE_CREDS"
-        echo "--------------------------------------------------------------------------------"
-    fi
-fi
 
 # Offer to source the new configuration
 if [ -f "$INSTALL_PREFIX/.zshrc" ]; then
@@ -787,3 +413,8 @@ if [ -f "$INSTALL_PREFIX/.zshrc" ]; then
 else
     echo "Note: .zshrc was not created. Please restart your terminal to use the new profile setup."
 fi
+
+echo ""
+echo "Optional developer tools are not installed by this script."
+echo "To install them (oh-my-zsh, p10k, mise, node, gh, claude, cargo, platformio, opencode):"
+echo "  ./scripts/bootstrap.sh"

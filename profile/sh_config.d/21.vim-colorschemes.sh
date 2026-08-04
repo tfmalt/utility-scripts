@@ -17,7 +17,7 @@ elif [ -L "$_COLORSCHEME_DIR" ] && [ ! -e "$_COLORSCHEME_DIR" ]; then
 elif [ ! -d "$_COLORSCHEME_DIR/.git" ]; then
     status_err "vim-colors" "awesome-vim-colorschemes missing or not a git repo; run install.sh to clone it"
 elif [ -z "$(ls -A "$_COLORSCHEME_DIR/colors" 2>/dev/null)" ]; then
-    status_err "vim-colors" "awesome-vim-colorschemes/colors is empty; try: git submodule update --init"
+    status_err "vim-colors" "awesome-vim-colorschemes/colors is empty; run install.sh to re-clone it"
 else
     _EXPECTED_TARGET="$(_resolve_path "$_COLORSCHEME_DIR/colors")"
 
