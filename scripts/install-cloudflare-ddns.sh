@@ -276,9 +276,14 @@ main() {
     # Prompt for account/conf name
     echo ""
     info "Existing accounts:"
-    if ls "${CONF_D_DIR}"/*.conf 2>/dev/null | xargs -I{} basename {} .conf | sed 's/^/  - /'; then
-        true
-    else
+    local found_conf=false
+    for conf in "${CONF_D_DIR}"/*.conf; do
+        if [ -f "${conf}" ]; then
+            found_conf=true
+            basename "${conf}" .conf | sed 's/^/  - /'
+        fi
+    done
+    if [ "${found_conf}" = false ]; then
         echo "  (none)"
     fi
     echo ""
