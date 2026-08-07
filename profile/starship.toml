@@ -5,7 +5,7 @@ command_timeout = 800
 scan_timeout = 30
 palette = "tm"
 
-format = "$os[](fg:os_bg bg:dir_bg)$directory[](fg:dir_bg)$git_branch$git_commit$git_state$git_status "
+format = "$os[](fg:os_bg bg:dir_bg)$directory$git_branch$git_commit$git_state$git_status "
 right_format = "$status$cmd_duration$jobs$direnv$python$nodejs$golang$rust$ruby$java$lua$php$haskell$nix_shell$conda$terraform$kubernetes$aws$gcloud$azure$container$username$hostname$env_var"
 continuation_prompt = "[∙](fg:muted) "
 
@@ -14,7 +14,8 @@ os_bg = "7"
 os_fg = "232"
 dir_bg = "4"
 dir_fg = "254"
-git = "196"
+git_bg = "2"
+git_fg = "232"
 muted = "242"
 status_bg = "238"
 success = "76"
@@ -43,10 +44,12 @@ Ubuntu = ""
 Windows = ""
 
 [directory]
-format = "[ $path]($style)[$read_only]($read_only_style)[ ]($style)"
+format = "[ $path]($style)[$read_only]($read_only_style)[ ]($style)[](fg:dir_bg)"
 home_symbol = "~"
 read_only = " "
 read_only_style = "fg:error bg:dir_bg"
+repo_root_format = "[ $before_root_path]($before_repo_root_style)[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style)[ ]($style)"
+before_repo_root_style = "fg:dir_fg bg:dir_bg"
 repo_root_style = "bold fg:dir_fg bg:dir_bg"
 style = "fg:dir_fg bg:dir_bg"
 truncate_to_repo = true
@@ -55,27 +58,27 @@ truncation_symbol = "…/"
 
 [git_branch]
 always_show_remote = false
-format = " [$symbol$branch(:$remote_branch)]($style)"
-style = "bold fg:git"
-symbol = " "
+format = "[](fg:dir_bg bg:git_bg)[ $symbol$branch(:$remote_branch)]($style)"
+style = "bold fg:git_fg bg:git_bg"
+symbol = " "
 truncation_length = 32
 truncation_symbol = "…"
 
 [git_commit]
 commit_hash_length = 8
-format = " [@$hash$tag]($style)"
+format = "[ @$hash$tag]($style)"
 only_detached = true
-style = "bold fg:git"
+style = "bold fg:git_fg bg:git_bg"
 tag_disabled = false
 tag_symbol = "  "
 
 [git_state]
-format = " [($state( $progress_current/$progress_total))]($style)"
-style = "bold yellow"
+format = "[ $state( $progress_current/$progress_total)]($style)"
+style = "bold fg:git_fg bg:git_bg"
 
 [git_status]
-format = "([ $all_status$ahead_behind]($style))"
-style = "bold fg:git"
+format = "([ $all_status$ahead_behind ]($style))[](fg:git_bg)"
+style = "bold fg:git_fg bg:git_bg"
 conflicted = "~${count}"
 ahead = "⇡${count}"
 behind = "⇣${count}"
