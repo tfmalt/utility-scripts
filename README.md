@@ -153,6 +153,7 @@ This will install the following dependencies:
 | `git` | Version control, cloning dependencies | Pre-installed on most systems |
 | `curl` | Downloading dependencies | Pre-installed on most systems |
 | `zsh` | Default shell | `brew install zsh` / `apt install zsh` |
+| `starship` | zsh prompt | `brew install starship` / [other platforms](https://starship.rs/installing/) |
 
 ### Optional Tools
 
@@ -171,6 +172,26 @@ This will install the following dependencies:
 - **Homebrew paths**: macOS with Apple Silicon uses `/opt/homebrew`, Intel Macs use `/usr/local`.
 
 ## Optional Configuration
+
+### Starship Prompt
+
+Starship renders the zsh prompt while Oh My Zsh continues to provide plugins,
+aliases, completion, and vi-mode behavior. The tracked configuration is
+`profile/starship.toml`; `profile/sh_config.d/89.starship.sh` selects it through
+`STARSHIP_CONFIG` and initializes Starship after the shell integrations.
+
+Install Starship before starting a new zsh session:
+
+```bash
+# macOS or Linuxbrew
+brew install starship
+
+# Other supported platforms
+curl -sS https://starship.rs/install.sh | sh
+```
+
+The prompt expects a Nerd Font for the OS, language, and Powerline glyphs. The
+existing Bash prompt remains independent and does not require Starship.
 
 ### Truecolor Terminal Support
 
@@ -256,6 +277,9 @@ ls -la ~/.zshrc ~/.vimrc ~/.vim ~/.dircolors
 
 # Verify shell configuration loads without errors
 zsh -i -c 'echo "Shell loaded successfully"'
+
+# Verify Starship uses the tracked configuration
+STARSHIP_CONFIG="$PWD/profile/starship.toml" starship explain
 
 # Run linter on all scripts
 ./scripts/lint.sh

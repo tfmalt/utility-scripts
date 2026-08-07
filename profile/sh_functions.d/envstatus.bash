@@ -83,7 +83,7 @@ envstatus() {
 
     _is_known_tool() {
         case "$1" in
-            mise|node|cargo|platformio|opencode|claude|gh|direnv|kanban|hass|ssh-agent|homebrew|cloudflare|profile|oh-my-zsh|vim-colors)
+            mise|node|cargo|platformio|opencode|claude|gh|direnv|kanban|hass|ssh-agent|homebrew|cloudflare|profile|starship|oh-my-zsh|vim-colors)
                 return 0
                 ;;
             *)
@@ -125,7 +125,7 @@ envstatus() {
         printf '  envstatus disabled\n'
         printf '  envstatus help\n\n'
         printf 'Config file: %s\n\n' "$_config_file"
-        printf 'Known tools: mise, node, cargo, platformio, opencode, claude, gh, direnv, kanban, hass, ssh-agent, homebrew, cloudflare, profile, oh-my-zsh, vim-colors\n'
+        printf 'Known tools: mise, node, cargo, platformio, opencode, claude, gh, direnv, kanban, hass, ssh-agent, homebrew, cloudflare, profile, starship, oh-my-zsh, vim-colors\n'
     }
 
     _disable_tool() {
@@ -502,6 +502,20 @@ envstatus() {
         _info "profile"    "disabled via local config"
     elif [ -z "$_profile" ]; then
         _warn "profile"    "PROFILE_DIR and PROFILE are unset — run install.sh"
+    fi
+
+    local _starship_path _starship_version
+    if _is_disabled "starship"; then
+        _info "starship"   "disabled via local config"
+    else
+        _starship_path=$(command -v starship 2>/dev/null || true)
+        if [ -n "$_starship_path" ]; then
+            _starship_version=$(starship --version 2>/dev/null | awk 'NR == 1 {print $2}')
+            [ -z "$_starship_version" ] && _starship_version="unknown"
+            _ok "starship" "$(_tool_msg "$_starship_version" "$_starship_path")"
+        else
+            _err "starship" "$(_tool_msg "missing" "install: https://starship.rs/installing/")"
+        fi
     fi
 
     if _is_disabled "oh-my-zsh"; then

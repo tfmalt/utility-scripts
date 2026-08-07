@@ -32,12 +32,12 @@ git submodule update --init --recursive  # Initialize vim colorscheme submodule
 
 The shell configuration uses a numbered loading system in `profile/sh_config.d/`:
 
-- `01-09`: Bootstrap — helper functions and early init (icons, p10k instant prompt)
+- `01-09`: Bootstrap — helper functions and early initialization
 - `10-19`: Foundation — environment variables, locales, core tool setup (zoxide, fzf, completions, Oh My Zsh)
 - `20-29`: Display — colors, dircolors
 - `30-39`: Dev tools — language-specific version managers and toolchains (cargo, gcloud, platformio, fnm)
 - `40-49`: Auth & credentials — SSH agent, API tokens (Homebrew, Cloudflare, AWS)
-- `90-99`: Finalization — aliases, shell-specific config, prompts, plugins, last-mile setup
+- `89-99`: Finalization — Starship, aliases, shell-specific config, plugins, and last-mile setup
 
 Files use a `NN.descriptive-name.sh` naming convention with kebab-case for multi-word names. Each prefix number must be unique.
 
@@ -48,7 +48,7 @@ Files use a `NN.descriptive-name.sh` naming convention with kebab-case for multi
 - Symlink creation with collision detection
 - Comprehensive backup system with timestamped backups
 - Uninstall capability with backup restoration
-- Dependency checking and installation (Oh My Zsh, Powerlevel10k, fnm)
+- Dependency checking and installation (Oh My Zsh, mise, and related tools)
 - Cross-platform support with verbose logging
 
 **`profile/sh_functions.d/setuptype.bash`**: System detection function that identifies:
@@ -63,6 +63,9 @@ Files use a `NN.descriptive-name.sh` naming convention with kebab-case for multi
 - Sources all modular configurations in order
 - Handles function pre-loading
 - Provides fallback for missing components
+
+**`profile/starship.toml`**: Starship prompt configuration. Oh My Zsh remains
+responsible for plugins and completion but does not load a theme.
 
 ### Configuration Flow
 

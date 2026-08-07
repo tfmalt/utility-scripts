@@ -5,33 +5,14 @@
 
 #only run if shell is zsh
 
-rustc_version() {
-  [[ -z $(command -v rustc) ]] && return 127
-
-  rustc --version | awk '{print $2}'
-  return 0
-}
-
-custom_rust() {
-  if [[ -e Cargo.toml ]] || [[ $(find . -maxdepth 1 -name '*.rs' -print -quit) ]]; then
-    echo -e "\ue7a8 $(rustc_version)"
-  fi
-}
-
-custom_js() {
-  if [[ -e package.json ]] || [[ $(find . -maxdepth 1 -name '*.js' -print -quit) ]]; then
-    echo -e "\ue74e"
-  fi
-}
-
 if envstatus_tool_disabled "oh-my-zsh"; then
   :
 elif [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
 
   export ZSH="$HOME/.oh-my-zsh"
 
-  # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-  ZSH_THEME="powerlevel10k/powerlevel10k"
+  # Starship owns the prompt; Oh My Zsh only provides plugins and utilities.
+  ZSH_THEME=""
 
   # Uncomment the following line to use case-sensitive completion.
   CASE_SENSITIVE="true"
@@ -73,7 +54,6 @@ elif [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
 
   HIST_STAMP="yyyy-mm-dd"
   ZSH_DISABLE_COMPFIX=true
-  DEFAULT_USER="tm"
   plugins=(
     git
     docker
@@ -92,53 +72,7 @@ elif [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
     fzf
   )
 
-  POWERLEVEL9K_MODE='nerdfont-complete'
-
-  # p9k directory truncation
-  POWERLEVEL9K_SHORTEN_STRATEGY="Default"
-  POWERLEVEL9K_SHORTEN_DIR_LENGTH=1
-  POWERLEVEL9K_SHORTEN_DELIMITER=".."
-
-  # Left prompt elements
-  POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
-    context
-    dir
-    dir_writable
-    custom_rust
-    custom_js
-    vcs
-  )
-
-  POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
-    command_execution_time
-    background_jobs
-    status
-    vi_mode
-  )
-
-  # Context colors - linux-server
-  POWERLEVEL9K_CONTEXT_BACKGROUND='33'
-  POWERLEVEL9K_CONTEXT_FOREGROUND='15'
-
-  POWERLEVEL9K_CUSTOM_RUST="custom_rust"
-  POWERLEVEL9K_CUSTOM_JS="custom_js"
-  POWERLEVEL9K_CUSTOM_JS_BACKGROUND='226'
-  POWERLEVEL9K_TIME_FORMAT="%D{%H:%M}"
-  POWERLEVEL9K_CUSTOM_RUST_BACKGROUND='166'
-  POWERLEVEL9K_ROOT_INDICATOR_BACKGROUND='160'
-  POWERLEVEL9K_ROOT_INDICATOR_FOREGROUND='white'
-  POWERLEVEL9K_CONTEXT_ROOT_BACKGROUND='160'
-  POWERLEVEL9K_CONTEXT_ROOT_FOREGROUND='white'
-  POWERLEVEL9K_VI_INSERT_MODE_STRING="INSERT"
-  POWERLEVEL9K_VI_COMMAND_MODE_STRING="NORMAL"
-  POWERLEVEL9K_VI_MODE_INSERT_BACKGROUND='2'
-  POWERLEVEL9K_VI_MODE_INSERT_FOREGROUND='white'
-  POWERLEVEL9K_VI_MODE_NORMAL_BACKGROUND='240'
-  POWERLEVEL9K_VI_MODE_NORMAL_FOREGROUND='black'
-  POWERLEVEL9K_STATUS_OK_BACKGROUND='238'
-  POWERLEVEL9K_HOME_FOLDER_ABBREVIATION=""
-
-  source $ZSH/oh-my-zsh.sh
+  source "$ZSH/oh-my-zsh.sh"
 
 else
   status_err "oh-my-zsh" "zsh not running ($0); setup skipped"

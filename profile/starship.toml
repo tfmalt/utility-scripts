@@ -1,0 +1,226 @@
+"$schema" = "https://starship.rs/config-schema.json"
+
+add_newline = false
+command_timeout = 800
+scan_timeout = 30
+palette = "tm"
+
+format = "$os[](fg:os_bg bg:dir_bg)$directory[](fg:dir_bg)$git_branch$git_commit$git_state$git_status "
+right_format = "$status$cmd_duration$jobs$direnv$python$nodejs$golang$rust$ruby$java$lua$php$haskell$nix_shell$conda$terraform$kubernetes$aws$gcloud$azure$container$username$hostname$env_var"
+continuation_prompt = "[∙](fg:muted) "
+
+[palettes.tm]
+os_bg = "7"
+os_fg = "232"
+dir_bg = "4"
+dir_fg = "254"
+git = "196"
+muted = "242"
+status_bg = "238"
+success = "76"
+error = "196"
+
+[os]
+disabled = false
+format = "[ $symbol ]($style)"
+style = "fg:os_fg bg:os_bg"
+
+[os.symbols]
+Alpine = ""
+Arch = ""
+CentOS = ""
+Debian = ""
+Fedora = ""
+Linux = ""
+Macos = ""
+Manjaro = ""
+Mint = ""
+NixOS = ""
+Raspbian = ""
+Redhat = ""
+RedHatEnterprise = ""
+Ubuntu = ""
+Windows = ""
+
+[directory]
+format = "[ $path]($style)[$read_only]($read_only_style)[ ]($style)"
+home_symbol = "~"
+read_only = " "
+read_only_style = "fg:error bg:dir_bg"
+repo_root_style = "bold fg:dir_fg bg:dir_bg"
+style = "fg:dir_fg bg:dir_bg"
+truncate_to_repo = true
+truncation_length = 4
+truncation_symbol = "…/"
+
+[git_branch]
+always_show_remote = false
+format = " [$symbol$branch(:$remote_branch)]($style)"
+style = "bold fg:git"
+symbol = " "
+truncation_length = 32
+truncation_symbol = "…"
+
+[git_commit]
+commit_hash_length = 8
+format = " [@$hash$tag]($style)"
+only_detached = true
+style = "bold fg:git"
+tag_disabled = false
+tag_symbol = "  "
+
+[git_state]
+format = " [($state( $progress_current/$progress_total))]($style)"
+style = "bold yellow"
+
+[git_status]
+format = "([ $all_status$ahead_behind]($style))"
+style = "bold fg:git"
+conflicted = "~${count}"
+ahead = "⇡${count}"
+behind = "⇣${count}"
+diverged = "⇕⇡${ahead_count}⇣${behind_count}"
+up_to_date = ""
+untracked = "?${count}"
+stashed = "*${count}"
+modified = "!${count}"
+staged = "+${count}"
+renamed = "»${count}"
+deleted = "✘${count}"
+
+[status]
+disabled = false
+format = "[](fg:status_bg)[ $symbol$common_meaning$signal_name$maybe_int ]($style)[](fg:status_bg)"
+pipestatus = true
+pipestatus_format = "[](fg:status_bg)[ $pipestatus ]($style)[](fg:status_bg)"
+pipestatus_segment_format = "[$symbol$maybe_int]($style)"
+map_symbol = true
+symbol = "✘ "
+success_symbol = "✔"
+success_style = "fg:white bg:status_bg"
+failure_style = "bold fg:error bg:status_bg"
+
+[cmd_duration]
+format = "[╱ $duration](fg:yellow)"
+min_time = 3000
+show_milliseconds = false
+
+[jobs]
+format = "[╱ $symbol$number](fg:cyan)"
+number_threshold = 999
+symbol = "⚙"
+symbol_threshold = 1
+
+[direnv]
+disabled = false
+format = "[╱ $symbol$loaded/$allowed]($style)"
+style = "bold fg:yellow"
+symbol = "direnv "
+
+[python]
+format = '[╱ ${symbol}${pyenv_prefix}(${version})(\($virtualenv\))]($style)'
+style = "bold yellow"
+symbol = " "
+
+[nodejs]
+format = "[╱ $symbol($version)]($style)"
+style = "bold green"
+symbol = " "
+
+[golang]
+format = "[╱ $symbol($version)]($style)"
+style = "bold cyan"
+symbol = " "
+
+[rust]
+format = "[╱ $symbol($version)]($style)"
+style = "bold red"
+symbol = " "
+
+[ruby]
+format = "[╱ $symbol($version)(-$gemset)]($style)"
+style = "bold red"
+symbol = " "
+
+[java]
+format = "[╱ $symbol($version)]($style)"
+style = "red"
+symbol = " "
+
+[lua]
+format = "[╱ $symbol($version)]($style)"
+style = "bold blue"
+symbol = " "
+
+[php]
+format = "[╱ $symbol($version)]($style)"
+style = "bold purple"
+symbol = " "
+
+[haskell]
+format = "[╱ $symbol($version)]($style)"
+style = "bold purple"
+symbol = " "
+
+[nix_shell]
+format = '[╱ $symbol$state(\($name\))]($style)'
+style = "bold blue"
+symbol = " "
+
+[conda]
+format = "[╱ $symbol$environment]($style)"
+ignore_base = true
+style = "bold green"
+symbol = " "
+
+[terraform]
+format = "[╱ $symbol$workspace]($style)"
+style = "bold 105"
+symbol = " "
+
+[kubernetes]
+disabled = false
+format = '[╱ $symbol$context(\($namespace\))]($style)'
+style = "bold cyan"
+symbol = "󱃾 "
+
+[aws]
+format = "[╱ $symbol($profile)(@$region)]($style)"
+style = "bold yellow"
+symbol = "󰸏 "
+
+[gcloud]
+format = "[╱ $symbol$project]($style)"
+style = "bold blue"
+symbol = "󱇶 "
+
+[azure]
+disabled = false
+format = "[╱ $symbol$subscription]($style)"
+style = "bold blue"
+symbol = "󰠅 "
+
+[container]
+format = "[╱ $symbol$name]($style)"
+style = "bold red"
+symbol = "⬢ "
+
+[username]
+format = "[╱ $user]($style)"
+show_always = false
+style_root = "bold fg:error"
+style_user = "bold yellow"
+
+[hostname]
+format = "[@$hostname]($style)"
+ssh_only = true
+ssh_symbol = ""
+style = "bold yellow"
+trim_at = "."
+
+[env_var]
+variable = "STARSHIP_VI_MODE"
+format = "[╱ $env_value](bold fg:muted)"
+
+[character]
+disabled = true
