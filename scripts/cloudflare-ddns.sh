@@ -93,6 +93,9 @@ load_account_config() {
     # shellcheck source=/dev/null
     source "${conf_file}"
 
+    # Export so child processes (flarectl) can see credentials
+    export CF_API_TOKEN
+
     if [ -z "${CF_ZONE:-}" ]; then
         log "ERROR" "CF_ZONE not set in ${conf_file}"
         return 1
@@ -155,20 +158,21 @@ update_dns_record() {
 
     log "INFO" "Updating ${record_name} (ID: ${record_id}) to ${new_ip} (proxy: ${proxy})"
 
-    # Build flarectl command
-    local cmd="flarectl dns update --zone \"${CF_ZONE}\" --id \"${record_id}\" --content \"${new_ip}\""
+    # Build flarectl command as an array to avoid eval/quoting pitfalls
+    local cmd=(flarectl dns update --zone "${CF_ZONE}" --id "${record_id}" --content "${new_ip}")
 
     # Add proxy flag if specified
     if [ "${proxy}" = "true" ]; then
-        cmd="${cmd} --proxy"
+        cmd+=(--proxy)
     fi
 
     # Execute update
-    if eval "${cmd}" >> "${LOG_FILE}" 2>&1; then
+    if "${cmd[@]}" >> "${LOG_FILE}" 2>&1; then
         log "INFO" "Successfully updated ${record_name}"
         return 0
     else
-        log "ERROR" "Failed to update ${record_name}"
+        local err=$?
+        log "ERROR" "Failed to update ${record_name} (exit ${err})"
         return 1
     fi
 }
@@ -179,7 +183,9 @@ update_all_records() {
     local success=true
 
     # Parse CF_RECORDS (format: "id:name:proxy id:name:proxy ...")
-    for record in ${CF_RECORDS}; do
+    local -a records
+    read -ra records <<< "${CF_RECORDS}"
+    for record in "${records[@]}"; do
         IFS=':' read -r record_id record_name proxy <<< "${record}"
 
         if ! update_dns_record "${record_id}" "${record_name}" "${new_ip}" "${proxy}"; then
