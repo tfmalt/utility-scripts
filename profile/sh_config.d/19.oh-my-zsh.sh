@@ -54,23 +54,18 @@ elif [[ $SHELL == *zsh ]] && [[ -d $HOME/.oh-my-zsh ]]; then
 
   HIST_STAMP="yyyy-mm-dd"
   ZSH_DISABLE_COMPFIX=true
+  # Keep only integrations that provide substantial shell behavior. Other
+  # aliases and completions live in tracked profile snippets.
   plugins=(
     git
     docker
-    history
-    macos
     brew
-    npm
-    yarn
-    node
     vi-mode
-    rust
-    wakeonlan
-    gatsby
-    gh
-    pip
-    fzf
   )
+
+  if [[ "$(uname -s)" == "Darwin" ]]; then
+    plugins+=(macos)
+  fi
 
   source "$ZSH/oh-my-zsh.sh"
 
