@@ -5,7 +5,7 @@ command_timeout = 800
 scan_timeout = 30
 palette = "tm"
 
-format = "$os[](fg:os_bg bg:dir_bg)$directory$git_branch$git_commit$git_state$git_status "
+format = "$os[](fg:os_bg bg:dir_bg)$directory$git_branch$git_commit$git_state$git_status[ ](fg:muted)"
 right_format = "$status$cmd_duration$jobs$direnv$python$nodejs$golang$rust$ruby$java$lua$php$haskell$nix_shell$conda$terraform$kubernetes$aws$gcloud$azure$container$username$hostname$env_var"
 continuation_prompt = "[∙](fg:muted) "
 
