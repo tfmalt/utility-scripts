@@ -64,8 +64,9 @@ Files use a `NN.descriptive-name.sh` naming convention with kebab-case for multi
 - Handles function pre-loading
 - Provides fallback for missing components
 
-**`profile/starship.toml`**: Starship prompt configuration. Oh My Zsh remains
-responsible for plugins and completion but does not load a theme.
+**`profile/starship.toml`**: Starship prompt configuration. Oh My Zsh provides
+the retained shell plugins but does not load a theme; tracked snippets configure
+the remaining aliases and completions.
 
 ### Configuration Flow
 

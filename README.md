@@ -175,8 +175,9 @@ This will install the following dependencies:
 
 ### Starship Prompt
 
-Starship renders the zsh prompt while Oh My Zsh continues to provide plugins,
-aliases, completion, and vi-mode behavior. The tracked configuration is
+Starship renders the zsh prompt while Oh My Zsh provides the Git, Docker,
+Homebrew, vi-mode, and macOS integrations. The profile provides the remaining
+aliases and command completions directly. The tracked configuration is
 `profile/starship.toml`; `profile/sh_config.d/89.starship.sh` selects it through
 `STARSHIP_CONFIG` and initializes Starship after the shell integrations.
 
