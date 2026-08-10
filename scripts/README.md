@@ -4,7 +4,7 @@ Standalone utility scripts in this repository.
 
 ## bootstrap.sh
 
-Installs the optional developer tools that the shell profile configures (oh-my-zsh, powerlevel10k, mise, node, gh, claude, cargo, platformio, opencode). Run after `./install.sh`; every tool can be skipped.
+Installs the optional developer tools that the shell profile configures (oh-my-zsh, mise, node, gh, claude, cargo, platformio, opencode). Run after `./install.sh`; every tool can be skipped.
 
 ```bash
 ./scripts/bootstrap.sh           # Interactive, confirms each tool

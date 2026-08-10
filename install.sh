@@ -416,5 +416,5 @@ fi
 
 echo ""
 echo "Optional developer tools are not installed by this script."
-echo "To install them (oh-my-zsh, p10k, mise, node, gh, claude, cargo, platformio, opencode):"
+echo "To install them (oh-my-zsh, mise, node, gh, claude, cargo, platformio, opencode):"
 echo "  ./scripts/bootstrap.sh"

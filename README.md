@@ -62,7 +62,7 @@ You can also control installation using environment variables:
 
 ### Optional Tool Installation
 
-`install.sh` only manages symlinks, backups, and the `~/.zshrc` entry point. It does **not** install developer tools. To install the optional tools that the shell profile configures (oh-my-zsh, powerlevel10k, mise, node, gh, claude, cargo, platformio, opencode):
+`install.sh` only manages symlinks, backups, and the `~/.zshrc` entry point. It does **not** install developer tools. To install the optional tools that the shell profile configures (oh-my-zsh, mise, node, gh, claude, cargo, platformio, opencode):
 
 ```bash
 ./scripts/bootstrap.sh     # Interactive, confirms each tool

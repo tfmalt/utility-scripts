@@ -10,7 +10,7 @@
 #   ./scripts/bootstrap.sh -y     # Assume yes for every prompt
 #   ./scripts/bootstrap.sh -v     # Verbose installer output
 #
-# Tools: oh-my-zsh, powerlevel10k, mise, node, gh, claude, cargo,
+# Tools: oh-my-zsh, mise, node, gh, claude, cargo,
 #        platformio, opencode
 #
 set -euo pipefail
@@ -37,7 +37,7 @@ while [[ $# -gt 0 ]]; do
             echo "  -h, --help      Show this help message"
             echo ""
             echo "Installs optional tools configured by the profile:"
-            echo "  oh-my-zsh, powerlevel10k, mise, node, gh, claude,"
+            echo "  oh-my-zsh, mise, node, gh, claude,"
             echo "  cargo, platformio, opencode"
             exit 0
             ;;
@@ -49,10 +49,9 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# Installation prefix and Oh My Zsh paths
+# Installation prefix and Oh My Zsh path
 INSTALL_PREFIX="${INSTALL_PREFIX:-$HOME}"
 ZSH="$INSTALL_PREFIX/.oh-my-zsh"
-ZSH_CUSTOM="$ZSH/custom"
 
 PAD=24
 
@@ -133,21 +132,6 @@ install_oh_my_zsh() {
                 -c fetch.fsck.zeroPaddedFilemode=ignore \
                 -c receive.fsck.zeroPaddedFilemode=ignore \
                 --depth=1 https://github.com/ohmyzsh/ohmyzsh.git "$ZSH"
-            echo " Done"
-        else
-            echo " Skipped"
-        fi
-    else
-        echo " exists"
-    fi
-}
-
-install_p10k() {
-    echo -n "$(pad_output "installing p10k theme"):"
-    if [ ! -d "$ZSH_CUSTOM/themes/powerlevel10k" ]; then
-        if [ -d "$ZSH" ] && confirm "Install Powerlevel10k theme?"; then
-            log_verbose "Cloning Powerlevel10k theme to $ZSH_CUSTOM/themes/powerlevel10k"
-            run_quiet git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$ZSH_CUSTOM"/themes/powerlevel10k
             echo " Done"
         else
             echo " Skipped"
@@ -410,7 +394,6 @@ log_verbose "Install prefix: $INSTALL_PREFIX"
 echo ""
 
 install_oh_my_zsh
-install_p10k
 install_mise
 install_node
 install_gh

@@ -17,7 +17,7 @@ This repository manages a personal UNIX/POSIX shell environment using symlinks.
 - `./install.sh -y` - skip confirmation prompts.
 - `./install.sh -u` - uninstall symlinks and restore backups.
 - `./install.sh --profile-dir /path/to/profile --config-dir /path/to/config` - custom roots.
-- `./scripts/bootstrap.sh` - optional developer tools (oh-my-zsh, p10k, mise, node, gh, claude, cargo, platformio, opencode).
+- `./scripts/bootstrap.sh` - optional developer tools (oh-my-zsh, mise, node, gh, claude, cargo, platformio, opencode).
 
 ### Dependencies
 - `npm install` - install optional CLI dependencies.
