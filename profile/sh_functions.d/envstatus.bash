@@ -494,6 +494,18 @@ envstatus() {
         _info "cloudflare" "not configured (no $_cf_creds)"
     fi
 
+    local _transmission_netrc="${XDG_CONFIG_HOME:-$HOME/.config}/transmission/remote.netrc"
+    if [ -f "$_transmission_netrc" ]; then
+        _perms=$(stat -c '%a' "$_transmission_netrc" 2>/dev/null || stat -f '%Lp' "$_transmission_netrc" 2>/dev/null)
+        if [ "$_perms" != "600" ]; then
+            _warn "transmission" "insecure permissions ($_perms); run: chmod 600 $_transmission_netrc"
+        else
+            _ok "transmission" "credentials configured"
+        fi
+    else
+        _info "transmission" "not configured (no $_transmission_netrc)"
+    fi
+
     # --- Shell Config -----------------------------------------------------
 
     _section "Shell Config"
@@ -589,6 +601,6 @@ envstatus() {
     unset _cargo_path _cargo_version _piopath _platformio_win_home _pio_path _pio_version
     unset _opencode_path _opencode_version _claude_path _claude_version _gh_path _gh_version
     unset _direnv_path _direnv_version _kanban_bin_dir _kanban_path _kanban_version
-    unset _ssh_agent_comm _cf_creds _perms
+    unset _ssh_agent_comm _cf_creds _transmission_netrc _perms
     unset _cs_dir _cs_link _actual _expected
 }
