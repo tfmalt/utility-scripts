@@ -218,7 +218,7 @@ style_user = "bold yellow"
 format = "[@$hostname]($style)"
 ssh_only = true
 ssh_symbol = ""
-style = "bold yellow"
+style = "bold fg:os_fg bg:os_bg"
 trim_at = "."
 
 [env_var]
