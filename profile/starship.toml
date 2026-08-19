@@ -6,7 +6,7 @@ scan_timeout = 30
 palette = "tm"
 
 format = "$hostname$os[](fg:os_bg bg:dir_bg)$directory$git_branch$git_commit$git_state$git_status[ ](fg:muted)"
-right_format = "$status$cmd_duration$jobs$direnv$python$nodejs$golang$rust$ruby$java$lua$php$haskell$nix_shell$conda$terraform$kubernetes$aws$gcloud$azure$container$env_var"
+right_format = "$status$cmd_duration$jobs$direnv$python$nodejs$golang$rust$ruby$java$lua$php$haskell$nix_shell$conda$terraform$kubernetes$aws$gcloud$azure$container${env_var.STARSHIP_VI_MODE}"
 continuation_prompt = "[∙](fg:muted) "
 
 [palettes.tm]
@@ -115,7 +115,7 @@ symbol = "⚙"
 symbol_threshold = 1
 
 [direnv]
-disabled = false
+disabled = true
 format = "[╱ $symbol$loaded/$allowed]($style)"
 style = "bold fg:yellow"
 symbol = "direnv "
@@ -126,6 +126,7 @@ style = "bold yellow"
 symbol = " "
 
 [nodejs]
+disabled = true
 format = "[╱ $symbol($version)]($style)"
 style = "bold green"
 symbol = " "
@@ -136,6 +137,7 @@ style = "bold cyan"
 symbol = " "
 
 [rust]
+disabled = true
 format = "[╱ $symbol($version)]($style)"
 style = "bold red"
 symbol = " "
@@ -182,7 +184,7 @@ style = "bold 105"
 symbol = " "
 
 [kubernetes]
-disabled = false
+disabled = true
 format = '[╱ $symbol$context(\($namespace\))]($style)'
 style = "bold cyan"
 symbol = "󱃾 "
@@ -214,8 +216,7 @@ ssh_only = true
 style = "bold fg:os_fg bg:os_bg"
 trim_at = "."
 
-[env_var]
-variable = "STARSHIP_VI_MODE"
+[env_var.STARSHIP_VI_MODE]
 format = "[╱ $env_value](bold fg:muted)"
 
 [character]
