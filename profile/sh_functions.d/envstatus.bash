@@ -83,7 +83,7 @@ envstatus() {
 
     _is_known_tool() {
         case "$1" in
-            mise|node|cargo|platformio|opencode|claude|gh|direnv|kanban|hass|ssh-agent|homebrew|cloudflare|profile|starship|oh-my-zsh|vim-colors)
+            mise|node|cargo|platformio|opencode|claude|gh|direnv|kanban|hass|ssh-agent|homebrew|cloudflare|transmission|profile|starship|oh-my-zsh|vim-colors)
                 return 0
                 ;;
             *)
@@ -125,7 +125,7 @@ envstatus() {
         printf '  envstatus disabled\n'
         printf '  envstatus help\n\n'
         printf 'Config file: %s\n\n' "$_config_file"
-        printf 'Known tools: mise, node, cargo, platformio, opencode, claude, gh, direnv, kanban, hass, ssh-agent, homebrew, cloudflare, profile, starship, oh-my-zsh, vim-colors\n'
+        printf 'Known tools: mise, node, cargo, platformio, opencode, claude, gh, direnv, kanban, hass, ssh-agent, homebrew, cloudflare, transmission, profile, starship, oh-my-zsh, vim-colors\n'
     }
 
     _disable_tool() {
@@ -495,7 +495,9 @@ envstatus() {
     fi
 
     local _transmission_netrc="${XDG_CONFIG_HOME:-$HOME/.config}/transmission/remote.netrc"
-    if [ -f "$_transmission_netrc" ]; then
+    if _is_disabled "transmission"; then
+        _info "transmission" "disabled via local config"
+    elif [ -f "$_transmission_netrc" ]; then
         _perms=$(stat -c '%a' "$_transmission_netrc" 2>/dev/null || stat -f '%Lp' "$_transmission_netrc" 2>/dev/null)
         if [ "$_perms" != "600" ]; then
             _warn "transmission" "insecure permissions ($_perms); run: chmod 600 $_transmission_netrc"

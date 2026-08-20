@@ -10,6 +10,8 @@ right_format = "$status$cmd_duration$jobs$direnv$python$nodejs$golang$rust$ruby$
 continuation_prompt = "[∙](fg:muted) "
 
 [palettes.tm]
+host_bg = "6"
+host_fg = "232"
 os_bg = "7"
 os_fg = "232"
 dir_bg = "4"
@@ -23,7 +25,7 @@ error = "196"
 
 [os]
 disabled = false
-format = "[$symbol ]($style)"
+format = "[ $symbol ]($style)"
 style = "fg:os_fg bg:os_bg"
 
 [os.symbols]
@@ -211,9 +213,9 @@ style = "bold red"
 symbol = "⬢ "
 
 [hostname]
-format = "[ $hostname ]($style)"
+format = "[ $hostname ]($style)[](fg:host_bg bg:os_bg)"
 ssh_only = true
-style = "bold fg:os_fg bg:os_bg"
+style = "bold fg:host_fg bg:host_bg"
 trim_at = "."
 
 [env_var.STARSHIP_VI_MODE]
