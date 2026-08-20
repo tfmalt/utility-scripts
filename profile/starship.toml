@@ -213,7 +213,7 @@ style = "bold red"
 symbol = "⬢ "
 
 [hostname]
-format = "[ $hostname ]($style)[](fg:host_bg bg:os_bg)"
+format = "[ $hostname ]($style)[](fg:host_bg bg:os_bg)"
 ssh_only = true
 style = "bold fg:host_fg bg:host_bg"
 trim_at = "."
