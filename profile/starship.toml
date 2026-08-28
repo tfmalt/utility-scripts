@@ -10,18 +10,24 @@ right_format = "$status$cmd_duration$jobs$direnv$python$nodejs$golang$rust$ruby$
 continuation_prompt = "[∙](fg:muted) "
 
 [palettes.tm]
-host_bg = "6"
+host_bg = "37"
 host_fg = "232"
-os_bg = "7"
+os_bg = "245"
 os_fg = "232"
-dir_bg = "4"
+dir_bg = "26"
 dir_fg = "254"
-git_bg = "2"
+git_bg = "70"
 git_fg = "232"
 muted = "242"
 status_bg = "238"
 success = "76"
 error = "196"
+yellow = "136"
+green = "64"
+cyan = "37"
+blue = "68"
+purple = "134"
+red = "167"
 
 [os]
 disabled = false
