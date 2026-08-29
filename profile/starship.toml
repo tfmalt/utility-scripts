@@ -28,6 +28,9 @@ cyan = "37"
 blue = "68"
 purple = "134"
 red = "167"
+violet = "105"
+dark = "232"
+light = "254"
 
 [os]
 disabled = false
@@ -101,121 +104,123 @@ deleted = "✘${count}"
 
 [status]
 disabled = false
-format = "[](fg:status_bg)[ $symbol$common_meaning$signal_name$maybe_int ]($style)[](fg:status_bg)"
+format = "[ $symbol$common_meaning$signal_name$maybe_int ]($style)"
 pipestatus = true
-pipestatus_format = "[](fg:status_bg)[ $pipestatus ]($style)[](fg:status_bg)"
+pipestatus_format = "[ $pipestatus ]($style)"
 pipestatus_segment_format = "[$symbol$maybe_int]($style)"
 map_symbol = true
 symbol = "✘ "
 success_symbol = "✔"
-success_style = "fg:white bg:status_bg"
+success_style = "fg:light bg:status_bg"
 failure_style = "bold fg:error bg:status_bg"
 
 [cmd_duration]
-format = "[╱ $duration](fg:yellow)"
+format = "[╱ $duration ]($style)"
 min_time = 3000
 show_milliseconds = false
+style = "fg:dark bg:yellow"
 
 [jobs]
-format = "[╱ $symbol$number](fg:cyan)"
+format = "[╱ $symbol$number ]($style)"
+style = "fg:dark bg:cyan"
 number_threshold = 999
 symbol = "⚙"
 symbol_threshold = 1
 
 [direnv]
 disabled = true
-format = "[╱ $symbol$loaded/$allowed]($style)"
-style = "bold fg:yellow"
+format = "[╱ $symbol$loaded/$allowed ]($style)"
+style = "fg:dark bg:yellow"
 symbol = "direnv "
 
 [python]
-format = '[╱ ${symbol}${pyenv_prefix}(${version})(\($virtualenv\))]($style)'
-style = "bold yellow"
+format = '[╱ ${symbol}${pyenv_prefix}(${version})(\($virtualenv\)) ]($style)'
+style = "fg:dark bg:yellow"
 symbol = " "
 
 [nodejs]
 disabled = true
-format = "[╱ $symbol($version)]($style)"
-style = "bold green"
+format = "[╱ $symbol($version) ]($style)"
+style = "fg:dark bg:green"
 symbol = " "
 
 [golang]
-format = "[╱ $symbol($version)]($style)"
-style = "bold cyan"
+format = "[╱ $symbol($version) ]($style)"
+style = "fg:dark bg:cyan"
 symbol = " "
 
 [rust]
 disabled = true
-format = "[╱ $symbol($version)]($style)"
-style = "bold red"
+format = "[╱ $symbol($version) ]($style)"
+style = "fg:dark bg:red"
 symbol = " "
 
 [ruby]
-format = "[╱ $symbol($version)(-$gemset)]($style)"
-style = "bold red"
+format = "[╱ $symbol($version)(-$gemset) ]($style)"
+style = "fg:dark bg:red"
 symbol = " "
 
 [java]
-format = "[╱ $symbol($version)]($style)"
-style = "red"
+format = "[╱ $symbol($version) ]($style)"
+style = "fg:dark bg:red"
 symbol = " "
 
 [lua]
-format = "[╱ $symbol($version)]($style)"
-style = "bold blue"
+format = "[╱ $symbol($version) ]($style)"
+style = "fg:dark bg:blue"
 symbol = " "
 
 [php]
 format = "[╱ $symbol($version)]($style)"
-style = "bold purple"
+style = "fg:dark bg:purple"
 symbol = " "
 
 [haskell]
 format = "[╱ $symbol($version)]($style)"
-style = "bold purple"
+style = "fg:dark bg:purple"
 symbol = " "
 
 [nix_shell]
-format = '[╱ $symbol$state(\($name\))]($style)'
-style = "bold blue"
+format = '[╱ $symbol$state(\($name\)) ]($style)'
+style = "fg:dark bg:blue"
 symbol = " "
 
 [conda]
-format = "[╱ $symbol$environment]($style)"
+format = "[╱ $symbol$environment ]($style)"
 ignore_base = true
-style = "bold green"
+style = "fg:dark bg:green"
 symbol = " "
 
 [terraform]
-format = "[╱ $symbol$workspace]($style)"
-style = "bold 105"
+format = "[╱ $symbol$workspace ]($style)"
+style = "fg:dark bg:violet"
 symbol = " "
 
 [kubernetes]
 disabled = true
-format = '[╱ $symbol$context(\($namespace\))]($style)'
-style = "bold cyan"
+format = '[╱ $symbol$context(\($namespace\)) ]($style)'
+style = "fg:dark bg:cyan"
 symbol = "󱃾 "
 
 [aws]
-format = "[╱ $symbol($profile)(@$region)]($style)"
-style = "bold yellow"
+format = "[╱ $symbol($profile)(@$region) ]($style)"
+style = "fg:dark bg:yellow"
 symbol = "󰸏 "
 
 [gcloud]
-format = "[╱ $symbol$project]($style)"
-style = "bold blue"
+format = "[╱ $symbol$project ]($style)"
+style = "fg:dark bg:blue"
 symbol = "󱇶 "
 
 [azure]
 disabled = false
-format = "[╱ $symbol$subscription]($style)"
-style = "bold blue"
+format = "[╱ $symbol$subscription ]($style)"
+style = "fg:dark bg:blue"
 symbol = "󰠅 "
 
 [container]
-format = "[╱ $symbol$name]($style)"
-style = "bold red"
+format = "[╱ $symbol$name ]($style)"
+style = "fg:dark bg:red"
 symbol = "⬢ "
 
 [hostname]
@@ -225,7 +230,8 @@ style = "bold fg:host_fg bg:host_bg"
 trim_at = "."
 
 [env_var.STARSHIP_VI_MODE]
-format = "[╱ $env_value](bold fg:muted)"
+format = "[╱ $env_value ]($style)"
+style = "fg:light bg:status_bg"
 
 [character]
 disabled = true
