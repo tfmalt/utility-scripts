@@ -12,7 +12,7 @@ autocmd! BufNewFile,BufRead *.ino setlocal ft=arduino
 set termguicolors
 set modelines=5
 set nocompatible
-set background=dark
+set background=light
 " set columns=80
 set ruler
 set mouse=a
@@ -39,8 +39,7 @@ let g:solarized_termtrans=1
 let g:onedark_termcolors=256
 " let g:afterglow_inherit_background=1
 " autoload/onedark.vim
-colorscheme molokai
-colorscheme afterglow
+colorscheme onehalflight
 
 " let s:uname = system("uname -s")
 " if s:uname == "Linux\n"
