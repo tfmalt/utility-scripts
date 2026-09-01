@@ -39,7 +39,43 @@ let g:solarized_termtrans=1
 let g:onedark_termcolors=256
 " let g:afterglow_inherit_background=1
 " autoload/onedark.vim
+
+function! s:apply_terminal_colorscheme() abort
+  let l:parts = matchlist(v:termrbgresp, '\c]11;rgb:\([0-9a-f]\+\)/\([0-9a-f]\+\)/\([0-9a-f]\+\)')
+  if len(l:parts) < 4
+    return
+  endif
+
+  let l:max = str2nr(repeat('f', strlen(l:parts[1])), 16)
+  let l:brightness = 299 * str2nr(l:parts[1], 16)
+        \ + 587 * str2nr(l:parts[2], 16)
+        \ + 114 * str2nr(l:parts[3], 16)
+  let l:colorscheme = l:brightness < 500 * l:max ? 'onehalfdark' : 'onehalflight'
+
+  if get(g:, 'colors_name', '') !=# l:colorscheme
+    execute 'colorscheme ' . l:colorscheme
+  endif
+endfunction
+
+" Start with the light scheme until the terminal reports its background.
 colorscheme onehalflight
+
+if exists('##TermResponseAll') && exists('+t_RB') && exists('*echoraw')
+  " colorresp.vim parses OSC 11 responses and sets v:termrbgresp.
+  runtime! plugin/colorresp.vim
+
+  augroup terminal_colorscheme
+    autocmd!
+    autocmd TermResponseAll background call <SID>apply_terminal_colorscheme()
+    autocmd FocusGained * if !has('gui_running') | call <SID>request_terminal_background() | endif
+  augroup END
+
+  function! s:request_terminal_background() abort
+    if !empty(&t_RB)
+      call echoraw(&t_RB)
+    endif
+  endfunction
+endif
 
 " let s:uname = system("uname -s")
 " if s:uname == "Linux\n"
@@ -47,4 +83,3 @@ colorscheme onehalflight
 "   python3 powerline_setup()
 "   python3 del powerline_setup
 " endif
-
