@@ -200,6 +200,26 @@ The shell profile enables truecolor (24-bit color) support by exporting `COLORTE
 
 This helps terminal-aware tools (such as modern prompts, Vim/Neovim, and other TUI applications) detect full color capability.
 
+### Local Network Hostname Completion
+
+`profile/sh_config.d/20.local-hosts.sh` adds local network hostnames to zsh's host completion, so `ssh`, `scp`, `sftp`, `ping`, `traceroute`, `wget`, `host`, `dig`, `nslookup`, `rsync`, `mtr` and similar commands complete them.
+
+Hostnames are collected from four sources:
+
+1. A curated file, `~/.config/local-hosts`, with one hostname per line or hosts(5)-style lines (`10.0.0.5 name alias`). Text after `#` is a comment.
+2. `/etc/hosts` and other NSS sources through `getent`.
+3. `~/.ssh/config` `Host` aliases and unhashed `~/.ssh/known_hosts` entries.
+4. Auto-discovery: ARP/neighbour table entries (including the Windows ARP table when running under WSL) that reverse-resolve to a hostname and forward-resolve again.
+
+Discovery is cached in `~/.cache/zsh/local-hosts` and refreshed in the background once the cache is older than `LOCAL_HOSTS_TTL` seconds (default 900), so completion never waits on the network.
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `LOCAL_HOSTS_FILE` | `~/.config/local-hosts` | Curated hostname list |
+| `LOCAL_HOSTS_TTL` | `900` | Seconds before the discovery cache is refreshed |
+
+This snippet is zsh-only; the bash profile ignores it.
+
 ### envstatus Tool Overrides (Local Only)
 
 The `envstatus` function now supports per-user, per-host local overrides so you can disable checks for tools that are not relevant on a specific machine.
