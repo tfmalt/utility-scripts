@@ -30,16 +30,11 @@ export PATH
 
 if ! envstatus_tool_disabled "opencode" && command -v opencode >/dev/null 2>&1; then
     if [ -n "${ZSH_VERSION:-}" ]; then
-        if ! type bashcompinit >/dev/null 2>&1; then
-            autoload -U bashcompinit
-        fi
-
-        bashcompinit >/dev/null 2>&1
         # shellcheck disable=SC1090
-        source <(opencode completion 2>/dev/null)
+        source <(opencode --completions zsh 2>/dev/null)
     elif [ -n "${BASH_VERSION:-}" ]; then
         # shellcheck disable=SC1090
-        source <(opencode completion 2>/dev/null)
+        source <(opencode --completions bash 2>/dev/null)
     else
         status_err "opencode" "unknown shell; completion setup skipped"
     fi
